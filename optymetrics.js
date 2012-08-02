@@ -5,6 +5,7 @@ var application_root = __dirname,
     cronJob = require('cron').CronJob,
     util = require('util'),
     http = require('http'),
+    logger = require('./util/logger'),
     path = require('path'),
     rest = require('restler'),
     mongoose = require('mongoose'),
@@ -19,8 +20,8 @@ var metrics_dao = require('./data_access/metrics_dao.js'),
 metrics_dao.connect();
 
 // Run the Trello backfill hourly
-var trelloBackfillJob = new cronJob("0 0 * * *", function() {
-    console.log('Running Trello backfill');
+var trelloBackfillJob = new cronJob("0 * * * *", function() {
+    logger.log('info','Running Trello backfill');
     trello_backfill.trelloBackfill();
 });
 trelloBackfillJob.start();
@@ -40,7 +41,7 @@ app.configure(function() {
 app.get('/dev/velocity', function(req, res, next) {
     metrics_dao.getDeploymentVelocity(function(err, results) {
          if(err) {
-            console.log(err);
+            logger.log('info',err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
@@ -54,7 +55,7 @@ app.get('/dev/velocity', function(req, res, next) {
 app.get('/dev/velocity/csv', function(req, res, next) {
     metrics_dao.getDeploymentVelocity(function(err, results) {
         if(err) {
-            console.log(err);
+            logger.log('info',err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
@@ -87,12 +88,12 @@ app.get('/dev/velocity/csv', function(req, res, next) {
 
 // Start the web server
 var server = app.listen(3000);
-console.log('Server started. Listening on port 3000');
+logger.log('info','Server started. Listening on port 3000');
 
 // Shutdown handler
 process.on('SIGINT', function() {
-    console.log('Shutting down');
-    console.log('Closing MongoDB connection');
+    logger.log('info','Shutting down');
+    logger.log('info','Closing MongoDB connection');
     metrics_dao.disconnect();
 
     trelloBackfillJob.stop(); 

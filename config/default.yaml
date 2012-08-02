@@ -1,0 +1,4 @@
+Mongo:
+  dbHost: localhost
+  dbPort: 27017 
+  database: optymetrics

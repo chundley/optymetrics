@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "async"         : "0.1.22",
+        "config"        : "0.4.15",
         "cron"          : "0.3.4",
         "csv"           : "0.0.18",
         "express"       : "3.0.0rc1",

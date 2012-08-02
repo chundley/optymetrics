@@ -1,9 +1,9 @@
 // Metrics MongoDB data access
 
-var mongoose = require('mongoose'),
+var logger = require('../util/logger.js'), 
+    mongo_config = require('config').Mongo, 
+    mongoose = require('mongoose'),
     _ = require('underscore');
-
-var db = 'mongodb://localhost/metrics';
 
 // Define our schema
 var Schema = mongoose.Schema,
@@ -46,7 +46,14 @@ var LabelModel = mongoose.model('Label', LabelSchema);
 
 
 var connect = function() {
-    mongoose.connect(db);
+    var conn_str = 'mongodb://' + mongo_config.dbHost + ':' + mongo_config.dbPort + '/' + mongo_config.database;
+    mongoose.connect(conn_str, function(err) { 
+        if(err) {             
+            logger.log('info',err); 
+        } else {
+            logger.log('info','Connected to MongoDB: ' + conn_str);
+        }
+    });
 };
 
 var disconnect = function() {
@@ -61,7 +68,7 @@ var insertMember = function(id, name, callback) {
         }
 
         if(!doc) {
-            console.log('Inserting member <' + name + '>');
+            logger.log('info','Inserting member <' + name + '>');
             var member = new MemberModel({ '_id': id, 'name': name });
             member.save(function(err) {
                 (err) ? callback(err) : callback(); 
@@ -78,7 +85,7 @@ var insertList = function(id, name, callback) {
         }
 
         if(!doc) {
-            console.log('Inserting list <' + name + '>');
+            logger.log('info','Inserting list <' + name + '>');
             var list = new ListModel({ '_id': id, 'name': name.replace(/\[\d+\]/, '').trim() });
             list.save(function(err) { 
                 (err) ? callback(err) : callback(); 

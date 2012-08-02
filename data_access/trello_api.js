@@ -3,6 +3,7 @@
 // programmatically?
 
 var async = require('async'),
+    logger = require('../util/logger.js'),
     metrics_dao = require('./metrics_dao.js'),
     rest = require('restler'),
     _ = require('underscore');
@@ -20,6 +21,7 @@ var getBoardUrl = function() {
 var getListUrl = function() {
     return baseUrl + 'boards/' + kanban_board_id + '/lists?key=' + key + '&token=' + token;
 };
+
 var getMemberUrl = function() {
     return baseUrl + 'boards/' + kanban_board_id + '/members?key=' + key + '&token=' + token;
 };
@@ -38,7 +40,7 @@ var getStorySize = function(name) {
     if(matches && matches.length == 2) {
         return matches[1];
     } else {
-        console.log('Could not parse a size for story ' + name + '"');
+        logger.log('info','Could not parse a size for story ' + name + '"');
     }
     return null;
 };
@@ -61,13 +63,13 @@ var backfillMembers = function(callback) {
             metrics_dao.insertMember(result.id, result.fullName, function(err) {
                 if(err) {
                     error = err;
-                    console.log('Unable to backfill member <' + result.fullName + '> ' + err);
+                    logger.log('info','Unable to backfill member <' + result.fullName + '> ' + err);
                 }
             });
         });
 
         callback(error);
-    }).on('error', function(error) { console.log(error); });;
+    }).on('error', function(error) { logger.log('info',error); });;
 };
 
 var backfillLists = function(callback) {
@@ -77,13 +79,13 @@ var backfillLists = function(callback) {
             metrics_dao.insertList(result.id, result.name, function(err) {
                 if(err) {
                     error = err;
-                    console.log('Unable to backfill list <' + result.name + '> ' + err);
+                    logger.log('info','Unable to backfill list <' + result.name + '> ' + err);
                 }
             });
         });
 
         callback(error);
-    }).on('error', function(error) { console.log(error); });
+    }).on('error', function(error) { logger.log('info',error); });
 };
 
 var backfillStories = function(callback) {
@@ -92,7 +94,7 @@ var backfillStories = function(callback) {
             metrics_dao.StoryModel.findById(result.id, function(err, doc) {
                 var story;
                 if(!doc) {
-                    console.log('No story found with id ' + result.id + '. Creating...');
+                    logger.log('info','No story found with id ' + result.id + '. Creating...');
 
                     story = new metrics_dao.StoryModel({
                         _id: result.id,
@@ -103,27 +105,32 @@ var backfillStories = function(callback) {
                         listHistory: []
                     });
                 } else {
-                    console.log('Updating story with id ' + result.id);
+                    logger.log('info','Updating story with id ' + result.id);
                     story = doc;
                 }
 
                 story.name = result.name,
                 story.size = getStorySize(result.name),
                 story.labels = getLabelModel(result.labels),
-                story.members = [],
 
                 async.series([
                     // Look up and assign members
                     function(callback) {
-                        story.members = [];
                         async.forEach(result.idMembers, function(id, callback) {
                             metrics_dao.MemberModel.findById(id, function(err, doc) {
-                                if(doc) story.members.push(new metrics_dao.MemberModel({ 'name': doc.name }));
+                                if(doc) {
+                                    var member_found = _.any(story.members, function(value) {
+                                        return value._id.toString() == id;
+                                    }); 
+                                    if(!member_found) {
+                                        story.members.push(new metrics_dao.MemberModel({ '_id': doc.id, 'name': doc.name }));
+                                    }
+                                }
                                 callback();
                             });
                          },
                         function(err) {
-                            if(err) console.log(err);
+                            if(err) logger.log('info',err);
                             callback();
                         });
                     },
@@ -138,7 +145,7 @@ var backfillStories = function(callback) {
                                 var deployDate = getDeploymentDate(doc.name);
                                 if(deployDate && !story.deployed) {
                                     if(deployDate > new Date()) {
-                                        console.log('Deployment date for story ' + story.id + ' is in the future. Not marking it as deployed for now');
+                                        logger.log('info','Deployment date for story ' + story.id + ' is in the future. Not marking it as deployed for now');
                                     } else {
                                         story.deployed = true;
                                         story.deployedOn = deployDate;
@@ -157,7 +164,7 @@ var backfillStories = function(callback) {
             });
         });
         callback();
-    }).on('error', function(error) { console.log(error); });
+    }).on('error', function(error) { logger.log('info',error); });
 };
 
 exports.backfillLists = backfillLists;
