@@ -90,12 +90,24 @@ app.get('/dev/velocity/csv', function(req, res, next) {
 var server = app.listen(3000);
 logger.log('info','Server started. Listening on port 3000');
 
-// Shutdown handler
-process.on('SIGINT', function() {
+var shutdownHook = function() {
     logger.log('info','Shutting down');
     logger.log('info','Closing MongoDB connection');
     metrics_dao.disconnect();
 
     trelloBackfillJob.stop(); 
     server.close();
+};
+
+// Handles keyboard interrupt Ctrl+C when running script via "node
+// optymetrics.js"
+process.on('SIGINT', function() {
+    shutdownHook();
+});
+
+// Handles shutdown when script is run using forever "forever start
+// optymetrics.js"
+process.on('SIGTERM', function() {
+    shutdownHook();
+    process.exit(0);
 });
