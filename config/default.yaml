@@ -2,3 +2,10 @@ Mongo:
   dbHost: localhost
   dbPort: 27017 
   database: optymetrics
+
+CoreDb:
+  dbHost: localhost
+  dbPort: 5432
+  database: Test
+  username: postgres
+  password: optify

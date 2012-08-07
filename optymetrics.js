@@ -14,10 +14,22 @@ var application_root = __dirname,
 
 // Application includes
 var metrics_dao = require('./data_access/metrics_dao.js'),
+    coredb_dao = require('./data_access/coredb_dao.js'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
 metrics_dao.connect();
+
+coredb_dao.getDomains(function (err, results) {
+    if (err) {
+        logger.log('info', err);
+    }
+    _.each(results, function (result) {
+        logger.log('info', result.org_name + '   ' + result.domain);
+    });
+});
+
+//logger.log('info', temp[0].domain);
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {
