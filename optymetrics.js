@@ -20,7 +20,7 @@ var metrics_dao = require('./data_access/metrics_dao.js'),
 metrics_dao.connect();
 
 // Run the Trello backfill hourly
-var trelloBackfillJob = new cronJob("0 0 * * *", function() {
+var trelloBackfillJob = new cronJob("0 * * * *", function() {
     logger.log('info','Running Trello backfill');
     trello_backfill.trelloBackfill();
 });

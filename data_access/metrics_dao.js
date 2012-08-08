@@ -90,8 +90,17 @@ var insertList = function(id, name, callback) {
             list.save(function(err) { 
                 (err) ? callback(err) : callback(); 
             });
-        }   
-    }); 
+        } else {
+            var listName = name.replace(/\[\d+\]/, '').trim();
+            if(listName != doc.name) {
+                logger.log('info', 'Updating list <' + id + '>. Name changed from <' + doc.name + '> to <' + listName + '>'); 
+                doc.name = listName;
+                doc.save(function(err) {
+                    (err) ? callback(err) : callback();
+                });
+            }
+        }
+    });
 };
 
 var getDeploymentVelocity = function(callback) {
