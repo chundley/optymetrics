@@ -1,38 +1,145 @@
-﻿// Access to the core postgres database
+﻿// Core postgres database access
 
-var logger = require('../util/logger.js'),
+var async = require('async'),
     pg = require('pg'),
+    mongo_config = require('config').Mongo,
+    mongoose = require('mongoose'),
     _ = require('underscore'),
-    coredb_config = require('config').CoreDb
-    conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
+    logger = require('../util/logger.js'),
+    customer_model = require('./model/customer_model.js'),
+    coredb_config = require('config').CoreDb;
+    
+var conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
 
-var getDomains = function (callback) {
-    logger.log('info', conn_str);
-    pg.connect(conn_str, function (err, client) {
+var customerBackfill = function () {
+
+    var shards2 = [];
+    async.series([
+        function (callback) {
+            getShards(function (err, shards) {
+                shards2 = shards;
+                
+                (err) ? callback(err) : callback();
+            });
+
+        }
+
+    ],
+    function (err) {
         if (err) {
-            logger.log('info', err);
+            logger.log('error', 'Customer backfill failed: ' + err);
         }
-        else {
-            logger.log('info', 'Connected to Postgres: ' + conn_str);
-        }
+    })
 
-        client.query('select org_name, domain from organization', function (err, result) {
-            if (err) {
-                logger.log('info', 'Error: ' + err);
-            }
-            else {
-                var orgs = [];
-                for (var row = 0; row < result.rows.length; row++) {
-                    var org = {
-                        org_name: result.rows[row].org_name,
-                        domain: result.rows[row].domain
-                    }
-                    orgs.push(org);
-                }
-                callback(err, orgs);
-            }
-        });
+    logger.log('info', shards2);
+    _.each(shards2, function (shard) {
+        logger.log('info', shard.short_name);
     });
 };
 
-exports.getDomains = getDomains;
+var getShards = function (callback) {
+    pg.connect(conn_str, function (err, client) {
+        if (err) {
+            logger.log('error', err);
+        }
+
+        client.query(QUERY_SHARDS, function (err, result) {
+            if (err) {
+                logger.log('error', 'Error: ' + err);
+            }
+            else {
+                var shards = [];
+                for (var row = 0; row < result.rows.length; row++) {
+                    var shard = {
+                        id: result.rows[row].id,
+                        short_name: result.rows[row].short_name
+                    }
+                    shards.push(shard);
+                }
+                callback(err, shards);
+            }
+        });
+    });
+
+};
+
+var getCustomers = function (callback) {
+    pg.connect(conn_str, function (err, client) {
+        if (err) {
+            logger.log('error', err);
+        }
+
+        client.query(QUERY_SHARDS, function (err, result) {
+            if (err) {
+                logger.log('error', 'Error: ' + err);
+            }
+            else {
+                var shards = [];
+                for (var row = 0; row < result.rows.length; row++) {
+                    var shard = {
+                        id: result.rows[row].id,
+                        short_name: result.rows[row].short_name
+                    }
+                    shards.push(shard);
+                }
+                callback(err, shards);
+            }
+        });
+    });
+
+};
+// public API
+exports.customerBackfill = customerBackfill;
+
+// query "constants"
+var QUERY_SHARDS =  "select distinct " +
+                        "sc.id, " +
+                        "sc.short_name, " +
+                        "sc.db_jdbc_url, " +
+                        "sc.db_user, " +
+                        "sc.db_password, " +
+                        "sc.disabled " +
+                    "from shard_configuration sc " +
+                    "inner join organization o on sc.id = o.shard_configuration_id";
+
+var QUERY_CUSTOMERS =   "select " +
+                            "c.id, " +
+                            "c.name, " +
+                            "c.created_at, " +
+                            "sku.display_name, " +
+                            "sku.short_name, " +
+                            "o.id as \"org_id\", " +
+                            "o.name as \"org_name\", " +
+                            "o.created_at as \"org_created_at\", " +
+                            "o.domain, " +
+                            "o.disabled, " +
+                            "o.shard_configuration_id " +
+                        "from customer c " +
+                        "inner join customer_subscription cs on c.current_subscription_id = cs.id " +
+                        "inner join subscription_sku sku on cs.subscription_sku_id = sku.id " +
+                        "inner join organization o on c.id = o.customer_id " +
+                        "where sku.short_name not like '%dormant' " +
+                        "and o.name != 'OPTIFY_SANITY-TEST' " +
+                        "and c.name != 'Hanegev' " +
+                        "order by c.name, o.name";
+
+var QUERY_ORGS =    "select " +
+                        "id, " +
+                        "name, " +
+                        "created_at, " +
+                        "domain, " +
+                        "customer_id, " +
+                        "pageview_processing, " +
+                        "ignore_all_pageviews, " +
+                        "disabled, " +
+                        "shard_configuration_id " +
+                    "from organization " +
+                    "where name != 'OPTIFY-SANITY-TEST'";
+
+var QUERY_KEYWORDS =    "select " +
+                            "key.organization_id, " +
+                            "count(key.keyword_id) as \"keywords\" " +
+                        "from organization_keyword key " +
+                        "inner join organization o on key.organization_id = o.id " +
+                        "where o.disabled = false " +
+                        "group by key.organization_id ";

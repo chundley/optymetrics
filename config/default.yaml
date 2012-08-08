@@ -6,6 +6,6 @@ Mongo:
 CoreDb:
   dbHost: localhost
   dbPort: 5432
-  database: Test
+  database: lt_optifydb1
   username: postgres
   password: optify
