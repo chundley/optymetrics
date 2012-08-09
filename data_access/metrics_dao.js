@@ -106,8 +106,7 @@ var insertList = function(id, name, callback) {
 var getDeploymentVelocity = function(callback) {
     var group = {
         keyf: function(doc) {
-            var dateKey = doc.deployedOn.getFullYear() + "/" + (doc.deployedOn.getMonth() + 1) + "/" + doc.deployedOn.getDate();
-            return { 'day': dateKey };
+            return { 'day': doc.deployedOn };
         },
         cond: { deployed: true },
         initial: { velocity: 0 },
@@ -124,8 +123,7 @@ var getDeploymentVelocity = function(callback) {
         null,
         true,
         function(err, results) {
-            debugger;
-            callback(err, results);
+            callback(err, _.sortBy(results, function(val) { return val.day; }));
         }
     );
 };
