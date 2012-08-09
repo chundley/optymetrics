@@ -12,29 +12,23 @@ var async = require('async'),
 var conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
 
 var customerBackfill = function () {
-
-    var shards2 = [];
-    async.series([
-        function (callback) {
+    async.series({
+        allshards: function (callback) {
             getShards(function (err, shards) {
-                shards2 = shards;
-                
-                (err) ? callback(err) : callback();
+                (err) ? callback(err) : callback(err, shards);
             });
-
         }
-
-    ],
-    function (err) {
+    },
+    function (err, results) {
         if (err) {
             logger.log('error', 'Customer backfill failed: ' + err);
         }
+        else {
+            _.each(results['allshards'], function (shard) {
+                logger.log('info', shard.short_name);
+            });
+        }
     })
-
-    logger.log('info', shards2);
-    _.each(shards2, function (shard) {
-        logger.log('info', shard.short_name);
-    });
 };
 
 var getShards = function (callback) {
