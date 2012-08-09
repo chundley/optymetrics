@@ -7,9 +7,25 @@ var async = require('async'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
     customer_model = require('./model/customer_model.js'),
+    shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
     
-var conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
+var db_conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
+
+var connect = function () {
+    var conn_str = 'mongodb://' + mongo_config.dbHost + ':' + mongo_config.dbPort + '/' + mongo_config.database;
+    mongoose.connect(conn_str, function (err) {
+        if (err) {
+            logger.log('info', 'Error: ' + err);
+        } else {
+            logger.log('info', 'Connected to MongoDB: ' + conn_str);
+        }
+    });
+};
+
+var disconnect = function () {
+    mongoose.disconnect();
+};
 
 var customerBackfill = function () {
     async.series({
@@ -24,15 +40,36 @@ var customerBackfill = function () {
             logger.log('error', 'Customer backfill failed: ' + err);
         }
         else {
+            mongoose.connection.collections['shards'].drop(function (err) {
+                if (err) {
+                    logger.log('error', 'Could not drop shards collection');
+                }
+            });
+
             _.each(results['allshards'], function (shard) {
-                logger.log('info', shard.short_name);
+                var shardmodel = new shard_model.ShardModel({
+                    'id': shard.id,
+                    'name': shard.short_name,
+                    'jdbcUrl': shard.db_jdbc_url,
+                    'user': shard.db_user,
+                    'password': shard.db_password,
+                    'disabled': shard.disabled
+                });
+                shardmodel.save(function (err) {
+                    if (err) {
+                        logger.log('error', "Error: " + err);
+                    }
+                    else {
+                        logger.log('info', 'Shard saved: ' + shard);
+                    }
+                });
             });
         }
     })
 };
 
 var getShards = function (callback) {
-    pg.connect(conn_str, function (err, client) {
+    pg.connect(db_conn_str, function (err, client) {
         if (err) {
             logger.log('error', err);
         }
@@ -46,7 +83,11 @@ var getShards = function (callback) {
                 for (var row = 0; row < result.rows.length; row++) {
                     var shard = {
                         id: result.rows[row].id,
-                        short_name: result.rows[row].short_name
+                        short_name: result.rows[row].short_name,
+                        db_jdbc_url: result.rows[row].db_jdbc_url,
+                        db_user: result.rows[row].db_user,
+                        db_password: result.rows[row].db_password,
+                        disabled: result.rows[row].disabled
                     }
                     shards.push(shard);
                 }
@@ -54,11 +95,10 @@ var getShards = function (callback) {
             }
         });
     });
-
 };
 
 var getCustomers = function (callback) {
-    pg.connect(conn_str, function (err, client) {
+    pg.connect(db_conn_str, function (err, client) {
         if (err) {
             logger.log('error', err);
         }
