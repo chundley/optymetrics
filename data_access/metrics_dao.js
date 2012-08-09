@@ -44,22 +44,6 @@ var StoryModel = mongoose.model('Story', StorySchema);
 var ListModel = mongoose.model('List', ListSchema);
 var LabelModel = mongoose.model('Label', LabelSchema);
 
-
-var connect = function() {
-    var conn_str = 'mongodb://' + mongo_config.dbHost + ':' + mongo_config.dbPort + '/' + mongo_config.database;
-    mongoose.connect(conn_str, function(err) { 
-        if(err) {             
-            logger.log('info',err); 
-        } else {
-            logger.log('info','Connected to MongoDB: ' + conn_str);
-        }
-    });
-};
-
-var disconnect = function() {
-    mongoose.disconnect();
-};
-
 var insertMember = function(id, name, callback) {
     MemberModel.findById(id, function(err, doc) {
         if(err) {
@@ -136,5 +120,3 @@ exports.StoryModel = StoryModel;
 exports.getDeploymentVelocity = getDeploymentVelocity;
 exports.insertMember = insertMember;
 exports.insertList = insertList;
-exports.connect = connect;
-exports.disconnect = disconnect;

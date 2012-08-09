@@ -5,7 +5,6 @@ var application_root = __dirname,
     cronJob = require('cron').CronJob,
     util = require('util'),
     http = require('http'),
-    logger = require('./util/logger'),
     path = require('path'),
     rest = require('restler'),
     mongoose = require('mongoose'),
@@ -13,12 +12,15 @@ var application_root = __dirname,
     express = require('express');
 
 // Application includes
-var metrics_dao = require('./data_access/metrics_dao.js'),
+var logger = require('./util/logger'),
+    mongodb_connection = require('./util/mongodb_connection'),
+    metrics_dao = require('./data_access/metrics_dao.js'),
     coredb_dao = require('./data_access/coredb_dao.js'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
-metrics_dao.connect();
+// connect to Mongo - this connection will be used for all access to MongoDB
+mongodb_connection.connect();
 
 coredb_dao.customerBackfill();
 
@@ -95,9 +97,8 @@ logger.log('info', 'Server started. Listening on port 3000');
 
 var shutdownHook = function() {
     logger.log('info','Shutting down');
-    logger.log('info','Closing MongoDB connection');
-    metrics_dao.disconnect();
-
+    logger.log('info', 'Closing MongoDB connection');
+    mongodb_connection.disconnect();
     trelloBackfillJob.stop(); 
     server.close();
 };
@@ -107,7 +108,6 @@ var shutdownHook = function() {
 if (process.platform != 'win32') {
     process.on('SIGINT', function () {
         shutdownHook();
-
     });
 }
 

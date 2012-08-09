@@ -12,21 +12,6 @@ var async = require('async'),
     
 var db_conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
 
-var connect = function () {
-    var conn_str = 'mongodb://' + mongo_config.dbHost + ':' + mongo_config.dbPort + '/' + mongo_config.database;
-    mongoose.connect(conn_str, function (err) {
-        if (err) {
-            logger.log('info', 'Error: ' + err);
-        } else {
-            logger.log('info', 'Connected to MongoDB: ' + conn_str);
-        }
-    });
-};
-
-var disconnect = function () {
-    mongoose.disconnect();
-};
-
 var customerBackfill = function () {
     async.series({
         allshards: function (callback) {
@@ -60,7 +45,7 @@ var customerBackfill = function () {
                         logger.log('error', "Error: " + err);
                     }
                     else {
-                        logger.log('info', 'Shard saved: ' + shard);
+                        logger.log('info', 'Shard saved: ' + shard.short_name);
                     }
                 });
             });
