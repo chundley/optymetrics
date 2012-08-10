@@ -10,7 +10,7 @@ var Schema = mongoose.Schema,
 var OrganizationSchema = new Schema({
     id: Number,
     name: String,
-    domain: String,
+    siteDomain: String,
     createdAt: Date,
     disabled: Boolean,
     shardConfigurationId: Number
@@ -19,7 +19,6 @@ var OrganizationSchema = new Schema({
 var CustomerSchema = new Schema({
     id: Number,
     name: String,
-    domain: String,
     createdAt: Date,
     sku: String,
     skuShort: String,

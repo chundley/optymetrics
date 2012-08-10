@@ -6,16 +6,20 @@ var async = require('async'),
     mongoose = require('mongoose'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
-    coredb_connection = require('../util/coredb_connection.js'),
     customer_model = require('./model/customer_model.js'),
     shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
-    
+
 var customerBackfill = function () {
     async.series({
         allshards: function (callback) {
             getShards(function (err, shards) {
                 (err) ? callback(err) : callback(err, shards);
+            });
+        },
+        allcustomers: function (callback) {
+            getCustomers(function (err, customers) {
+                (err) ? callback(err) : callback(err, customers);
             });
         }
     },
@@ -24,6 +28,7 @@ var customerBackfill = function () {
             logger.log('error', 'Customer backfill failed: ' + err);
         }
         else {
+            // save shards
             mongoose.connection.collections['shards'].drop(function (err) {
                 if (err) {
                     logger.log('error', 'Could not drop shards collection');
@@ -45,6 +50,24 @@ var customerBackfill = function () {
                     }
                     else {
                         logger.log('info', 'Shard saved: ' + shard.short_name);
+                    }
+                });
+            });
+
+            // save customers
+            mongoose.connection.collections['customers'].drop(function (err) {
+                if (err) {
+                    logger.log('error', 'Could not drop customers collection');
+                }
+            });
+            _.each(results['allcustomers'], function (customer) {
+                debugger;
+                customer.save(function (err) {
+                    if (err) {
+                        logger.log('error', "Error: " + err);
+                    }
+                    else {
+                        logger.log('info', 'Customer saved: ' + customer.name);
                     }
                 });
             });
@@ -76,6 +99,54 @@ var getShards = function (callback) {
                     shards.push(shard);
                 }
                 callback(err, shards);
+            }
+        });
+    });
+};
+
+var getCustomers = function (callback) {
+    pg.connect(coredb_config.connectionString, function (err, client) {
+        if (err) {
+            logger.log('error', err);
+        }
+
+        client.query(QUERY_CUSTOMERS, function (err, result) {
+            if (err) {
+                logger.log('error', 'Error: ' + err);
+            }
+            else {
+                var customers = [];
+                var customermodel; // = new customer_model.CustomerModel();
+                var currentCustomerId = 0;
+                for (var row = 0; row < result.rows.length; row++) {
+                    if (result.rows[row].id != currentCustomerId) {
+                        if (currentCustomerId > 0) {
+                            customers.push(customermodel);
+                        }
+                        currentCustomerId = result.rows[row].id;
+                        customermodel = new customer_model.CustomerModel({
+                            'id': result.rows[row].id,
+                            'name': result.rows[row].name,
+                            'createdAt': result.rows[row].created_at,
+                            'sku': result.rows[row].display_name,
+                            'skuShort': result.rows[row].short_name,
+                            'organizations': []
+                        });
+                    }
+
+                    organizationmodel = new customer_model.OrganizationModel({
+                        'id': result.rows[row].org_id,
+                        'name': result.rows[row].org_name,
+                        'createdAt': result.rows[row].org_created_at,
+                        'siteDomain': result.rows[row].domain,
+                        'disabled': result.rows[row].disabled,
+                        'shardConfigurationId': result.rows[row].shard_configuration_id
+                    });
+                    customermodel.organizations.push(organizationmodel);
+                }
+                // push last one
+                customers.push(customermodel);
+                callback(err, customers);
             }
         });
     });
@@ -114,6 +185,7 @@ var QUERY_CUSTOMERS =   "select " +
                         "where sku.short_name not like '%dormant' " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
                         "and c.name != 'Hanegev' " +
+                        //"and c.name = '110 Consulting' " +
                         "order by c.name, o.name";
 
 var QUERY_ORGS =    "select " +
