@@ -11,6 +11,107 @@ var async = require('async'),
     coredb_config = require('config').CoreDb;
 
 var customerBackfill = function () {
+    async.series([
+        function (callback) {
+            etlBaselineData();
+            callback(null);
+        },
+        function (callback) {
+            updateStats();
+            callback(null);
+        }
+    ],
+    function (err) {
+
+    }
+    )
+};
+
+// pull baseline data, populate Mongo collections
+var etlBaselineData = function (callback) {
+    async.parallel({
+        allshards: function (callback) {
+            getShards(function (err, shards) {
+                (err) ? callback(err) : callback(err, shards);
+            });
+        },
+        allcustomers: function (callback) {
+            getCustomers(function (err, customers) {
+                (err) ? callback(err) : callback(err, customers);
+            });
+        }
+    },
+    function (err, results) {
+        if (err) {
+            logger.log('error', 'Customer backfill failed: ' + err);
+        }
+        else {
+            // truncate then save shards
+            mongoose.connection.collections['shards'].drop(function (err) {
+                if (err) {
+                    logger.log('error', 'Could not drop shards collection');
+                }
+            });
+            _.each(results['allshards'], function (shard) {
+                shard.save(function (err) {
+                    if (err) {
+                        logger.log('error', "Error: " + err);
+                    }
+                    else {
+                        logger.log('info', 'Shard saved: ' + shard.name);
+                    }
+                });
+            }); // end _.each(results[allshards]...)
+
+            // truncate then save customers
+            mongoose.connection.collections['customers'].drop(function (err) {
+                if (err) {
+                    logger.log('error', 'Could not drop customers collection');
+                }
+            });
+
+            _.each(results['allcustomers'], function (customer) {
+                customer.save(function (err) {
+                    if (err) {
+                        logger.log('error', "Error: " + err);
+                    }
+                    else {
+                        logger.log('info', 'Customer saved: ' + customer.name);
+                    }
+                });                
+            });
+        } // end else
+    }); // end async.parallel
+};
+
+var updateStats = function (callback) {
+    shard_model.ShardModel.find({ id: 2 }, function (err, sh) {
+        logger.log('info', sh.jdbcUrl);
+    });
+
+    customer_model.CustomerModel.find({ id: 2397 }, function (err, c) {
+        logger.log('info', 'SPECIAL C: ' + c.siteDomain);
+    });
+
+    customer_model.CustomerModel.find({}, function (err, docs) {
+        _.each(docs, function (customer) {
+            logger.log('info', 'found customer: ' + customer.name);
+            _.each(customer.organizations, function (organization) {
+                logger.log('info', 'found site: ' + organization.siteDomain);
+
+                // for each organization, get correct shard and update stats
+                shard_model.ShardModel.find({ 'id': organization.shardConfigurationId }, function (err, shard) {
+                    if (err) {
+                        logger.log('error', err);
+                    }
+                    logger.log('info', 'found shard: ' + shard.jdbcUrl);
+                });
+            });
+        });
+    });
+}
+
+var customerBackfill_old = function () {
     async.series({
         allshards: function (callback) {
             getShards(function (err, shards) {
@@ -52,7 +153,47 @@ var customerBackfill = function () {
                     logger.log('error', 'Could not drop customers collection');
                 }
             });
+
+
             _.each(results['allcustomers'], function (customer) {
+                _.each(customer.organizations, function (organization) {
+                    logger.log('info', 'cid1: ' + organization.shardConfigurationId);
+                    //shard_model.ShardModel.find({ id: organization.shardConfigurationId }, function (err, sh) {
+                    shard_model.ShardModel.findOne(function (err, sh) {
+                        if (err) {
+                            logger.log('error', err);
+                        }
+                        logger.log('info', 'sh: ' + sh.jdbcUrl);
+                        pg.connect(sh.jdbcUrl, function (err, client) {
+                            if (err) {
+                                logger.log('error', err);
+                            }
+
+                            client.query(QUERY_VISITORS, [organization.id], function (err, result) {
+                                if (err) {
+                                    logger.log('error', 'Error: ' + err);
+                                }
+                                else {
+
+                                    if (result.rows.length > 0) {
+                                        logger.log('info', result);
+                                        organization.visitors = result.rows[0].visitors;
+                                        organization.visits = result.rows[0].visits;
+                                        organization.pageviews = result.rows[0].pageviews;
+                                        logger.log('info', 'stats updated');
+                                    }
+                                    debugger;
+                                }
+                            });
+                        });
+
+                    });
+
+                    //logger.log('info', shardmodel.jdbcUrl);
+                    // TODO:  this won't work in production - the connection string is wrong
+
+
+                });
                 customer.save(function (err) {
                     if (err) {
                         logger.log('error', "Error: " + err);
@@ -130,7 +271,10 @@ var getCustomers = function (callback) {
                         'createdAt': result.rows[row].org_created_at,
                         'siteDomain': result.rows[row].domain,
                         'disabled': result.rows[row].disabled,
-                        'shardConfigurationId': result.rows[row].shard_configuration_id
+                        'shardConfigurationId': result.rows[row].shard_configuration_id,
+                        'visitors': 0,
+                        'visits': 0,
+                        'pageviews': 0
                     });
                     customermodel.organizations.push(organizationmodel);
                 }
@@ -174,8 +318,9 @@ var QUERY_CUSTOMERS =   "select " +
                         "inner join organization o on c.id = o.customer_id " +
                         "where sku.short_name not like '%dormant' " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
+                        "and o.id = 2972 " +
                         "and c.name != 'Hanegev' " +
-                        //"and c.name = '110 Consulting' " +
+                        //"and c.name = 'Optify' " +
                         "order by c.name, o.name";
 
 var QUERY_ORGS =    "select " +
@@ -198,3 +343,13 @@ var QUERY_KEYWORDS =    "select " +
                         "inner join organization o on key.organization_id = o.id " +
                         "where o.disabled = false " +
                         "group by key.organization_id ";
+
+var QUERY_VISITORS =    "select " +
+                             "va.organization_id, " +
+                             "count(va.id) as \"visitors\", " +
+                             "sum(va.total_visits) as \"visits\", " +
+                             "sum(va.total_pageviews) as \"pageviews\" " +
+                        "from visitor_aggregate va " +
+                        "where va.organization_id = $1 " +
+                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '31 DAY' " +
+                        "group by va.organization_id";

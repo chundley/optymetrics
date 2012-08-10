@@ -13,7 +13,10 @@ var OrganizationSchema = new Schema({
     siteDomain: String,
     createdAt: Date,
     disabled: Boolean,
-    shardConfigurationId: Number
+    shardConfigurationId: Number,
+    visitors: Number,
+    visits: Number,
+    pageviews: Number
 });
 
 var CustomerSchema = new Schema({
