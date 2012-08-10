@@ -36,15 +36,7 @@ var customerBackfill = function () {
             });
 
             _.each(results['allshards'], function (shard) {
-                var shardmodel = new shard_model.ShardModel({
-                    'id': shard.id,
-                    'name': shard.short_name,
-                    'jdbcUrl': shard.db_jdbc_url,
-                    'user': shard.db_user,
-                    'password': shard.db_password,
-                    'disabled': shard.disabled
-                });
-                shardmodel.save(function (err) {
+                shard.save(function (err) {
                     if (err) {
                         logger.log('error', "Error: " + err);
                     }
@@ -61,7 +53,6 @@ var customerBackfill = function () {
                 }
             });
             _.each(results['allcustomers'], function (customer) {
-                debugger;
                 customer.save(function (err) {
                     if (err) {
                         logger.log('error', "Error: " + err);
@@ -88,22 +79,21 @@ var getShards = function (callback) {
             else {
                 var shards = [];
                 for (var row = 0; row < result.rows.length; row++) {
-                    var shard = {
+                    var shardmodel = new shard_model.ShardModel({
                         id: result.rows[row].id,
-                        short_name: result.rows[row].short_name,
-                        db_jdbc_url: result.rows[row].db_jdbc_url,
-                        db_user: result.rows[row].db_user,
-                        db_password: result.rows[row].db_password,
+                        name: result.rows[row].short_name,
+                        jdbcUrl: result.rows[row].db_jdbc_url,
+                        user: result.rows[row].db_user,
+                        password: result.rows[row].db_password,
                         disabled: result.rows[row].disabled
-                    }
-                    shards.push(shard);
+                    });
+                    shards.push(shardmodel);
                 }
                 callback(err, shards);
             }
         });
     });
 };
-
 var getCustomers = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
