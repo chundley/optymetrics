@@ -4,8 +4,4 @@ Mongo:
   database: optymetrics
 
 CoreDb:
-  dbHost: localhost
-  dbPort: 5432
-  database: lt_optifydb1
-  username: postgres
-  password: optify
+  connectionString: postgres://postgres:optify@localhost:5432/lt_optifydb1

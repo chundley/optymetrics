@@ -6,12 +6,11 @@ var async = require('async'),
     mongoose = require('mongoose'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
+    coredb_connection = require('../util/coredb_connection.js'),
     customer_model = require('./model/customer_model.js'),
     shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
     
-var db_conn_str = 'postgres://' + coredb_config.username + ':' + coredb_config.password + '@' + coredb_config.dbHost + ':' + coredb_config.dbPort + '/' + coredb_config.database;
-
 var customerBackfill = function () {
     async.series({
         allshards: function (callback) {
@@ -54,7 +53,7 @@ var customerBackfill = function () {
 };
 
 var getShards = function (callback) {
-    pg.connect(db_conn_str, function (err, client) {
+    pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
             logger.log('error', err);
         }
@@ -82,31 +81,6 @@ var getShards = function (callback) {
     });
 };
 
-var getCustomers = function (callback) {
-    pg.connect(db_conn_str, function (err, client) {
-        if (err) {
-            logger.log('error', err);
-        }
-
-        client.query(QUERY_SHARDS, function (err, result) {
-            if (err) {
-                logger.log('error', 'Error: ' + err);
-            }
-            else {
-                var shards = [];
-                for (var row = 0; row < result.rows.length; row++) {
-                    var shard = {
-                        id: result.rows[row].id,
-                        short_name: result.rows[row].short_name
-                    }
-                    shards.push(shard);
-                }
-                callback(err, shards);
-            }
-        });
-    });
-
-};
 // public API
 exports.customerBackfill = customerBackfill;
 
