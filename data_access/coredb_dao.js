@@ -13,199 +13,123 @@ var async = require('async'),
 var customerBackfill = function () {
     async.series([
         function (callback) {
-            etlBaselineData();
-            callback(null);
+            etlBaselineData(function (err) {
+                if (err) {
+                    logger.log('error', 'etlBaselineData: ' + err);
+                    callback(err);
+                }
+                callback();
+            });
         },
         function (callback) {
-            updateStats();
-            callback(null);
+            updateStats(function (err) {
+                if (err) {
+                    logger.log('error', 'updateStats: ' + err);
+                    callback(err);
+                }
+                callback();
+            });
         }
     ],
     function (err) {
-
     }
     )
 };
 
-// pull baseline data, populate Mongo collections
 var etlBaselineData = function (callback) {
-    async.parallel({
-        allshards: function (callback) {
-            getShards(function (err, shards) {
-                (err) ? callback(err) : callback(err, shards);
-            });
-        },
-        allcustomers: function (callback) {
-            getCustomers(function (err, customers) {
-                (err) ? callback(err) : callback(err, customers);
-            });
-        }
-    },
-    function (err, results) {
-        if (err) {
-            logger.log('error', 'Customer backfill failed: ' + err);
-        }
-        else {
-            // truncate then save shards
-            mongoose.connection.collections['shards'].drop(function (err) {
+    // get shard data from core, clear mongodb collection, save
+    getShards(function (err, shards) {
+        mongoose.connection.collections['shards'].drop(function (err) {
+            if (err) {
+                logger.log('error', 'Could not drop shards collection');
+            }
+        });
+
+        async.forEach(shards, function (shard) {
+            shard.save(function (err) {
                 if (err) {
-                    logger.log('error', 'Could not drop shards collection');
+                    logger.log('error', "Error: " + err);
+                }
+                else {
+                    logger.log('info', 'Shard saved: ' + shard.name);
                 }
             });
-            _.each(results['allshards'], function (shard) {
-                shard.save(function (err) {
-                    if (err) {
-                        logger.log('error', "Error: " + err);
-                    }
-                    else {
-                        logger.log('info', 'Shard saved: ' + shard.name);
-                    }
-                });
-            }); // end _.each(results[allshards]...)
+        });
+    });
 
-            // truncate then save customers
-            mongoose.connection.collections['customers'].drop(function (err) {
+    // get customer data from coredb, clear mongodb collection, save
+    getCustomers(function (err, customers) {
+        mongoose.connection.collections['customers'].drop(function (err) {
+            if (err) {
+                logger.log('error', 'Could not drop customers collection');
+            }
+        });
+
+        async.forEach(customers, function (customer) {
+            customer.save(function (err) {
                 if (err) {
-                    logger.log('error', 'Could not drop customers collection');
+                    logger.log('error', "Error: " + err);
+                }
+                else {
+                    logger.log('info', 'Customer saved: ' + customer.name);
                 }
             });
+        });
+    });
 
-            _.each(results['allcustomers'], function (customer) {
-                customer.save(function (err) {
-                    if (err) {
-                        logger.log('error', "Error: " + err);
-                    }
-                    else {
-                        logger.log('info', 'Customer saved: ' + customer.name);
-                    }
-                });                
-            });
-        } // end else
-    }); // end async.parallel
+    callback();
 };
 
 var updateStats = function (callback) {
-    shard_model.ShardModel.find({ id: 2 }, function (err, sh) {
-        logger.log('info', sh.jdbcUrl);
-    });
-
-    customer_model.CustomerModel.find({ id: 2397 }, function (err, c) {
-        logger.log('info', 'SPECIAL C: ' + c.siteDomain);
-    });
-
     customer_model.CustomerModel.find({}, function (err, docs) {
-        _.each(docs, function (customer) {
-            logger.log('info', 'found customer: ' + customer.name);
-            _.each(customer.organizations, function (organization) {
-                logger.log('info', 'found site: ' + organization.siteDomain);
-
+        async.forEach(docs, function (customer) {
+            async.forEach(customer.organizations, function (organization) {
                 // for each organization, get correct shard and update stats
-                shard_model.ShardModel.find({ 'id': organization.shardConfigurationId }, function (err, shard) {
+                shard_model.ShardModel.findOne({ id: organization.shardConfigurationId }, function (err, shard) {
                     if (err) {
                         logger.log('error', err);
                     }
-                    logger.log('info', 'found shard: ' + shard.jdbcUrl);
+                    // from here, update stats for the org, customer, and shard
+                    pg.connect(shard.jdbcUrl, function (err, client) {
+                        if (err) {
+                            logger.log('error', err);
+                        }
+
+                        client.query(QUERY_VISITORS, [organization.id], function (err, result) {
+                            if (err) {
+                                logger.log('error', 'Error: ' + err);
+                            }
+                            else {
+                                if (result.rows.length > 0) {
+                                    customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
+                                        for (var i = 0; i < doc.organizations.length; i++) {
+
+                                            if (doc.organizations[i].id = organization.id) {
+                                                doc.organizations[i].visitors = result.rows[0].visitors;
+                                                doc.organizations[i].visits = result.rows[0].visits;
+                                                doc.organizations[i].pageviews = result.rows[0].pageviews;
+                                            }
+
+                                        }
+                                        doc.save(function (err) {
+                                            if (err) {
+                                                logger.log('error', 'Save failed: ' + err);
+                                            }
+                                            else {
+                                                logger.log('warn', 'Stats updated for site: ' + organization.siteDomain);
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        });
+                    });
                 });
             });
         });
     });
+    callback();
 }
-
-var customerBackfill_old = function () {
-    async.series({
-        allshards: function (callback) {
-            getShards(function (err, shards) {
-                (err) ? callback(err) : callback(err, shards);
-            });
-        },
-        allcustomers: function (callback) {
-            getCustomers(function (err, customers) {
-                (err) ? callback(err) : callback(err, customers);
-            });
-        }
-    },
-    function (err, results) {
-        if (err) {
-            logger.log('error', 'Customer backfill failed: ' + err);
-        }
-        else {
-            // save shards
-            mongoose.connection.collections['shards'].drop(function (err) {
-                if (err) {
-                    logger.log('error', 'Could not drop shards collection');
-                }
-            });
-
-            _.each(results['allshards'], function (shard) {
-                shard.save(function (err) {
-                    if (err) {
-                        logger.log('error', "Error: " + err);
-                    }
-                    else {
-                        logger.log('info', 'Shard saved: ' + shard.short_name);
-                    }
-                });
-            });
-
-            // save customers
-            mongoose.connection.collections['customers'].drop(function (err) {
-                if (err) {
-                    logger.log('error', 'Could not drop customers collection');
-                }
-            });
-
-
-            _.each(results['allcustomers'], function (customer) {
-                _.each(customer.organizations, function (organization) {
-                    logger.log('info', 'cid1: ' + organization.shardConfigurationId);
-                    //shard_model.ShardModel.find({ id: organization.shardConfigurationId }, function (err, sh) {
-                    shard_model.ShardModel.findOne(function (err, sh) {
-                        if (err) {
-                            logger.log('error', err);
-                        }
-                        logger.log('info', 'sh: ' + sh.jdbcUrl);
-                        pg.connect(sh.jdbcUrl, function (err, client) {
-                            if (err) {
-                                logger.log('error', err);
-                            }
-
-                            client.query(QUERY_VISITORS, [organization.id], function (err, result) {
-                                if (err) {
-                                    logger.log('error', 'Error: ' + err);
-                                }
-                                else {
-
-                                    if (result.rows.length > 0) {
-                                        logger.log('info', result);
-                                        organization.visitors = result.rows[0].visitors;
-                                        organization.visits = result.rows[0].visits;
-                                        organization.pageviews = result.rows[0].pageviews;
-                                        logger.log('info', 'stats updated');
-                                    }
-                                    debugger;
-                                }
-                            });
-                        });
-
-                    });
-
-                    //logger.log('info', shardmodel.jdbcUrl);
-                    // TODO:  this won't work in production - the connection string is wrong
-
-
-                });
-                customer.save(function (err) {
-                    if (err) {
-                        logger.log('error', "Error: " + err);
-                    }
-                    else {
-                        logger.log('info', 'Customer saved: ' + customer.name);
-                    }
-                });
-            });
-        }
-    })
-};
 
 var getShards = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
@@ -235,6 +159,7 @@ var getShards = function (callback) {
         });
     });
 };
+
 var getCustomers = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
@@ -280,6 +205,7 @@ var getCustomers = function (callback) {
                 }
                 // push last one
                 customers.push(customermodel);
+                logger.log('info', customers); // TODO!!!! too many customers
                 callback(err, customers);
             }
         });
@@ -318,9 +244,9 @@ var QUERY_CUSTOMERS =   "select " +
                         "inner join organization o on c.id = o.customer_id " +
                         "where sku.short_name not like '%dormant' " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
-                        "and o.id = 2972 " +
+                        //"and o.id = 2972 " +
                         "and c.name != 'Hanegev' " +
-                        //"and c.name = 'Optify' " +
+                        "and c.name = 'Optify' " +
                         "order by c.name, o.name";
 
 var QUERY_ORGS =    "select " +
