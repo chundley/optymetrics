@@ -66,13 +66,13 @@ app.get('/dev/velocity/csv', function(req, res, next) {
             return;
         }
 
-        var source = [ [ "Date", "Velocity" ] ];
+        var source = [ [ "WeekOf", "Velocity" ] ];
         debugger;
         _.each(results, function(result) {
             var row = [];
-            row.push(result.day);
+            row.push(result.week_of);
             row.push(result.velocity);
-            source.push(row);i
+            source.push(row);
         });
 
         var result = [];

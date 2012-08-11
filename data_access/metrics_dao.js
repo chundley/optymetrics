@@ -3,7 +3,8 @@
 var logger = require('../util/logger.js'), 
     mongo_config = require('config').Mongo, 
     mongoose = require('mongoose'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    date_util = require('../util/date_util.js');
 
 // Define our schema
 var Schema = mongoose.Schema,
@@ -88,26 +89,69 @@ var insertList = function(id, name, callback) {
 };
 
 var getDeploymentVelocity = function(callback) {
-    var group = {
-        keyf: function(doc) {
-            return { 'day': doc.deployedOn };
-        },
-        cond: { deployed: true },
-        initial: { velocity: 0 },
-        reduce: function(doc, out) { 
-            out.velocity += doc.size;
-        },
+    var map = function() {
+        var getWeek = function(d) {
+            /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
+            dowOffset = 1;
+            var newYear = new Date(d.getFullYear(),0,1);
+            var day = newYear.getDay() - dowOffset;
+            day = (day >= 0 ? day : day + 7);
+            var daynum = Math.floor((d.getTime() - newYear.getTime() - (d.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+            var weeknum;
+            if (day < 4) {
+                weeknum = Math.floor((daynum+day-1)/7) + 1;
+                if(weeknum > 52) {
+                    nYear = new Date(d.getFullYear() + 1,0,1);
+                    nday = nYear.getDay() - dowOffset;
+                    nday = nday >= 0 ? nday : nday + 7;
+                    weeknum = nday < 4 ? 1 : 53;
+                }
+            } else {
+                weeknum = Math.floor((daynum+day-1)/7);
+            }
+
+            return weeknum;
+        };
+        
+        emit(getWeek(this.deployedOn) + '-' + this.deployedOn.getFullYear(), this.size);
     };
 
-    StoryModel.collection.group(
-        group.keyf,
-        group.cond,
-        group.initial,
-        group.reduce,
-        null,
-        true,
-        function(err, results) {
-            callback(err, _.sortBy(results, function(val) { return val.day; }));
+    var reduce = function(key, values){
+        var by_week = {};  
+        by_week.weeknum_year = key;
+        by_week.velocity = 0;
+        values.forEach(function(size){
+            by_week.velocity += size;
+        });
+        return by_week;
+    };
+
+    var command = {
+        mapreduce: 'stories',
+        query: { deployed: true },
+        map:  map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function(err, results) {
+            if(results.numberReturned > 0) {
+                callback(
+                    err, 
+                    _.map(results.documents[0].results, 
+                          function(result, key) {
+                              var weeknum, year;
+                              var split_key = result._id.split('-');
+                              weeknum = split_key[0];
+                              year = split_key[1];
+                              return {  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), velocity: result.value.velocity }; 
+                          }
+                    )
+                );
+            } else {
+                callback(err, []);
+            }
         }
     );
 };
