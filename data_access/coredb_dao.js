@@ -1,8 +1,9 @@
-﻿// Core postgres database access
+﻿/**
+* Core database access and ETL to create TCO data
+*/
 
 var async = require('async'),
     pg = require('pg'),
-    mongo_config = require('config').Mongo,
     mongoose = require('mongoose'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
@@ -10,76 +11,108 @@ var async = require('async'),
     shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
 
+/**
+* Entry point for a full data backfill. First runs ETL to pull data
+* from the core database into MongoDB, including shard_configuration.
+* Then pulls usage statistics from the shard databases
+*/
 var customerBackfill = function () {
     async.series([
         function (callback) {
-            etlBaselineData(function (err) {
-                if (err) {
-                    logger.log('error', 'etlBaselineData: ' + err);
-                    callback(err);
-                }
-                callback();
+            etlBaselineData(function () {
+                callback(null, 'ETL DONE:  ' + new Date().getTime());
             });
         },
         function (callback) {
-            updateStats(function (err) {
-                if (err) {
-                    logger.log('error', 'updateStats: ' + err);
-                    callback(err);
-                }
-                callback();
+            updateStats(function () {
+                callback(null, 'STATS DONE: ' + new Date().getTime());
             });
         }
     ],
-    function (err) {
-    }
-    )
+    function (err, results) {
+        logger.log('info', results[0]);
+        logger.log('info', results[1]);
+    });
 };
 
+/**
+* Helper function to support async.forEach to save shards with proper
+* callback syntax to notify when all saves are complete
+*/
+var saveShard = function (shard, callback) {
+    shard.save(function (err) {
+        if (err) {
+            logger.log('error', "Error: " + err);
+        }
+        else {
+            logger.log('info', 'Shard saved: ' + shard.name);
+        }
+        callback();
+    });
+}
+
+/**
+* Helper function to support async.forEach to save customers with proper
+* callback syntax to notify when all saves are complete
+*
+* NOTE/TODO: in theory these two helper methods could be the same
+*/
+var saveCustomer = function (customer, callback) {
+    customer.save(function (err) {
+        if (err) {
+            logger.log('error', "Error: " + err);
+        }
+        else {
+            logger.log('info', 'Customer saved: ' + customer.name);
+        }
+        callback();
+    });
+}
+
+/**
+* Gets shard and customer data from core, saves to MongoDB
+*/
 var etlBaselineData = function (callback) {
     // get shard data from core, clear mongodb collection, save
-    getShards(function (err, shards) {
-        mongoose.connection.collections['shards'].drop(function (err) {
-            if (err) {
-                logger.log('error', 'Could not drop shards collection');
-            }
-        });
+    async.parallel([
+        function (callback) {
+            getShards(function (err, shards) {
+                mongoose.connection.collections['shards'].drop(function (err) {
+                    if (err) {
+                        logger.log('error', 'Could not drop shards collection: ' + err);
+                    }
+                });
 
-        async.forEach(shards, function (shard) {
-            shard.save(function (err) {
-                if (err) {
-                    logger.log('error', "Error: " + err);
-                }
-                else {
-                    logger.log('info', 'Shard saved: ' + shard.name);
-                }
+                async.forEach(shards, saveShard, function (err) {
+                    callback(null, 'SHARDS DONE');
+                });
             });
-        });
-    });
+        },
+        function (callback) {
+            // get customer data from coredb, clear mongodb collection, save
+            getCustomers(function (err, customers) {
+                mongoose.connection.collections['customers'].drop(function (err) {
+                    if (err) {
+                        logger.log('error', 'Could not drop customers collection');
+                    }
+                });
 
-    // get customer data from coredb, clear mongodb collection, save
-    getCustomers(function (err, customers) {
-        mongoose.connection.collections['customers'].drop(function (err) {
-            if (err) {
-                logger.log('error', 'Could not drop customers collection');
-            }
-        });
-
-        async.forEach(customers, function (customer) {
-            customer.save(function (err) {
-                if (err) {
-                    logger.log('error', "Error: " + err);
-                }
-                else {
-                    logger.log('info', 'Customer saved: ' + customer.name);
-                }
+                async.forEach(customers, saveCustomer, function (err) {
+                    callback(null, 'CUSTOMERS DONE');
+                });
             });
-        });
-    });
-
-    callback();
+        } ],
+        function (err, results) {
+            logger.log('warn', results[0]);
+            logger.log('warn', results[1]);
+            callback();
+        }
+    );
 };
 
+/**
+* Updates organizations (sites) with visitor, visit, and pageview data
+*/
 var updateStats = function (callback) {
     customer_model.CustomerModel.find({}, function (err, docs) {
         async.forEach(docs, function (customer) {
@@ -102,21 +135,22 @@ var updateStats = function (callback) {
                             else {
                                 if (result.rows.length > 0) {
                                     customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
-                                        for (var i = 0; i < doc.organizations.length; i++) {
 
-                                            if (doc.organizations[i].id = organization.id) {
+                                        for (var i = 0; i < doc.organizations.length; i++) {
+                                            if (doc.organizations[i]._id.equals(organization._id)) {
                                                 doc.organizations[i].visitors = result.rows[0].visitors;
                                                 doc.organizations[i].visits = result.rows[0].visits;
                                                 doc.organizations[i].pageviews = result.rows[0].pageviews;
+                                                logger.log('info', 'Stats found for site: ' + organization.siteDomain);
+                                                break;
                                             }
-
                                         }
                                         doc.save(function (err) {
                                             if (err) {
                                                 logger.log('error', 'Save failed: ' + err);
                                             }
                                             else {
-                                                logger.log('warn', 'Stats updated for site: ' + organization.siteDomain);
+                                                logger.log('info', 'Stats updated for customer: ' + customer.name);
                                             }
                                         });
                                     });
@@ -131,6 +165,9 @@ var updateStats = function (callback) {
     callback();
 }
 
+/**
+* Queries core for shard data, returns array of ShardModel
+*/
 var getShards = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
@@ -160,6 +197,9 @@ var getShards = function (callback) {
     });
 };
 
+/**
+* Queries core for customer data, returns array of CustomerModel
+*/
 var getCustomers = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
@@ -172,7 +212,7 @@ var getCustomers = function (callback) {
             }
             else {
                 var customers = [];
-                var customermodel; // = new customer_model.CustomerModel();
+                var customermodel;
                 var currentCustomerId = 0;
                 for (var row = 0; row < result.rows.length; row++) {
                     if (result.rows[row].id != currentCustomerId) {
@@ -205,17 +245,20 @@ var getCustomers = function (callback) {
                 }
                 // push last one
                 customers.push(customermodel);
-                logger.log('info', customers); // TODO!!!! too many customers
                 callback(err, customers);
             }
         });
     });
 };
 
-// public API
+/**
+* Public API
+*/
 exports.customerBackfill = customerBackfill;
 
-// query "constants"
+/**
+* Query "constants"
+*/
 var QUERY_SHARDS =  "select distinct " +
                         "sc.id, " +
                         "sc.short_name, " +
@@ -244,9 +287,11 @@ var QUERY_CUSTOMERS =   "select " +
                         "inner join organization o on c.id = o.customer_id " +
                         "where sku.short_name not like '%dormant' " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
+                        "and o.disabled = false " +
                         //"and o.id = 2972 " +
                         "and c.name != 'Hanegev' " +
-                        "and c.name = 'Optify' " +
+                        //"and c.id = 1 " +
+                        //"and c.id in(1, 70) " +
                         "order by c.name, o.name";
 
 var QUERY_ORGS =    "select " +

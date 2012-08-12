@@ -17,6 +17,7 @@ var connect = function () {
 
 var disconnect = function () {
     mongoose.disconnect();
+    logger.log('info', 'Disconnected');
 };
 
 exports.connect = connect;

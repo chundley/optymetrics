@@ -19,6 +19,8 @@ var logger = require('./util/logger'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
+
+
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
@@ -98,7 +100,7 @@ logger.log('info', 'Server started. Listening on port 3000');
 var shutdownHook = function() {
     logger.log('info','Shutting down');
     logger.log('info', 'Closing MongoDB connection');
-    mongodb_connection.disconnect();
+    //mongodb_connection.disconnect();
     trelloBackfillJob.stop(); 
     server.close();
 };
