@@ -19,8 +19,6 @@ var logger = require('./util/logger'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
-
-
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
@@ -68,13 +66,13 @@ app.get('/dev/velocity/csv', function(req, res, next) {
             return;
         }
 
-        var source = [ [ "Date", "Velocity" ] ];
+        var source = [ [ "WeekOf", "Velocity" ] ];
         debugger;
         _.each(results, function(result) {
             var row = [];
-            row.push(result.day);
+            row.push(result.week_of);
             row.push(result.velocity);
-            source.push(row);i
+            source.push(row);
         });
 
         var result = [];
