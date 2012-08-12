@@ -7,6 +7,7 @@ var async = require('async'),
     mongoose = require('mongoose'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
+    array_util = require('../util/array_util.js'),
     customer_model = require('./model/customer_model.js'),
     shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
@@ -20,12 +21,12 @@ var customerBackfill = function () {
     async.series([
         function (callback) {
             etlBaselineData(function () {
-                callback(null, 'ETL DONE:  ' + new Date().getTime());
+                callback(null, 'Backfill ETL done');
             });
         },
         function (callback) {
             updateStats(function () {
-                callback(null, 'STATS DONE: ' + new Date().getTime());
+                callback(null, 'Backfill Stats done');
             });
         }
     ],
@@ -82,9 +83,8 @@ var etlBaselineData = function (callback) {
                         logger.log('error', 'Could not drop shards collection: ' + err);
                     }
                 });
-
                 async.forEach(shards, saveShard, function (err) {
-                    callback(null, 'SHARDS DONE');
+                    callback(null, 'ETL step 1: Shards done');
                 });
             });
         },
@@ -96,15 +96,14 @@ var etlBaselineData = function (callback) {
                         logger.log('error', 'Could not drop customers collection');
                     }
                 });
-
                 async.forEach(customers, saveCustomer, function (err) {
-                    callback(null, 'CUSTOMERS DONE');
+                    callback(null, 'ETL step 2: Customers done');
                 });
             });
         } ],
         function (err, results) {
-            logger.log('warn', results[0]);
-            logger.log('warn', results[1]);
+            logger.log('info', results[0]);
+            logger.log('info', results[1]);
             callback();
         }
     );
@@ -135,7 +134,6 @@ var updateStats = function (callback) {
                             else {
                                 if (result.rows.length > 0) {
                                     customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
-                                        logger.log('info', 'ORG COUNT: ' + doc.organizations.length + ' : ' + doc.name);
                                         for (var i = 0; i < doc.organizations.length; i++) {
                                             if (doc.organizations[i]._id.equals(organization._id)) {
                                                 doc.organizations[i].visitors = result.rows[0].visitors;
@@ -197,10 +195,9 @@ var getShards = function (callback) {
     });
 };
 
+
 /**
 * Queries core for customer data, returns array of CustomerModel
-* BUG: this depends on results being ordered by customer_id - should re-factor
-* to make it more robust
 */
 var getCustomers = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
@@ -213,16 +210,11 @@ var getCustomers = function (callback) {
                 logger.log('error', 'Error: ' + err);
             }
             else {
-                var customers = [];
+                var customers = {};
                 var customermodel;
-                var currentCustomerId = 0;
+                //var currentCustomerId = 0;
                 for (var row = 0; row < result.rows.length; row++) {
-                    if (result.rows[row].id != currentCustomerId) {
-                        if (currentCustomerId > 0) {
-                            // Moved on to the next customer, add this one to the array
-                            customers.push(customermodel);
-                        }
-                        currentCustomerId = result.rows[row].id;
+                    if (!(result.rows[row].id in customers)) {
                         customermodel = new customer_model.CustomerModel({
                             'id': result.rows[row].id,
                             'name': result.rows[row].name,
@@ -231,6 +223,7 @@ var getCustomers = function (callback) {
                             'skuShort': result.rows[row].short_name,
                             'organizations': []
                         });
+                        customers[result.rows[row].id] = customermodel;
                     }
 
                     organizationmodel = new customer_model.OrganizationModel({
@@ -244,11 +237,12 @@ var getCustomers = function (callback) {
                         'visits': 0,
                         'pageviews': 0
                     });
-                    customermodel.organizations.push(organizationmodel);
+                    customers[result.rows[row].id].organizations.push(organizationmodel);
                 }
                 // push last one on to the array or it'll be left out
-                customers.push(customermodel);
-                callback(err, customers);
+                //customers.push(customermodel);
+                debugger;
+                callback(err, array_util.hashToArray(customers));
             }
         });
     });
@@ -291,7 +285,6 @@ var QUERY_CUSTOMERS =   "select " +
                         "where sku.short_name not like '%dormant' " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
                         "and o.disabled = false " +
-                        //"and o.id = 2972 " +
                         "and c.name != 'Hanegev' " +
                         //"and c.id = 1 " +
                         //"and c.id in(1, 70) " +
