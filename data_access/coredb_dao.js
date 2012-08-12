@@ -135,7 +135,7 @@ var updateStats = function (callback) {
                             else {
                                 if (result.rows.length > 0) {
                                     customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
-
+                                        logger.log('info', 'ORG COUNT: ' + doc.organizations.length + ' : ' + doc.name);
                                         for (var i = 0; i < doc.organizations.length; i++) {
                                             if (doc.organizations[i]._id.equals(organization._id)) {
                                                 doc.organizations[i].visitors = result.rows[0].visitors;
@@ -199,6 +199,8 @@ var getShards = function (callback) {
 
 /**
 * Queries core for customer data, returns array of CustomerModel
+* BUG: this depends on results being ordered by customer_id - should re-factor
+* to make it more robust
 */
 var getCustomers = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
@@ -217,6 +219,7 @@ var getCustomers = function (callback) {
                 for (var row = 0; row < result.rows.length; row++) {
                     if (result.rows[row].id != currentCustomerId) {
                         if (currentCustomerId > 0) {
+                            // Moved on to the next customer, add this one to the array
                             customers.push(customermodel);
                         }
                         currentCustomerId = result.rows[row].id;
@@ -243,7 +246,7 @@ var getCustomers = function (callback) {
                     });
                     customermodel.organizations.push(organizationmodel);
                 }
-                // push last one
+                // push last one on to the array or it'll be left out
                 customers.push(customermodel);
                 callback(err, customers);
             }
@@ -292,7 +295,7 @@ var QUERY_CUSTOMERS =   "select " +
                         "and c.name != 'Hanegev' " +
                         //"and c.id = 1 " +
                         //"and c.id in(1, 70) " +
-                        "order by c.name, o.name";
+                        "order by c.id, o.id";
 
 var QUERY_ORGS =    "select " +
                         "id, " +
