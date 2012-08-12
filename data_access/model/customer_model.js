@@ -25,6 +25,9 @@ var CustomerSchema = new Schema({
     createdAt: Date,
     sku: String,
     skuShort: String,
+    visitors: Number,
+    visits: Number,
+    pageviews: Number,
     organizations: [OrganizationSchema]
 });
 

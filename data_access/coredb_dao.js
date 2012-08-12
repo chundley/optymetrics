@@ -139,6 +139,12 @@ var updateStats = function (callback) {
                                                 doc.organizations[i].visitors = result.rows[0].visitors;
                                                 doc.organizations[i].visits = result.rows[0].visits;
                                                 doc.organizations[i].pageviews = result.rows[0].pageviews;
+
+                                                // update customer stats as well
+                                                doc.visitors += result.rows[0].visitors;
+                                                doc.visits += result.rows[0].visits;
+                                                doc.pageviews += result.rows[0].pageviews;
+
                                                 logger.log('info', 'Stats found for site: ' + organization.siteDomain);
                                                 break;
                                             }
@@ -221,6 +227,9 @@ var getCustomers = function (callback) {
                             'createdAt': result.rows[row].created_at,
                             'sku': result.rows[row].display_name,
                             'skuShort': result.rows[row].short_name,
+                            'visitors': 0,
+                            'visits': 0,
+                            'pageviews' : 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;
