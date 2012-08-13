@@ -2,7 +2,7 @@ var opty = opty || {};
 
 opty.VelocityChart = Backbone.View.extend({
     id: 'velocity-chart',
-
+    className: 'span6',
     velocity_chart_options: {
         chart: {
             renderTo: 'velocity-chart',

@@ -3,36 +3,62 @@ var opty = opty || {} ;
 opty.OptyMetricsRouter = Backbone.Router.extend({ 
     routes: {
         '': 'defaultRoute',
-        'engineering': 'engineeringRoute'
+        'engineering': 'engineeringRoute',
+        'engineering/:subpage': 'engineeringRoute',
+        'marketing': 'marketingRoute',
+        'marketing/:subpage': 'marketingRoute',
+        'product': 'productRoute',
+        'product/:subpage': 'productRoute',
+        'sales': 'salesRoute',
+        'sales/:subpage': 'salesRoute'
     },
 
     initialize: function(options) {
         var me = this;
 
-        _.bindAll(this, 'defaultRoute', 'engineeringRoute', 'updateNavTabState');
+        _.bindAll(this, 
+                  'defaultRoute', 
+                  'engineeringRoute',
+                  'marketingRoute',
+                  'productRoute',
+                  'salesRoute',
+                  'updateNavState');
     },
 
     defaultRoute: function() {
-        this.updateNavTabState('home');
-
+        this.updateNavState();
         $('div.tab-content').empty();
     },
 
-    engineeringRoute: function() {
-        this.updateNavTabState('engineering');
+    engineeringRoute: function(subpage) {
+        this.updateNavState('engineering');
         
-        var velocity_collection = new opty.VelocityCollection();
-        var velocity_chart = new opty.VelocityChart({ collection: velocity_collection });
-       
-        $('div.tab-content').empty()
-            .append(velocity_chart.$el);
+        var engineering_view = new opty.EngineeringView({ selected: subpage });
+        var engineering_subnav = new opty.EngineeringSubNav({ selected: subpage });
 
-        velocity_collection.fetch();
+        $('div.tab-content').empty()
+            .append(engineering_subnav.render())
+            .append(engineering_view.render());
     },
 
-    updateNavTabState: function(tab_name) {
-        $('ul.app-tabs li').removeClass('active');
-        $('ul.app-tabs li.' + tab_name).addClass('active');
+    marketingRoute: function() {
+        this.updateNavState('marketing');
+        $('div.tab-content').empty();
+    },
+
+    productRoute: function() {
+        this.updateNavState('product');
+        $('div.tab-content').empty();
+    },
+
+    salesRoute: function() {
+        this.updateNavState('sales');
+        $('div.tab-content').empty();
+    },
+
+    updateNavState: function(tab_name) {
+        $('ul.nav li').removeClass('active');
+        $('ul.nav li.' + tab_name).addClass('active');
     }
 });
 
