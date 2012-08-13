@@ -22,10 +22,10 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
         this.updateNavTabState('engineering');
         
         var velocity_collection = new opty.VelocityCollection();
-        var velocity_view = new opty.VelocityView({ collection: velocity_collection });
+        var velocity_chart = new opty.VelocityChart({ collection: velocity_collection });
        
         $('div.tab-content').empty()
-            .append(velocity_view.$el);
+            .append(velocity_chart.$el);
 
         velocity_collection.fetch();
     },

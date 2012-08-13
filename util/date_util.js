@@ -46,5 +46,10 @@ function firstWeekday(date) {
     return date;
 }
 
+function convertDateToUTC(date) { 
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); 
+}
+
 exports.firstDayOfWeek = firstDayOfWeek;
 exports.firstDayOfYear = firstDayOfYear;
+exports.convertDateToUTC = convertDateToUTC;
