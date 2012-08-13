@@ -52,4 +52,4 @@ function convertDateToUTC(date) {
 
 exports.firstDayOfWeek = firstDayOfWeek;
 exports.firstDayOfYear = firstDayOfYear;
-export.convertDateToUTC = convertDateToUTC;
+exports.convertDateToUTC = convertDateToUTC;
