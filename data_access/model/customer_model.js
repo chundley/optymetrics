@@ -16,7 +16,8 @@ var OrganizationSchema = new Schema({
     shardConfigurationId: Number,
     visitors: Number,
     visits: Number,
-    pageviews: Number
+    pageviews: Number,
+    keywords: Number
 });
 
 var CustomerSchema = new Schema({
@@ -28,6 +29,7 @@ var CustomerSchema = new Schema({
     visitors: Number,
     visits: Number,
     pageviews: Number,
+    keywords: Number,
     organizations: [OrganizationSchema]
 });
 

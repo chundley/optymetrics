@@ -64,7 +64,7 @@ var saveCustomer = function (customer, callback) {
             logger.log('error', "Error: " + err);
         }
         else {
-            logger.log('info', 'Customer saved: ' + customer.name);
+           // logger.log('info', 'Customer saved: ' + customer.name);
         }
         callback();
     });
@@ -84,7 +84,7 @@ var etlBaselineData = function (callback) {
                     }
                 });
                 async.forEach(shards, saveShard, function (err) {
-                    callback(null, 'ETL step 1: Shards done');
+                    callback(null, 'ETL step: Shards done');
                 });
             });
         },
@@ -97,7 +97,7 @@ var etlBaselineData = function (callback) {
                     }
                 });
                 async.forEach(customers, saveCustomer, function (err) {
-                    callback(null, 'ETL step 2: Customers done');
+                    callback(null, 'ETL step: Customers done');
                 });
             });
         } ],
@@ -109,64 +109,110 @@ var etlBaselineData = function (callback) {
     );
 };
 
-/**
-* Updates organizations (sites) with visitor, visit, and pageview data
-*/
-var updateStats = function (callback) {
-    customer_model.CustomerModel.find({}, function (err, docs) {
-        async.forEach(docs, function (customer) {
-            async.forEach(customer.organizations, function (organization) {
-                // for each organization, get correct shard and update stats
-                shard_model.ShardModel.findOne({ id: organization.shardConfigurationId }, function (err, shard) {
-                    if (err) {
-                        logger.log('error', err);
-                    }
-                    // from here, update stats for the org, customer, and shard
-                    pg.connect(shard.jdbcUrl, function (err, client) {
-                        if (err) {
-                            logger.log('error', err);
-                        }
-
-                        client.query(QUERY_VISITORS, [organization.id], function (err, result) {
-                            if (err) {
-                                logger.log('error', 'Error: ' + err);
+var updateCustomerKeywordCounts = function (customer, callback) {
+    customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
+        pg.connect(coredb_config.connectionString, function (err, client) {
+            if (err) {
+                logger.log('error', err);
+            }
+            client.query(QUERY_KEYWORDS, [customer.id], function (err, result) {
+                if (err) {
+                    logger.log('error', 'Error: ' + err);
+                }
+                if (result.rows.length > 0) {
+                    // fetch a row at a time, fire callback when all orgs have been updated for the customer
+                    async.forEach(result.rows, function (row, callback) {
+                        for (var i = 0; i < customer.organizations.length; i++) {
+                            if (customer.organizations[i].id == row.organization_id) {
+                                customer.organizations[i].keywords = row.keywords;
                             }
-                            else {
-                                if (result.rows.length > 0) {
-                                    customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
-                                        for (var i = 0; i < doc.organizations.length; i++) {
-                                            if (doc.organizations[i]._id.equals(organization._id)) {
-                                                doc.organizations[i].visitors = result.rows[0].visitors;
-                                                doc.organizations[i].visits = result.rows[0].visits;
-                                                doc.organizations[i].pageviews = result.rows[0].pageviews;
+                        }
+                        callback();
+                    },
+                    function () {
+                        // all rows have been updated with keyword counts
+                        async.forEach(customer.organizations, function (organization, callback) {
+                            // update customer with cumulative data, fire callback when all done to trigger a save
+                            customer.keywords += organization.keywords;
+                            callback();
+                        },
+                        function () {
+                            saveCustomer(customer, function () {
+                                // and finally the customer can be saved with all data updated
+                                logger.log('info', 'Keyword counts for ' + customer.name + ' updated');
+                                callback();
+                            });
 
-                                                // update customer stats as well
-                                                doc.visitors += result.rows[0].visitors;
-                                                doc.visits += result.rows[0].visits;
-                                                doc.pageviews += result.rows[0].pageviews;
+                        });
 
-                                                logger.log('info', 'Stats found for site: ' + organization.siteDomain);
-                                                break;
-                                            }
-                                        }
-                                        doc.save(function (err) {
-                                            if (err) {
-                                                logger.log('error', 'Save failed: ' + err);
-                                            }
-                                            else {
-                                                logger.log('info', 'Stats updated for customer: ' + customer.name);
-                                            }
-                                        });
-                                    });
+                    });
+                    //callback();
+                }
+            }); // end query
+        }); // end pg.connect
+    }); // end CustomerModel.findOne
+}
+
+var updateCustomerTrafficCounts = function (customer, callback) {
+    customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
+        async.forEach(doc.organizations, function (organization, callback) {
+            shard_model.ShardModel.findOne({ id: organization.shardConfigurationId }, function (err, shard) {
+                pg.connect(shard.jdbcUrl, function (err, client) {
+                    client.query(QUERY_VISITORS, [organization.id], function (err, result) {
+                        if (err) {
+                            logger.log('error', 'Error: ' + err);
+                        }
+                        else {
+                            if (result.rows.length > 0) {
+                                for (var i = 0; i < doc.organizations.length; i++) {
+                                    if (doc.organizations[i].id == result.rows[0].organization_id) {
+                                        doc.organizations[i].visitors = result.rows[0].visitors;
+                                        doc.organizations[i].visits = result.rows[0].visits;
+                                        doc.organizations[i].pageviews = result.rows[0].pageviews;
+                                    }
                                 }
                             }
-                        });
-                    });
+                        } // end else
+                        callback();
+                    }); // end client.query
+                }); // end pg.connect
+            }); // end ShardModel.findOne
+        },
+        function () {
+            // all sites should have stats updated, update totals for customer before saving
+            async.forEach(doc.organizations, function (organization, callback) {
+                doc.visitors += organization.visitors;
+                doc.visits += organization.visits;
+                doc.pageviews += organization.pageviews;
+                callback();
+            },
+            function () {
+                saveCustomer(doc, function () {
+                    logger.log('info', 'Traffic counts for ' + customer.name + ' updated');
+                    callback();
                 });
             });
         });
+    }); // end CustomerModel.findOne
+}
+
+
+/**
+* Updates organizations (sites) with keyword, visitor, visit, and pageview data
+*
+* BUG: Concurrency issue here could have the two update functions hitting the same document
+* simultaneously. A callback on async.X doesn't get fired, not sure why
+*/
+var updateStats = function (callback) {
+    customer_model.CustomerModel.find({}, function (err, docs) {
+        async.forEach(docs, updateCustomerKeywordCounts, function () {
+            logger.log('info', 'All keyword counts updated');
+        });
+
+        async.forEach(docs, updateCustomerTrafficCounts, function () {
+            logger.log('info', 'All traffic counts updated');
+        });
     });
-    callback();
 }
 
 /**
@@ -218,7 +264,6 @@ var getCustomers = function (callback) {
             else {
                 var customers = {};
                 var customermodel;
-                //var currentCustomerId = 0;
                 for (var row = 0; row < result.rows.length; row++) {
                     if (!(result.rows[row].id in customers)) {
                         customermodel = new customer_model.CustomerModel({
@@ -229,7 +274,8 @@ var getCustomers = function (callback) {
                             'skuShort': result.rows[row].short_name,
                             'visitors': 0,
                             'visits': 0,
-                            'pageviews' : 0,
+                            'pageviews': 0,
+                            'keywords': 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;
@@ -244,7 +290,8 @@ var getCustomers = function (callback) {
                         'shardConfigurationId': result.rows[row].shard_configuration_id,
                         'visitors': 0,
                         'visits': 0,
-                        'pageviews': 0
+                        'pageviews': 0,
+                        'keywords': 0
                     });
                     customers[result.rows[row].id].organizations.push(organizationmodel);
                 }
@@ -317,8 +364,8 @@ var QUERY_KEYWORDS =    "select " +
                             "count(key.keyword_id) as \"keywords\" " +
                         "from organization_keyword key " +
                         "inner join organization o on key.organization_id = o.id " +
-                        "where o.disabled = false " +
-                        "group by key.organization_id ";
+                        "where o.customer_id = $1 " +
+                        "group by key.organization_id";
 
 var QUERY_VISITORS =    "select " +
                              "va.organization_id, " +
@@ -327,5 +374,5 @@ var QUERY_VISITORS =    "select " +
                              "sum(va.total_pageviews) as \"pageviews\" " +
                         "from visitor_aggregate va " +
                         "where va.organization_id = $1 " +
-                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '31 DAY' " +
+                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '40 DAY' " + // change back to 31 in prod
                         "group by va.organization_id";
