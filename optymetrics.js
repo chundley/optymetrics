@@ -16,18 +16,13 @@ var logger = require('./util/logger'),
     mongodb_connection = require('./util/mongodb_connection'),
     metrics_dao = require('./data_access/metrics_dao.js'),
     coredb_dao = require('./data_access/coredb_dao.js'),
-    cost_dao = require('./data_access/cost_dao.js'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
-// customer traffic/keywords backfill
 coredb_dao.customerBackfill();
-
-// costs backfill
-cost_dao.costBackfill('costs.csv');
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {

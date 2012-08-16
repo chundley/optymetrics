@@ -6,15 +6,12 @@ opty.VelocityChart = Backbone.View.extend({
     velocity_chart_options: {
         chart: {
             renderTo: 'velocity-chart',
-            zoomType: 'x',
             spacingRight: 20
         },
         title: {
             text: 'Engineering Team Velocity'
         },
-        xAxis: {
-            type: 'datetime'
-        },
+        xAxis: { },
         yAxis: {
             title: {
                 text: 'Story Points'
@@ -38,11 +35,25 @@ opty.VelocityChart = Backbone.View.extend({
                       radius: 5
                   }
                 }
+            },
+
+            area: {
+                stacking: 'normal',
+                lineColor: '#666666',
+                lineWidth: 1,
+                marker: {
+                    lineWidth: 1,
+                    lineColor: '#666666'
+                }
             }
        },
        series: [{
-           type: 'line',
-           name: 'Team Velocity'
+           type: 'area',
+           name: 'Features'
+       },
+       {
+            type: 'area',
+            name: 'Defects'
        }],
        credits: {
            enabled: false
@@ -65,15 +76,17 @@ opty.VelocityChart = Backbone.View.extend({
     render: function() {
         var me = this;
 
-        var data = [];
+        var features = [], defects = [];
         var categories = [];
         me.collection.each(function(model) {
-            categories.push(me.convertDateToUTC(new Date(model.get('week_of'))));
-            data.push(model.get('velocity'));
+            categories.push(Highcharts.dateFormat('Week of %b %e', me.convertDateToUTC(new Date(model.get('week_of')))));
+            features.push(model.get('feature_velocity'));
+            defects.push(model.get('defect_velocity'));
         });
       
         this.velocity_chart_options.xAxis.categories = categories;
-        this.velocity_chart_options.series[0].data = data;
+        this.velocity_chart_options.series[0].data = features;
+        this.velocity_chart_options.series[1].data = defects;
         this.chart = new Highcharts.Chart(this.velocity_chart_options); 
 
         return this.$el;
