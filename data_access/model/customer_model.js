@@ -17,7 +17,12 @@ var OrganizationSchema = new Schema({
     visitors: Number,
     visits: Number,
     pageviews: Number,
-    keywords: Number
+    keywords: Number,
+    percTraffic: Number,
+    percSEO: Number,
+    tcoTraffic: Number,
+    tcoSEO: Number,
+    tcoTotal: Number,
 });
 
 var CustomerSchema = new Schema({
@@ -30,6 +35,11 @@ var CustomerSchema = new Schema({
     visits: Number,
     pageviews: Number,
     keywords: Number,
+    percTraffic: Number,
+    percSEO: Number,
+    tcoTraffic: Number,
+    tcoSEO: Number,
+    tcoTotal: Number,
     organizations: [OrganizationSchema]
 });
 

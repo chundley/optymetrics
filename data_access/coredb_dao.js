@@ -8,7 +8,10 @@ var async = require('async'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
     array_util = require('../util/array_util.js'),
+    number_util = require('../util/number_util.js'),
     customer_model = require('./model/customer_model.js'),
+    cost_model = require('./model/cost_model.js'),
+    cost_dao = require('./cost_dao.js'),
     shard_model = require('./model/shard_model.js'),
     coredb_config = require('config').CoreDb;
 
@@ -197,25 +200,107 @@ var updateCustomerTrafficCounts = function (customer, callback) {
     }); // end CustomerModel.findOne
 }
 
+var updateCustomerCOGS = function (callback) {
+    var tcoSEO = 0;
+    var tcoTraffic = 0;
+    var tcoTotal = 0;
+
+    var totalKeywords = 0;
+    var totalTraffic = 0;
+
+    async.series(
+    [
+        function (callback_inner) {
+            cost_model.CostModel.find({}, function (err, docs) {
+                async.forEach(docs, function (doc, callback_inner_inner) {
+                    tcoSEO += (doc.monthlyCost * doc.percSEO);
+                    tcoTraffic += (doc.monthlyCost * doc.percTraffic);
+                    callback_inner_inner();
+                },
+                function () {
+                    callback_inner();
+                });
+            });
+        },
+        function (callback_inner) {
+            customer_model.CustomerModel.find({}, function (err, docs) {
+                async.forEach(docs, function (doc, callback_inner_inner) {
+                    totalKeywords += doc.keywords;
+                    totalTraffic += doc.pageviews;
+                    callback_inner_inner();
+                },
+                function () {
+                    callback_inner();
+                });
+            });
+        },
+        function (callback_inner) {
+            customer_model.CustomerModel.find({}, function (err, docs) {
+                async.forEach(docs, function (doc, callback_inner_inner) {
+                    doc.percTraffic = doc.pageviews / totalTraffic;
+                    doc.percSEO = doc.keywords / totalKeywords;
+                    doc.tcoTraffic = doc.percTraffic * tcoTraffic;
+                    doc.tcoSEO = doc.percSEO * tcoSEO;
+                    doc.tcoTotal = doc.tcoTraffic + doc.tcoSEO;
+                    for (var i = 0; i < doc.organizations.length; i++) {
+                        doc.organizations[i].percTraffic = doc.organizations[i].pageviews / totalTraffic;
+                        doc.organizations[i].percSEO = doc.organizations[i].keywords / totalKeywords;
+                        doc.organizations[i].tcoTraffic = doc.organizations[i].percTraffic * tcoTraffic;
+                        doc.organizations[i].tcoSEO = doc.organizations[i].percSEO * tcoSEO;
+                        doc.organizations[i].tcoTotal = doc.organizations[i].tcoTraffic + doc.organizations[i].tcoSEO;
+                    }
+                    doc.save(function () {
+                        callback_inner_inner();
+                    });
+                },
+                function () {
+                    callback_inner();
+                });
+            });
+        }
+    ],
+    function () {
+        logger.log('info', 'Total Keywords: ' + number_util.numberFormat(totalKeywords));
+        logger.log('info', 'Total Pageviews: ' + number_util.numberFormat(totalTraffic));
+        logger.log('info', 'Total SEO Cost: $' + number_util.numberFormat(tcoSEO, 2));
+        logger.log('info', 'Total Traffic Cost: $' + number_util.numberFormat(tcoTraffic, 2));
+        callback();
+    }
+    );
+}
 
 /**
-* Updates organizations (sites) with keyword, visitor, visit, and pageview data
+* Updates organizations (sites) with COGS data
 */
 var updateStats = function (callback) {
     customer_model.CustomerModel.find({}, function (err, docs) {
-        async.series([
-            function (callback2) {
-                async.forEach(docs, updateCustomerKeywordCounts, function (callback) {
-                    logger.log('info', 'All keyword counts updated');
-                    callback2();
-                });
-            },
-            function (callback2) {
-                async.forEach(docs, updateCustomerTrafficCounts, function () {
-                    logger.log('info', 'All traffic counts updated');
-                    callback2();
-                });
-            } ],
+        async.series(
+            [
+                function (callback_inner) {
+                    async.forEach(docs, updateCustomerKeywordCounts, function (callback) {
+                        logger.log('info', 'All keyword counts updated');
+                        callback_inner();
+                    });
+                },
+                function (callback_inner) {
+                    async.forEach(docs, updateCustomerTrafficCounts, function () {
+                        logger.log('info', 'All traffic counts updated');
+                        callback_inner();
+                    });
+                },
+                function (callback_inner) {
+                    cost_dao.costBackfill('costs.csv', function () {
+                        logger.log('info', 'Cost baseline data updated');
+                        callback_inner();
+                    });
+                },
+                function (callback_inner) {
+                    updateCustomerCOGS(function () {
+                        logger.log('info', 'Customer COGS updated');
+                        callback_inner();
+                    });
+                }
+            ],
             function () {
                 logger.log('info', 'TCO data refresh complete');
             }
@@ -284,6 +369,11 @@ var getCustomers = function (callback) {
                             'visits': 0,
                             'pageviews': 0,
                             'keywords': 0,
+                            'percTraffic': 0,
+                            'percSEO': 0,
+                            'tcoTraffic': 0,
+                            'tcoSEO': 0,
+                            'tcoTotal': 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;
@@ -299,7 +389,12 @@ var getCustomers = function (callback) {
                         'visitors': 0,
                         'visits': 0,
                         'pageviews': 0,
-                        'keywords': 0
+                        'keywords': 0,
+                        'percTraffic': 0,
+                        'percSEO': 0,
+                        'tcoTraffic': 0,
+                        'tcoSEO': 0,
+                        'tcoTotal': 0
                     });
                     customers[result.rows[row].id].organizations.push(organizationmodel);
                 }

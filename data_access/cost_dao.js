@@ -30,7 +30,7 @@ var saveCost = function (cost, callback) {
     });
 }
 
-var costBackfill = function (fileName) {
+var costBackfill = function (fileName, callback) {
     var costs = [];
     var now = new Date();
     csv().fromPath(fileName).on("data", function (data, index) {
@@ -57,6 +57,7 @@ var costBackfill = function (fileName) {
 
         async.forEach(costs, saveCost, function (err) {
             logger.log('info', 'Finished importing COGS: ' + count + ' items imported');
+            callback();
         });
     }).on('error', function (err) {
         logger.log('error', 'Error: ' + err);
