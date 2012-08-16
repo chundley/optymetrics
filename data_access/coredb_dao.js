@@ -161,7 +161,7 @@ var updateCustomerTrafficCounts = function (customer, callback) {
     customer_model.CustomerModel.findOne({ id: customer.id }, function (err, doc) {
         async.forEach(doc.organizations, function (organization, callback) {
             shard_model.ShardModel.findOne({ id: organization.shardConfigurationId }, function (err, shard) {
-                pg.connect(shard.jdbcUrl, function (err, client) {
+                pg.connect(shard.connectionString, function (err, client) {
                     client.query(QUERY_VISITORS, [organization.id], function (err, result) {
                         if (err) {
                             logger.log('error', 'Error: ' + err);
@@ -324,15 +324,17 @@ var getShards = function (callback) {
             else {
                 var shards = [];
                 for (var row = 0; row < result.rows.length; row++) {
-                    var shardmodel = new shard_model.ShardModel({
-                        id: result.rows[row].id,
-                        name: result.rows[row].short_name,
-                        jdbcUrl: result.rows[row].db_jdbc_url,
-                        user: result.rows[row].db_user,
-                        password: result.rows[row].db_password,
-                        disabled: result.rows[row].disabled
+                    formatShardConnectionString(result.rows[row].db_jdbc_url, result.rows[row].db_user, result.rows[row].db_password, function (connectionString) {
+                        var shardmodel = new shard_model.ShardModel({
+                            id: result.rows[row].id,
+                            name: result.rows[row].short_name,
+                            connectionString: connectionString,
+                            user: result.rows[row].db_user,
+                            password: result.rows[row].db_password,
+                            disabled: result.rows[row].disabled
+                        });
+                        shards.push(shardmodel);
                     });
-                    shards.push(shardmodel);
                 }
                 callback(err, shards);
             }
@@ -340,6 +342,18 @@ var getShards = function (callback) {
     });
 };
 
+/**
+* Formats the jdbcUrl string we store for shard connections into a standard
+* postgres connection string
+*
+* Turns this: jdbc:postgresql://localhost:5432/lt_optifydb3?prepareThreshold=1000000000
+* into this:  postgres://user:password@localhost:5432/lt_optifydb3
+*
+* This may be better served in another util library
+*/
+var formatShardConnectionString = function (jdbcUrl, user, password, callback) {
+    callback('postgres://' + user + ':' + password + '@' + jdbcUrl.match(/(\/\/)(.*)(?=\?)/)[2]);
+};
 
 /**
 * Queries core for customer data, returns array of CustomerModel

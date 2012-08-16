@@ -10,7 +10,7 @@ var Schema = mongoose.Schema,
 var ShardSchema = new Schema({
     id: Number,
     name: String,
-    jdbcUrl: String,
+    connectionString: String,
     user: String,
     password: String,
     disabled: Boolean
