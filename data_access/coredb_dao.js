@@ -146,9 +146,10 @@ var updateCustomerKeywordCounts = function (customer, callback) {
                         });
 
                     });
-                    //callback();
+                    
                 }
             }); // end query
+            callback();
         }); // end pg.connect
     }); // end CustomerModel.findOne
 }
@@ -199,19 +200,26 @@ var updateCustomerTrafficCounts = function (customer, callback) {
 
 /**
 * Updates organizations (sites) with keyword, visitor, visit, and pageview data
-*
-* BUG: Concurrency issue here could have the two update functions hitting the same document
-* simultaneously. A callback on async.X doesn't get fired, not sure why
 */
 var updateStats = function (callback) {
     customer_model.CustomerModel.find({}, function (err, docs) {
-        async.forEach(docs, updateCustomerKeywordCounts, function () {
-            logger.log('info', 'All keyword counts updated');
-        });
-
-        async.forEach(docs, updateCustomerTrafficCounts, function () {
-            logger.log('info', 'All traffic counts updated');
-        });
+        async.series([
+            function (callback2) {
+                async.forEach(docs, updateCustomerKeywordCounts, function (callback) {
+                    logger.log('info', 'All keyword counts updated');
+                    callback2();
+                });
+            },
+            function (callback2) {
+                async.forEach(docs, updateCustomerTrafficCounts, function () {
+                    logger.log('info', 'All traffic counts updated');
+                    callback2();
+                });
+            } ],
+            function () {
+                logger.log('info', 'TCO data refresh complete');
+            }
+        );
     });
 }
 
