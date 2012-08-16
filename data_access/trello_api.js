@@ -45,6 +45,15 @@ var getStorySize = function(name) {
     return null;
 };
 
+var getFeatureGroups = function(name) {
+    var featureGroupRegex = /\[(.+)\]$/;
+    var matches = featureGroupRegex.exec(name.trim());
+    if(matches && matches.length == 2) {
+        return matches[1].split(',');
+    }
+    return null;
+};
+
 var getDeploymentDate = function(listName) {
     var deployDateRegex = /Deployed\s(\d{1,2}\/\d{1,2})/gi;
     var matches = deployDateRegex.exec(listName);
@@ -100,6 +109,7 @@ var backfillStories = function(callback) {
                         _id: result.id,
                         name: result.name,
                         size: getStorySize(result.name),
+                        featureGroups: getFeatureGroups(result.name),
                         labels: getLabelModel(result.labels),
                         members: [],
                         listHistory: []
@@ -109,9 +119,10 @@ var backfillStories = function(callback) {
                     story = doc;
                 }
 
-                story.name = result.name,
-                story.size = getStorySize(result.name),
-                story.labels = getLabelModel(result.labels),
+                story.name = result.name;
+                story.size = getStorySize(result.name);
+                story.featureGroups = getFeatureGroups(result.name);
+                story.labels = getLabelModel(result.labels);
 
                 async.series([
                     // Look up and assign members

@@ -4,7 +4,8 @@ var logger = require('../util/logger.js'),
     mongo_config = require('config').Mongo, 
     mongoose = require('mongoose'),
     _ = require('underscore'),
-    date_util = require('../util/date_util.js');
+    date_util = require('../util/date_util.js'),
+    logger = require('../util/logger.js');
 
 // Define our schema
 var Schema = mongoose.Schema,
@@ -37,7 +38,8 @@ var StorySchema = new Schema({
     labels      : [LabelSchema],
     listHistory : [HistorySchema],
     deployed    : Boolean,
-    deployedOn  : Date
+    deployedOn  : Date,
+    featureGroups: [String]
 });
 
 var MemberModel = mongoose.model('Member', MemberSchema);
@@ -112,16 +114,46 @@ var getDeploymentVelocity = function(callback) {
 
             return weeknum;
         };
-        
-        emit(getWeek(this.deployedOn) + '-' + this.deployedOn.getFullYear(), this.size);
+      
+        var isDefect = function(story) {
+            for(var i = 0; i < story.labels.length; i++) {
+                if(story.labels[i].name.toLowerCase().indexOf('defect') != -1) {
+                    return true;
+                }
+            }
+            return false; 
+        };
+
+        var isFeature = function(story) {
+            for(var i = 0; i < story.labels.length; i++) {
+                if(story.labels[i].name.toLowerCase().indexOf('feature') != -1) {
+                    return true;
+                }
+            }
+            return false; 
+        };
+
+        var key = getWeek(this.deployedOn) + '-' + this.deployedOn.getFullYear();
+
+        if(isDefect(this)) {
+            emit(key,  { type: 'defect', size: this.size });
+        } else if(isFeature(this)) {
+            emit(key,  { type: 'feature', size: this.size });
+        }
     };
 
     var reduce = function(key, values){
         var by_week = {};  
-        by_week.weeknum_year = key;
-        by_week.velocity = 0;
-        values.forEach(function(size){
-            by_week.velocity += size;
+        by_week.weeknum_year_type = key;
+        by_week.defect_velocity = 0;
+        by_week.feature_velocity = 0;
+        values.forEach(function(value){
+            if(value.type == 'defect') {
+                by_week.defect_velocity += value.size;
+            } else { 
+                // Unlabeled get tagged as features
+                by_week.feature_velocity += value.size;
+            }
         });
         return by_week;
     };
@@ -136,16 +168,21 @@ var getDeploymentVelocity = function(callback) {
 
     mongoose.connection.db.executeDbCommand(
         command, function(err, results) {
+            if(err) {
+                logger.log('error', err);
+            }
+
             if(results.numberReturned > 0) {
                 callback(
                     err, 
                     _.map(results.documents[0].results, 
                           function(result, key) {
-                              var weeknum, year;
+                              var weeknum, year, type;
                               var split_key = result._id.split('-');
                               weeknum = split_key[0];
                               year = split_key[1];
-                              return {  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), velocity: result.value.velocity }; 
+                              return {  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), defect_velocity: result.value.defect_velocity, 
+                                        feature_velocity: result.value.feature_velocity }; 
                           }
                     )
                 );
