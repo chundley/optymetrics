@@ -18,9 +18,10 @@ var async = require('async'),
 /**
 * Entry point for a full data backfill. First runs ETL to pull data
 * from the core database into MongoDB, including shard_configuration.
-* Then pulls usage statistics from the shard databases
+* Then pulls usage statistics from the shard databases and finally
+* resolves TCO data for all customers and sites
 */
-var customerBackfill = function () {
+var tcoBackfill = function () {
     async.series([
         function (callback) {
             etlBaselineData(function () {

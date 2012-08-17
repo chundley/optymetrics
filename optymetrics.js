@@ -20,10 +20,14 @@ var logger = require('./util/logger'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
-mongodb_connection.connect();
+mongodb_connection.connect();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
-// customer traffic/keywords backfill
-// coredb_dao.customerBackfill();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+// Run the TCO backfill every 8 hours
+var tcoBackfillJob = new cronJob("0 */8 * * *", function () {
+    logger.log('info', 'Running TCO backfill');
+    coredb_dao.tcoBackfill();
+});
+tcoBackfillJob.start();
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {
