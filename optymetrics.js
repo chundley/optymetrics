@@ -23,7 +23,7 @@ var logger = require('./util/logger'),
 mongodb_connection.connect();
 
 // customer traffic/keywords backfill
-coredb_dao.customerBackfill();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+// coredb_dao.customerBackfill();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {

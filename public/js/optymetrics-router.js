@@ -1,39 +1,42 @@
 var opty = opty || {} ;
 
-opty.OptyMetricsRouter = Backbone.Router.extend({ 
+opty.OptyMetricsRouter = Backbone.Router.extend({
     routes: {
         '': 'defaultRoute',
         'engineering': 'engineeringRoute',
         'engineering/:subpage': 'engineeringRoute',
         'marketing': 'marketingRoute',
         'marketing/:subpage': 'marketingRoute',
+        'operations': 'operationsRoute',
+        'operations/:subpage': 'operationsRoute',
         'product': 'productRoute',
         'product/:subpage': 'productRoute',
         'sales': 'salesRoute',
         'sales/:subpage': 'salesRoute'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
         var me = this;
 
-        _.bindAll(this, 
-                  'defaultRoute', 
+        _.bindAll(this,
+                  'defaultRoute',
                   'engineeringRoute',
                   'marketingRoute',
+                  'operationsRoute',
                   'productRoute',
                   'salesRoute',
                   'updateNavState');
     },
 
-    defaultRoute: function() {
+    defaultRoute: function () {
         this.updateNavState();
         $('div.tab-content').empty();
     },
 
-    engineeringRoute: function(subpage) {
+    engineeringRoute: function (subpage) {
         this.updateNavState('engineering');
-        
-        var nav_options = [ 
+
+        var nav_options = [
             {
                 url_fragment: 'sprint-metrics',
                 title: 'Sprint Metrics',
@@ -45,16 +48,16 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
             }
         ];
 
-        if(subpage) {
-            _.each(nav_options, function(option) {
-                option.selected = (option.url_fragment == subpage); 
+        if (subpage) {
+            _.each(nav_options, function (option) {
+                option.selected = (option.url_fragment == subpage);
             });
         }
 
         var engineering_view = new opty.EngineeringView({ selected: subpage });
-        var optymetrics_subnav = new opty.OptyMetricSubNav({ 
-            root_hash: '#engineering', 
-            nav_options: nav_options 
+        var optymetrics_subnav = new opty.OptyMetricSubNav({
+            root_hash: '#engineering',
+            nav_options: nav_options
         });
 
         $('div.tab-content').empty()
@@ -62,22 +65,53 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
             .append(engineering_view.render());
     },
 
-    marketingRoute: function() {
+    marketingRoute: function () {
         this.updateNavState('marketing');
         $('div.tab-content').empty();
     },
 
-    productRoute: function() {
+    operationsRoute: function () {
+        this.updateNavState('operations');
+        var nav_options = [
+            {
+                url_fragment: 'overview-metrics',
+                title: 'Overview',
+                selected: true // default
+            },
+            {
+                url_fragment: 'tco-metrics',
+                title: 'TCO/ROI'
+            }
+        ];
+
+        if (subpage) {
+            _.each(nav_options, function (option) {
+                option.selected = (option.url_fragment == subpage);
+            });
+        }
+
+        var operations_view = new opty.OperationsView({ selected: subpage });
+        var optymetrics_subnav = new opty.OptyMetricSubNav({
+            root_hash: '#operations',
+            nav_options: nav_options
+        });
+
+        $('div.tab-content').empty()
+            .append(optymetrics_subnav.render())
+            .append(operations_view.render());
+    },
+
+    productRoute: function () {
         this.updateNavState('product');
         $('div.tab-content').empty();
     },
 
-    salesRoute: function() {
+    salesRoute: function () {
         this.updateNavState('sales');
         $('div.tab-content').empty();
     },
 
-    updateNavState: function(tab_name) {
+    updateNavState: function (tab_name) {
         $('ul.nav li').removeClass('active');
         $('ul.nav li.' + tab_name).addClass('active');
     }
