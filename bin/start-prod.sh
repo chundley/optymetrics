@@ -1,4 +1,6 @@
 #!/bin/bash
 
+DIR=$(cd $(dirname "$0"); pwd) 
+
 export NODE_ENV=production
-forever start ../optymetrics.js
+forever start $DIR/../optymetrics.js
