@@ -2,3 +2,6 @@ Mongo:
   dbHost: prod-it-102
   dbPort: 27017
   database: optymetrics  
+
+CoreDb:
+  connectionString: postgres://ouser:MadronaMadness@db1:5432/p_optifydb1
