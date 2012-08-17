@@ -215,7 +215,7 @@ var updateCustomerCOGS = function (callback) {
             cost_model.CostModel.find({}, function (err, docs) {
                 async.forEach(docs, function (doc, callback_inner_inner) {
                     tcoSEO += (doc.monthlyCost * doc.percSEO);
-                    tcoTraffic += (doc.monthlyCost * doc.percTraffic);
+                    tcoTraffic += (doc.monthlyCost * doc.percTraffic) * TRAFFIC_CAPACITY;
                     callback_inner_inner();
                 },
                 function () {
@@ -426,6 +426,11 @@ var getCustomers = function (callback) {
 * Public API
 */
 exports.tcoBackfill = tcoBackfill;
+
+/**
+* Fixed amount - assume the system will scale and always have 20% headroom
+*/
+var TRAFFIC_CAPACITY = .8;
 
 /**
 * Query "constants"
