@@ -75,6 +75,7 @@ opty.VelocityChart = Backbone.View.extend({
 
     render: function() {
         var me = this;
+        this.$el.empty();
 
         var features = [], defects = [];
         var categories = [];
