@@ -425,7 +425,7 @@ var getCustomers = function (callback) {
 /**
 * Public API
 */
-exports.customerBackfill = customerBackfill;
+exports.tcoBackfill = tcoBackfill;
 
 /**
 * Query "constants"
