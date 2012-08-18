@@ -24,7 +24,7 @@ opty.VelocityChart = Backbone.View.extend({
             shared: true
         },
         legend: {
-            enabled: false
+            enabled: true 
         },
         plotOptions: {
             marker: {
@@ -37,7 +37,7 @@ opty.VelocityChart = Backbone.View.extend({
                 }
             },
 
-            area: {
+            column: {
                 stacking: 'normal',
                 lineColor: '#666666',
                 lineWidth: 1,
@@ -48,12 +48,16 @@ opty.VelocityChart = Backbone.View.extend({
             }
        },
        series: [{
-           type: 'area',
+           type: 'column',
            name: 'Features'
        },
        {
-            type: 'area',
+            type: 'column',
             name: 'Defects'
+       },
+       {
+            type: 'column',
+            name: 'Engineering Excellence'
        }],
        credits: {
            enabled: false
@@ -77,17 +81,19 @@ opty.VelocityChart = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        var features = [], defects = [];
+        var features = [], defects = [], excellence = [];
         var categories = [];
         me.collection.each(function(model) {
             categories.push(Highcharts.dateFormat('Week of %b %e', me.convertDateToUTC(new Date(model.get('week_of')))));
             features.push(model.get('feature_velocity'));
             defects.push(model.get('defect_velocity'));
+            excellence.push(model.get('excellence_velocity'));
         });
       
         this.velocity_chart_options.xAxis.categories = categories;
         this.velocity_chart_options.series[0].data = features;
         this.velocity_chart_options.series[1].data = defects;
+        this.velocity_chart_options.series[2].data = excellence;
         this.chart = new Highcharts.Chart(this.velocity_chart_options); 
 
         return this.$el;

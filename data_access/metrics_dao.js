@@ -133,11 +133,24 @@ var getDeploymentVelocity = function(callback) {
             return false; 
         };
 
+        var isExcellence = function(story) {
+            for(var i = 0; i < story.labels.length; i++) {
+                if(story.labels[i].name.toLowerCase().indexOf('excellence') != -1) {
+                    return true;
+                }
+            }
+            return false; 
+        };
+
         var key = getWeek(this.deployedOn) + '-' + this.deployedOn.getFullYear();
 
         if(isDefect(this)) {
             emit(key,  { type: 'defect', size: this.size });
         } else if(isFeature(this)) {
+            emit(key,  { type: 'feature', size: this.size });
+        } else if(isExcellence(this)) {
+            emit(key, { type: 'excellence', size: this.size });
+        } else { // Unlabeled stories get treated as features
             emit(key,  { type: 'feature', size: this.size });
         }
     };
@@ -147,12 +160,14 @@ var getDeploymentVelocity = function(callback) {
         by_week.weeknum_year_type = key;
         by_week.defect_velocity = 0;
         by_week.feature_velocity = 0;
+        by_week.excellence_velocity = 0;
         values.forEach(function(value){
             if(value.type == 'defect') {
                 by_week.defect_velocity += value.size;
-            } else { 
-                // Unlabeled get tagged as features
+            } else if(value.type == 'feature') { 
                 by_week.feature_velocity += value.size;
+            } else if (value.type == 'excellence') {
+                by_week.excellence_velocity += value.size;
             }
         });
         return by_week;
@@ -182,7 +197,7 @@ var getDeploymentVelocity = function(callback) {
                               weeknum = split_key[0];
                               year = split_key[1];
                               return {  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), defect_velocity: result.value.defect_velocity, 
-                                        feature_velocity: result.value.feature_velocity }; 
+                                        feature_velocity: result.value.feature_velocity, excellence_velocity: result.value.excellence_velocity, total: result.value.defect_velocity + result.value.feature_velocity + result.value.excellence_velocity }; 
                           }
                     )
                 );

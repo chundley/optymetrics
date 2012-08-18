@@ -38,11 +38,19 @@ opty.EngineeringView = Backbone.View.extend({
                       },
                       {
                           field: 'feature_velocity',
-                          display_name: 'Feature Points'
+                          display_name: 'Feature'
                       },
                       {
                           field: 'defect_velocity',
-                          display_name: 'Defect Points'
+                          display_name: 'Defect'
+                      },
+                      {
+                          field: 'excellence_velocity',
+                          display_name: 'Engineering Excellence'
+                      },
+                      {
+                          field: 'total',
+                          display_name: 'Weekly Total'
                       }
                     ],
                     collection: velocity_collection
