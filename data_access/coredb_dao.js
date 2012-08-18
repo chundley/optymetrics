@@ -18,9 +18,10 @@ var async = require('async'),
 /**
 * Entry point for a full data backfill. First runs ETL to pull data
 * from the core database into MongoDB, including shard_configuration.
-* Then pulls usage statistics from the shard databases
+* Then pulls usage statistics from the shard databases and finally
+* resolves TCO data for all customers and sites
 */
-var customerBackfill = function () {
+var tcoBackfill = function () {
     async.series([
         function (callback) {
             etlBaselineData(function () {
@@ -214,7 +215,7 @@ var updateCustomerCOGS = function (callback) {
             cost_model.CostModel.find({}, function (err, docs) {
                 async.forEach(docs, function (doc, callback_inner_inner) {
                     tcoSEO += (doc.monthlyCost * doc.percSEO);
-                    tcoTraffic += (doc.monthlyCost * doc.percTraffic);
+                    tcoTraffic += (doc.monthlyCost * doc.percTraffic) * TRAFFIC_CAPACITY;
                     callback_inner_inner();
                 },
                 function () {
@@ -424,7 +425,12 @@ var getCustomers = function (callback) {
 /**
 * Public API
 */
-exports.customerBackfill = customerBackfill;
+exports.tcoBackfill = tcoBackfill;
+
+/**
+* Fixed amount - assume the system will scale and always have 20% headroom
+*/
+var TRAFFIC_CAPACITY = .8;
 
 /**
 * Query "constants"

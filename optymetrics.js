@@ -16,14 +16,19 @@ var logger = require('./util/logger'),
     mongodb_connection = require('./util/mongodb_connection'),
     metrics_dao = require('./data_access/metrics_dao.js'),
     coredb_dao = require('./data_access/coredb_dao.js'),
+    tco_dao = require('./data_access/tco_dao.js'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
-// customer traffic/keywords backfill
-// coredb_dao.customerBackfill();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+// Run the TCO backfill every 8 hours
+var tcoBackfillJob = new cronJob("0 */8 * * *", function () {
+    logger.log('info', 'Running TCO backfill');
+    coredb_dao.tcoBackfill();
+});
+tcoBackfillJob.start();
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {
@@ -89,6 +94,20 @@ app.get('/dev/velocity/csv', function(req, res, next) {
                 res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
                 res.send(result.join('\n'));
             });
+    });
+});
+
+// fetch TCO data
+app.get('/ops/tco', function (req, res, next) {
+    tco_dao.getCustomerTCOData(50, function (err, customers) {
+        if (err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(customers);
     });
 });
 
