@@ -118,7 +118,7 @@ logger.log('info', 'Server started. Listening on port 3000');
 var shutdownHook = function() {
     logger.log('info','Shutting down');
     logger.log('info', 'Closing MongoDB connection');
-    //mongodb_connection.disconnect();
+    mongodb_connection.disconnect();
     trelloBackfillJob.stop(); 
     server.close();
 };
