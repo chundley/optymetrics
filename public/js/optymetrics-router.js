@@ -70,18 +70,18 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty();
     },
 
-    operationsRoute: function () {
+    operationsRoute: function (subpage) {
         this.updateNavState('operations');
         var nav_options = [
-            {
-                url_fragment: 'overview-metrics',
-                title: 'Overview',
-                selected: true // default
-            },
-            {
-                url_fragment: 'tco-metrics',
-                title: 'TCO/ROI'
-            }
+        {
+            url_fragment: 'overview-metrics',
+            title: 'Overview',
+            selected: true // default
+        },
+        {
+            url_fragment: 'tco-metrics',
+            title: 'TCO'
+        }
         ];
 
         if (subpage) {
@@ -91,14 +91,16 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
         }
 
         var operations_view = new opty.OperationsView({ selected: subpage });
+
         var optymetrics_subnav = new opty.OptyMetricSubNav({
             root_hash: '#operations',
             nav_options: nav_options
         });
 
         $('div.tab-content').empty()
-            .append(optymetrics_subnav.render())
-            .append(operations_view.render());
+          .append(optymetrics_subnav.render())
+          .append(operations_view.render());
+
     },
 
     productRoute: function () {
