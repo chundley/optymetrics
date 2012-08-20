@@ -1,7 +1,7 @@
 var opty = opty || {};
 
 opty.TableView = Backbone.View.extend({
-    className: 'table table-striped table-bordered',
+    className: 'table table-striped table-bordered table-condensed',
     tagName: 'table',
 
     initialize: function(options) {
