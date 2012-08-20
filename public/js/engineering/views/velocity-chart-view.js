@@ -5,8 +5,7 @@ if(!window.Opty) { window.Opty = {}; }
  */
 Opty.VelocityChart = Backbone.View.extend({
     id: 'velocity-chart',
-    className: 'span6',
-    velocity_chart_options: {
+    velocityChartOptions: {
         chart: {
             renderTo: 'velocity-chart',
             spacingRight: 20
@@ -93,11 +92,11 @@ Opty.VelocityChart = Backbone.View.extend({
             excellence.push(model.get('excellence_velocity'));
         });
       
-        this.velocity_chart_options.xAxis.categories = categories;
-        this.velocity_chart_options.series[0].data = features;
-        this.velocity_chart_options.series[1].data = defects;
-        this.velocity_chart_options.series[2].data = excellence;
-        this.chart = new Highcharts.Chart(this.velocity_chart_options); 
+        this.velocityChartOptions.xAxis.categories = categories;
+        this.velocityChartOptions.series[0].data = features;
+        this.velocityChartOptions.series[1].data = defects;
+        this.velocityChartOptions.series[2].data = excellence;
+        this.chart = new Highcharts.Chart(this.velocityChartOptions); 
 
         return this.$el;
     },

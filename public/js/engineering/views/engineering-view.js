@@ -2,7 +2,6 @@ if(!window.Opty) { window.Opty = {}; }
 
 Opty.EngineeringView = Backbone.View.extend({
     id: 'engineering-view',
-    className: 'row-fluid',
 
     initialize: function(options) {
         var me = this;
@@ -17,12 +16,21 @@ Opty.EngineeringView = Backbone.View.extend({
                 break;
             }
             default: {
-                var velocity_collection = new Opty.VelocityCollection();
+                // Define basic top-level view infrastructure
+                var $velocityRow = $('<div>', { 'class': 'row-fluid' });
+                var $velocityChartColumn = $('<div>', { 'class': 'span6' });
+                var $velocityTableColumn = $('<div>', { 'class': 'span6' });
+                this.$el.append($velocityRow);
+                $velocityRow.append($velocityChartColumn);
+                $velocityRow.append($velocityTableColumn);
+
+                var velocityCollection = new Opty.VelocityCollection();
                 
-                var velocity_chart = new Opty.VelocityChart({ collection: velocity_collection }); 
-                this.$el.append(velocity_chart.$el);
+                // Chart view 
+                var velocityChart = new Opty.VelocityChart({ collection: velocityCollection }); 
+                $velocityChartColumn.append(velocityChart.$el);
                 
-                var velocity_table = new opty.TableView({
+                var velocityTable = new opty.TableView({
                     table_fields: [
                       {
                           field: 'week_of',
@@ -57,12 +65,12 @@ Opty.EngineeringView = Backbone.View.extend({
                           text_align: 'right'
                       }
                     ],
-                    collection: velocity_collection
+                    collection: velocityCollection
                 });
+               
+                $velocityTableColumn.append(velocityTable.$el);
                 
-                this.$el.append($('<div>', { 'class': 'span6' }).append(velocity_table.$el));
-                
-                velocity_collection.fetch();
+                velocityCollection.fetch();
                 break;
             }
         }
