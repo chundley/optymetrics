@@ -16,7 +16,7 @@ opty.OperationsView = Backbone.View.extend({
     render: function () {
         switch (this.options.selected) {
             default:
-                {    
+                {
                     var tco_collection = new opty.TCOCollection();
 
                     var tco_table = new opty.TableView({
@@ -31,7 +31,15 @@ opty.OperationsView = Backbone.View.extend({
                           },
                           {
                               field: 'tcoTotal',
-                              display_name: 'Total TCO'
+                              display_name: 'Total TCO',
+                              text_align: 'right',
+                              formatter: function (data) {
+                                  if (data) {
+                                      return '$ ' + opty.util.formatNumber(data, 2);
+                                  } else {
+                                      return "";
+                                  }
+                              }
                           }
                         ],
                         collection: tco_collection
@@ -40,7 +48,7 @@ opty.OperationsView = Backbone.View.extend({
                     this.$el.append($('<div>', { 'class': 'span9' }).append(tco_table.$el));
 
                     tco_collection.fetch();
-                    
+
                     break;
                 }
             case 'tco-metrics':

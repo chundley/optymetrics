@@ -23,7 +23,7 @@ opty.TableView = Backbone.View.extend({
         var header_template = _.template(
            '<thead><tr> \
            <% _.each(table_fields, function(header) { %> \
-               <th class="<%= header.field %>"><%= header.display_name %></th> \
+               <th class="<%= header.field %>" style="text-align: <%= header.text_align %>;"><%= header.display_name %></th> \
             <% }); %> \
             </tr></thead>');
 
@@ -34,12 +34,11 @@ opty.TableView = Backbone.View.extend({
                 <% data.forEach(function(row) { %> \
                         <tr> \
                         <% _.each(table_fields, function(field) { %> \
-                            <td><%= (field.formatter) ? field.formatter(row.get(field.field)) : row.get(field.field) %></td> \
+                            <td style="text-align: <%= field.text_align %>;"><%= (field.formatter) ? field.formatter(row.get(field.field)) : row.get(field.field) %></td> \
                         <% }); %> \
                         </tr> \
                 <% }); %> \
-            </tbody>'
-        );
+            </tbody>');
        
         this.$el.append(body_template( { table_fields: this.table_fields, data: this.collection }));
 
