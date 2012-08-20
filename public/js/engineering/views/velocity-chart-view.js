@@ -1,6 +1,9 @@
-var opty = opty || {};
+if(!window.Opty) { window.Opty = {}; }
 
-opty.VelocityChart = Backbone.View.extend({
+/**
+ * Velocity chart view
+ */
+Opty.VelocityChart = Backbone.View.extend({
     id: 'velocity-chart',
     className: 'span6',
     velocity_chart_options: {
@@ -103,10 +106,3 @@ opty.VelocityChart = Backbone.View.extend({
         return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); }
     }
 );
-
-opty.VelocityModel = Backbone.Model.extend({});
-
-opty.VelocityCollection = Backbone.Collection.extend({
-    model: opty.VelocityModel, 
-    url: '/dev/velocity'
-});

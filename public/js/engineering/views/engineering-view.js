@@ -1,6 +1,6 @@
-var opty = opty || {};
+if(!window.Opty) { window.Opty = {}; }
 
-opty.EngineeringView = Backbone.View.extend({
+Opty.EngineeringView = Backbone.View.extend({
     id: 'engineering-view',
     className: 'row-fluid',
 
@@ -17,9 +17,9 @@ opty.EngineeringView = Backbone.View.extend({
                 break;
             }
             default: {
-                var velocity_collection = new opty.VelocityCollection();
+                var velocity_collection = new Opty.VelocityCollection();
                 
-                var velocity_chart = new opty.VelocityChart({ collection: velocity_collection }); 
+                var velocity_chart = new Opty.VelocityChart({ collection: velocity_collection }); 
                 this.$el.append(velocity_chart.$el);
                 
                 var velocity_table = new opty.TableView({
@@ -38,19 +38,23 @@ opty.EngineeringView = Backbone.View.extend({
                       },
                       {
                           field: 'feature_velocity',
-                          display_name: 'Feature'
+                          display_name: 'Feature',
+                          text_align: 'right'
                       },
                       {
                           field: 'defect_velocity',
-                          display_name: 'Defect'
+                          display_name: 'Defect',
+                          text_align: 'right'
                       },
                       {
                           field: 'excellence_velocity',
-                          display_name: 'Engineering Excellence'
+                          display_name: 'Engineering Excellence',
+                          text_align: 'right'
                       },
                       {
                           field: 'total',
-                          display_name: 'Weekly Total'
+                          display_name: 'Weekly Total',
+                          text_align: 'right'
                       }
                     ],
                     collection: velocity_collection

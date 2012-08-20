@@ -1,6 +1,6 @@
-var opty = opty || {} ;
+if(!window.Opty) { window.Opty = {}; }
 
-opty.OptyMetricsRouter = Backbone.Router.extend({
+Opty.OptyMetricsRouter = Backbone.Router.extend({
     routes: {
         '': 'defaultRoute',
         'engineering': 'engineeringRoute',
@@ -54,7 +54,7 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
             });
         }
 
-        var engineering_view = new opty.EngineeringView({ selected: subpage });
+        var engineering_view = new Opty.EngineeringView({ selected: subpage });
         var optymetrics_subnav = new opty.OptyMetricSubNav({
             root_hash: '#engineering',
             nav_options: nav_options
@@ -120,6 +120,6 @@ opty.OptyMetricsRouter = Backbone.Router.extend({
 });
 
 $(function() {
-    var router = new opty.OptyMetricsRouter({});
+    var router = new Opty.OptyMetricsRouter({});
     Backbone.history.start();
 });
