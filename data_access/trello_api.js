@@ -10,7 +10,7 @@ var async = require('async'),
 
 var key = 'df90ea5c83fc1d11eba9510bc5006ad6',
     secret = '95a9ca0722ab5804699652e49506fc4bef726af2f83c7c953a17a6abf113c9ff',
-    token = '513272175833f21948cc4987c00750df820f3c8c1ef852f657754aa9457acf4c',
+    token = '0eb6da1fc99fdaec8e66af314d7d902c5acacb3fd5128697bb7ef8f583fd3251',
     kanban_board_id = '4feb247bb42644e7707c305c',
     baseUrl = 'https://trello.com/1/';
 
