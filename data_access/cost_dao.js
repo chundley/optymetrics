@@ -21,10 +21,10 @@ var async = require('async'),
 var saveCost = function (cost, callback) {
     cost.save(function (err) {
         if (err) {
-            logger.log('error', "Error: " + err);
+            logger.error(err);
         }
         else {
-            logger.log('info', 'Cost saved: ' + cost.detail);
+            logger.info('Cost saved: ' + cost.detail);
         }
         callback();
     });
@@ -51,16 +51,16 @@ var costBackfill = function (fileName, callback) {
     }).on('end', function (count) {
         mongoose.connection.collections['costs'].drop(function (err) {
             if (err) {
-                logger.log('error', 'Could not drop costs collection: ' + err);
+                logger.error('Could not drop costs collection: ' + err);
             }
         });
 
         async.forEach(costs, saveCost, function (err) {
-            logger.log('info', 'Finished importing COGS: ' + count + ' items imported');
+            logger.info('Finished importing COGS: ' + count + ' items imported');
             callback();
         });
     }).on('error', function (err) {
-        logger.log('error', 'Error: ' + err);
+        logger.error(err);
     });
 };
 

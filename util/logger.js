@@ -26,3 +26,15 @@ logger.log = function(level, message) {
         stream.end();
     }
 }
+
+logger.info = function(message) {
+    logger.log('info', message);
+}
+
+logger.warn = function(message) {
+    logger.log('warn', message);
+}
+
+logger.error = function (message) {
+    logger.log('error', message);
+}
