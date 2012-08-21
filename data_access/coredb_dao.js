@@ -271,6 +271,59 @@ var updateCustomerCOGS = function (callback) {
 }
 
 /**
+* Helper function for async.forEach on mrr data
+*/
+var saveMRR = function (mrr, callback) {
+    customer_model.CustomerModel.findOne({ id: mrr[0] }, function (err, doc) {
+        if (err) {
+            logger.error(err);
+            callback(err);
+        }
+        else if (doc) {
+            doc.salesforceName = mrr[1];
+            doc.mrr = mrr[2];
+            saveCustomer(doc, function (err) {
+                logger.info('MRR saved for customer: ' + doc.name);
+                callback(null);
+            });
+
+        }
+        else {
+            logger.warn('No Optify customer id found for Salesforce id: ' + mrr[0] + ',  Customer = ' + mrr[1]);
+            callback();
+        }
+    });
+}
+
+/**
+* This is a stupid thing to have to do
+*
+* The MRR csv file contains duplicates and for some reason Mongoose is queuing
+* document saves. This causes the last document to win.  This method de-duplicates
+* MRR data before attempting to save, otherwise the last document in just
+* overwrites the other ones that aren't saved until the end
+*/
+var cleanMRRData = function (mrr, callback) {
+    var newMRR = [];
+    _.each(mrr, function (m) {
+        // convert to a float, they come in from the csv as strings
+        m[2] = parseFloat(m[2]);
+        var found = false;
+        _.each(newMRR, function (nm) {
+            if (m[0] == nm[0]) {
+                found = true;
+                nm[1] = m[1];
+                nm[2] = nm[2] + m[2];
+            }
+        });
+        if (!found) {
+            newMRR.push(m);
+        }
+    });
+    callback(newMRR);
+};
+
+/**
 * Updates MRR for each customer
 *
 * Right now this is done through a csv export once a month but should be
@@ -280,27 +333,17 @@ var updateCustomerCOGS = function (callback) {
 *    {customer_id},{salesforce_name},{mrr}
 */
 var updateCustomerMRR = function (callback) {
+    var mrrData = [];
     csv().fromPath('mrr.csv').on("data", function (data, index) {
-        customer_model.CustomerModel.findOne({ id: data[0] }, function (err, doc) {
-            if (err) {
-                logger.error(err);
-            }
-            else if (doc) {
-                doc.salesforceName = data[1];
-                logger.info(doc.name + ' : ' + data[2] + ' : ' + doc.mrr);
-                doc.mrr = doc.mrr + data[2];
-                logger.info(doc.name + ' : ' + data[2] + ' : ' + doc.mrr);
-                saveCustomer(doc, function (err) {
-                    logger.info('MRR saved for customer: ' + doc.name);
-                });
-            }
-            else {
-                logger.warn('No Optify customer id found for Salesforce id: ' + data[0] + ',  Customer = ' + data[1]);
-            }
-        });
+        mrrData.push(data);
     }).on('end', function (count) {
-        logger.info('MRR found for ' + count + ' customers');
-        callback();
+        cleanMRRData(mrrData, function (newMRRData) {
+            async.forEach(newMRRData, saveMRR, function (err) {
+                logger.info('MRR found for ' + newMRRData.length + ' customers');
+                callback();
+            });
+        });
+
     }).on('error', function (err) {
         logger.error('END ' + err);
     });
@@ -509,8 +552,6 @@ var QUERY_CUSTOMERS =   "select " +
                         "and o.name != 'OPTIFY_SANITY-TEST' " +
                         "and o.disabled = false " +
                         "and c.name != 'Hanegev' " +
-                        //"and c.id = 1 " +
-                        //"and c.id in(1, 70) " +
                         "order by c.id, o.id";
 
 var QUERY_ORGS =    "select " +
@@ -541,5 +582,5 @@ var QUERY_VISITORS =    "select " +
                              "sum(va.total_pageviews) as \"pageviews\" " +
                         "from visitor_aggregate va " +
                         "where va.organization_id = $1 " +
-                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '40 DAY' " + // change back to 31 in prod
+                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '31 DAY' " +
                         "group by va.organization_id";
