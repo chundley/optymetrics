@@ -7,6 +7,7 @@ Internal business metrics dashboard.
     /config                 - Application configuration files
     /data_access            - Methods for accessing external data sources
         /model              - Mongoose model/schema definitions. All files follow the convention <type>-model.js
+        /data_feed          - Local storage for manually integrated .csv data. All files follow <datatype>-data.csv
     /jobs                   - Scheduled background jobs. All files follow the convetion <job_name>-job.js
     /util                   - General purpose utility libraries
     /web                    - Dynamic web content. Express.js and REST API endpoint definitions

@@ -333,12 +333,12 @@ var cleanMRRData = function (mrr, callback) {
 * Right now this is done through a csv export once a month but should be
 * automated to pull direct from Salesforce eventually
 *
-* The spreadsheet is in the root of the project (mrr.csv) and is formatted:
+* The spreadsheet is mrr-data.csv and is formatted:
 *    {customer_id},{salesforce_name},{mrr}
 */
 var updateCustomerMRR = function (callback) {
     var mrrData = [];
-    csv().fromPath('mrr.csv').on("data", function (data, index) {
+    csv().fromPath('./data_access/data_feed/mrr-data.csv').on("data", function (data, index) {
         mrrData.push(data);
     }).on('end', function (count) {
         cleanMRRData(mrrData, function (newMRRData) {
@@ -373,7 +373,7 @@ var updateStats = function (callback) {
                     });
                 },
                 function (callback_inner) {
-                    cost_dao.costBackfill('costs.csv', function () {
+                    cost_dao.costBackfill('./data_access/data_feed/costs-data.csv', function () {
                         logger.log('info', 'Cost baseline data updated');
                         callback_inner();
                     });
