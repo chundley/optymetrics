@@ -10,10 +10,10 @@ var async = require('async'),
     logger = require('../util/logger.js'),
     array_util = require('../util/array_util.js'),
     number_util = require('../util/number_util.js'),
-    customer_model = require('./model/customer_model.js'),
-    cost_model = require('./model/cost_model.js'),
+    customer_model = require('./model/customer-model.js'),
+    cost_model = require('./model/cost-model.js'),
     cost_dao = require('./cost_dao.js'),
-    shard_model = require('./model/shard_model.js'),
+    shard_model = require('./model/shard-model.js'),
     coredb_config = require('config').CoreDb;
 
 /**

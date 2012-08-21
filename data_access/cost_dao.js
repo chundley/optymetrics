@@ -10,7 +10,7 @@ var async = require('async'),
     mongoose = require('mongoose'),
     _ = require('underscore'),
     logger = require('../util/logger.js'),
-    cost_model = require('./model/cost_model.js');
+    cost_model = require('./model/cost-model.js');
 
 /**
 * Helper function to support async.forEach to save costs with proper

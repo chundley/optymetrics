@@ -3,7 +3,7 @@
 */
 
 var mongoose = require('mongoose'),
-    customer_model = require('./model/customer_model.js');
+    customer_model = require('./model/customer-model.js');
 
 /**
 * Get TCO data for Customers only, sorted by total tco descending
