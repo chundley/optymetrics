@@ -243,6 +243,9 @@ var updateCustomerCOGS = function (callback) {
                     doc.tcoTraffic = doc.percTraffic * tcoTraffic;
                     doc.tcoSEO = doc.percSEO * tcoSEO;
                     doc.tcoTotal = doc.tcoTraffic + doc.tcoSEO;
+                    // set net revenue for all customers to loss at tco total.  This will get corrected later
+                    // for those who actually have mrr.  For those who don't it's a net loss
+                    doc.netRevenue = (-1) * doc.tcoTotal;
                     for (var i = 0; i < doc.organizations.length; i++) {
                         doc.organizations[i].percTraffic = doc.organizations[i].pageviews / totalTraffic;
                         doc.organizations[i].percSEO = doc.organizations[i].keywords / totalKeywords;
