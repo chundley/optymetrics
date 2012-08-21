@@ -282,6 +282,7 @@ var saveMRR = function (mrr, callback) {
         else if (doc) {
             doc.salesforceName = mrr[1];
             doc.mrr = mrr[2];
+            doc.netRevenue = doc.mrr - doc.tcoTotal;
             saveCustomer(doc, function (err) {
                 logger.info('MRR saved for customer: ' + doc.name);
                 callback(null);
@@ -476,6 +477,7 @@ var getCustomers = function (callback) {
                             'tcoTotal': 0,
                             'salesforceName': 'n/a',
                             'mrr': 0,
+                            'netRevenue': 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;

@@ -98,6 +98,23 @@ opty.OperationsView = Backbone.View.extend({
                                 return '$0.00';
                             }
                         }
+                    },
+                    {
+                        field: 'netRevenue',
+                        display_name: 'Net Revenue',
+                        text_align: 'right',
+                        formatter: function (data) {
+                            if (data) {
+                                if (data < 0) {
+                                    return '($' + opty.util.formatNumber(data, 2).replace(/-/,'') + ')';
+                                }
+                                else {
+                                    return '$' + opty.util.formatNumber(data, 2);
+                                }
+                            } else {
+                                return '$0.00';
+                            }
+                        }
                     }
                     ],
                         collection: tco_collection
