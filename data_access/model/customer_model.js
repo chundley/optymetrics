@@ -22,7 +22,7 @@ var OrganizationSchema = new Schema({
     percSEO: Number,
     tcoTraffic: Number,
     tcoSEO: Number,
-    tcoTotal: Number,
+    tcoTotal: Number
 });
 
 var CustomerSchema = new Schema({
@@ -40,6 +40,8 @@ var CustomerSchema = new Schema({
     tcoTraffic: Number,
     tcoSEO: Number,
     tcoTotal: Number,
+    salesforceName: String,
+    mrr: Number,
     organizations: [OrganizationSchema]
 });
 

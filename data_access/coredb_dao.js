@@ -3,6 +3,7 @@
 */
 
 var async = require('async'),
+    csv = require('csv'),
     pg = require('pg'),
     mongoose = require('mongoose'),
     _ = require('underscore'),
@@ -271,6 +272,46 @@ var updateCustomerCOGS = function (callback) {
 }
 
 /**
+* Updates MRR for each customer
+*
+* Right now this is done through a csv export once a month but should be
+* automated to pull direct from Salesforce eventually
+*
+* The spreadsheet is in the root of the project (mrr.csv) and is formatted:
+*    {customer_id},{salesforce_name},{mrr}
+*/
+var updateCustomerMRR = function (callback) {
+    csv().fromPath('mrr.csv').on("data", function (data, index) {
+        customer_model.CustomerModel.findOne({ id: data[0] }, function (err, doc) {
+            if (err) {
+                logger.error(err);
+            }
+            else if (doc) {
+                doc.salesforceName = data[1];
+                doc.mrr += data[2];
+                logger.log(data[2]);
+                doc.save(function (err) {
+                    if (err) {
+                        logger.error(err);
+                    }
+                    else {
+                        logger.info('Saved MRR data for customer: ' + doc.name);
+                    }
+                });
+            }
+            else {
+                logger.warn('No Optify customer id found for Salesforce id: ' + data[0] + ',  Customer = ' + data[1]);
+            }
+        });
+    }).on('end', function (count) {
+        logger.info('MRR found for ' + count + ' customers');
+        callback();
+    }).on('error', function (err) {
+        logger.error('END ' + err);
+    });
+}
+
+/**
 * Updates organizations (sites) with COGS data
 */
 var updateStats = function (callback) {
@@ -298,6 +339,12 @@ var updateStats = function (callback) {
                 function (callback_inner) {
                     updateCustomerCOGS(function () {
                         logger.log('info', 'Customer COGS updated');
+                        callback_inner();
+                    });
+                },
+                function (callback_inner) {
+                    updateCustomerMRR(function () {
+                        logger.log('info', 'Customer MRR updated');
                         callback_inner();
                     });
                 }
@@ -389,6 +436,8 @@ var getCustomers = function (callback) {
                             'tcoTraffic': 0,
                             'tcoSEO': 0,
                             'tcoTotal': 0,
+                            'salesforceName': 'n/a',
+                            'mrr': 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;

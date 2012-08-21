@@ -86,6 +86,18 @@ opty.OperationsView = Backbone.View.extend({
                                 return '$0.00';
                             }
                         }
+                    },
+                    {
+                        field: 'mrr',
+                        display_name: 'Software MRR',
+                        text_align: 'right',
+                        formatter: function (data) {
+                            if (data) {
+                                return '$' + opty.util.formatNumber(data, 2);
+                            } else {
+                                return '$0.00';
+                            }
+                        }
                     }
                     ],
                         collection: tco_collection
