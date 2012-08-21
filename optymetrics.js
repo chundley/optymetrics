@@ -24,7 +24,7 @@ var logger = require('./util/logger'),
 mongodb_connection.connect();
 
 // Run the TCO backfill every 8 hours
-var tcoBackfillJob = new cronJob("0 0,8,16 * * *", function () {
+var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
     logger.log('info', 'Running TCO backfill');
     coredb_dao.tcoBackfill();
 });
