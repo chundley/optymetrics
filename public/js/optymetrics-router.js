@@ -74,12 +74,12 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         this.updateNavState('operations');
         var nav_options = [
         {
-            url_fragment: 'overview-metrics',
+            url_fragment: 'overview',
             title: 'Overview',
             selected: true // default
         },
         {
-            url_fragment: 'tco-metrics',
+            url_fragment: 'tco',
             title: 'TCO'
         }
         ];

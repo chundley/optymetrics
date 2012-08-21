@@ -12,7 +12,7 @@ opty.OperationsView = Backbone.View.extend({
     },
     render: function () {
         switch (this.options.selected) {
-            default:
+            case 'tco':
                 {
 
                     var tco_collection = new opty.TCOCollection();
@@ -135,9 +135,9 @@ opty.OperationsView = Backbone.View.extend({
                     */
                     break;
                 }
-            case 'tco-metrics':
+            default:
                 {
-                    this.$el.append($('<div>TCO Metrics sub page</div>'));
+                    this.$el.append($('<div>Not implemented</div>'));
                     break;
                 }
         }
