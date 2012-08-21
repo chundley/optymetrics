@@ -69,7 +69,6 @@ var saveCustomer = function (customer, callback) {
             logger.log('error', "Error: " + err);
         }
         else {
-           // logger.log('info', 'Customer saved: ' + customer.name);
         }
         callback();
     });
@@ -288,15 +287,11 @@ var updateCustomerMRR = function (callback) {
             }
             else if (doc) {
                 doc.salesforceName = data[1];
-                doc.mrr += data[2];
-                logger.log(data[2]);
-                doc.save(function (err) {
-                    if (err) {
-                        logger.error(err);
-                    }
-                    else {
-                        logger.info('Saved MRR data for customer: ' + doc.name);
-                    }
+                logger.info(doc.name + ' : ' + data[2] + ' : ' + doc.mrr);
+                doc.mrr = doc.mrr + data[2];
+                logger.info(doc.name + ' : ' + data[2] + ' : ' + doc.mrr);
+                saveCustomer(doc, function (err) {
+                    logger.info('MRR saved for customer: ' + doc.name);
                 });
             }
             else {
