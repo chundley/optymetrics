@@ -21,7 +21,7 @@ var pingdomJob = function () {
                     callback(err);
                 }
                 else {
-                    uptime_dao.saveUptimeStats(data, 'Service', function (err) {
+                    uptime_dao.saveUptimeStats(data, 'service', function (err) {
                         if (err) {
                             callback(err);
                         }
@@ -39,7 +39,7 @@ var pingdomJob = function () {
                     callback(err);
                 }
                 else {
-                    uptime_dao.saveUptimeStats(data, 'Dashboard', function (err) {
+                    uptime_dao.saveUptimeStats(data, 'dashboard', function (err) {
                         if (err) {
                             callback(err);
                         }
@@ -57,7 +57,7 @@ var pingdomJob = function () {
                     callback(err);
                 }
                 else {
-                    uptime_dao.saveUptimeStats(data, 'Dashboard & Maint', function (err) {
+                    uptime_dao.saveUptimeStats(data, 'dashboardormaint', function (err) {
                         if (err) {
                             callback(err);
                         }
@@ -75,7 +75,7 @@ var pingdomJob = function () {
                     callback(err);
                 }
                 else {
-                    uptime_dao.saveUptimeStats(data, 'Landing Pages', function (err) {
+                    uptime_dao.saveUptimeStats(data, 'landingpages', function (err) {
                         if (err) {
                             callback(err);
                         }

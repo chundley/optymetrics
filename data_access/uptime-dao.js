@@ -8,6 +8,28 @@ var async = require('async'),
     uptime_model = require('./model/uptime-model.js');
 
 /**
+* Get Uptime data for a specified monitor
+*
+* @param monitorName   The monitor to get uptime stats for
+* @param count         The number of days to return
+*/
+var getUptimeData = function (monitorName, count, callback) {
+    uptime_model.UptimeModel
+        .find({ 'monitorName': monitorName })
+        .sort('monitorDate', -1)
+        .limit(count)
+        .exec(function (err, uptimes) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, uptimes);
+            }
+        });
+};
+
+
+/**
 * Parse results from a call to Pingdom's API to get uptime for
 * a monitored web site or service endpoint
 *
@@ -60,4 +82,5 @@ var saveUptimeStats = function (data, monitorName, callback) {
     });
 };
 
+exports.getUptimeData = getUptimeData;
 exports.saveUptimeStats = saveUptimeStats;

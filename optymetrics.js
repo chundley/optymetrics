@@ -4,6 +4,7 @@ var application_root = __dirname,
     csv = require('csv'),
     cronJob = require('cron').CronJob,
     util = require('util'),
+    url = require('url'),
     http = require('http'),
     path = require('path'),
     rest = require('restler'),
@@ -19,7 +20,8 @@ var logger = require('./util/logger'),
     tco_dao = require('./data_access/tco_dao.js'),
     trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
-    pingdom = require('./jobs/pingdom-job.js');
+    pingdom = require('./jobs/pingdom-job.js'),
+    uptime = require('./data_access/uptime-dao.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
@@ -39,8 +41,8 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
 trelloBackfillJob.start();
 
 // Run the Pingdom backfill hourly (five minutes after the hour)
-var pingdomJobSchedule = new cronJob("0 5 * * *", function () {
-    logger.into('Running Pingdom job');
+var pingdomJobSchedule = new cronJob('0 5 * * *', function () {
+    logger.info('Running Pingdom job');
     pingdom.pingdomJob();
 });
 pingdomJobSchedule.start();
@@ -116,6 +118,39 @@ app.get('/ops/tco', function (req, res, next) {
         }
 
         res.send(customers);
+    });
+});
+
+// fetch Uptime data (default)
+app.get('/ops/uptime', function (req, res, next) {
+    uptime.getUptimeData('service', 30, function (err, uptimes) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(uptimes);
+    });
+});
+
+// fetch Uptime data
+// @param monitorName            which monitor to pull data for
+// @param count (query string)   how many days to return (default 30)
+app.get('/ops/uptime/:monitorName', function (req, res, next) {
+    var params = url.parse(req.url, true).query;
+    var count = 30;
+    if (params.count) {
+        count = params.count;
+    }
+    uptime.getUptimeData(req.params.monitorName, count, function (err, uptimes) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(uptimes);
     });
 });
 
