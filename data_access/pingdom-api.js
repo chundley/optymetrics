@@ -33,7 +33,7 @@ var pingdomId = {
 * to the end (after day):  &from=1329980400
 */
 var getUptimeUrl = function (id) {
-    return baseUrl + 'summary.performance/' + id + '?includeuptime=true&resolution=day&from=1329980400';
+    return baseUrl + 'summary.performance/' + id + '?includeuptime=true&resolution=day';
 };
 
 /**
