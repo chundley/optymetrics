@@ -79,6 +79,10 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
             selected: true // default
         },
         {
+            url_fragment: 'uptime',
+            title: 'Uptime'
+        },
+        {
             url_fragment: 'tco',
             title: 'TCO'
         }

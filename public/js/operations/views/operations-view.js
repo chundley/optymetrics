@@ -12,6 +12,59 @@ opty.OperationsView = Backbone.View.extend({
     },
     render: function () {
         switch (this.options.selected) {
+            case 'uptime':
+                {
+                    var uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'dashboard', 'count' : '30' });
+                    var uptime_table = new opty.TableView({
+                        table_fields: [
+                    {
+                        field: 'monitorDate',
+                        display_name: 'Date',
+                        formatter: function (data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return date.getFullYear() + '-' + opty.util.padNumber(date.getMonth() + 1, 2) + '-' + opty.util.padNumber(date.getDate(), 2);
+                            } else {
+                                return "";
+                            }
+                        }
+
+                    },
+                    {
+                        field: 'uptime',
+                        display_name: 'Uptime (m)',
+                        text_align: 'right',
+                        formatter: function (data) {
+                            if (data) {
+                                return opty.util.formatNumber(data/60, 0);
+                            } else {
+                                return '0';
+                            }
+                        }
+
+                    },
+                    {
+                        field: 'downtime',
+                        display_name: 'Downtime (m)',
+                        text_align: 'right',
+                        formatter: function (data) {
+                            if (data) {
+                                return opty.util.formatNumber(data / 60, 0);
+                            } else {
+                                return '0';
+                            }
+                        }
+                    }
+                    ],
+                    collection: uptime_collection
+
+                    });
+                    this.$el.append($('<div>', { 'class': 'span3' }).append(uptime_table.$el));
+
+                    uptime_collection.fetch();
+
+                    break;
+                }
             case 'tco':
                 {
 
@@ -106,7 +159,7 @@ opty.OperationsView = Backbone.View.extend({
                         formatter: function (data) {
                             if (data) {
                                 if (data < 0) {
-                                    return '($' + opty.util.formatNumber(data, 2).replace(/-/,'') + ')';
+                                    return '($' + opty.util.formatNumber(data, 2).replace(/-/, '') + ')';
                                 }
                                 else {
                                     return '$' + opty.util.formatNumber(data, 2);
