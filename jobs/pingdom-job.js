@@ -16,24 +16,6 @@ var async = require('async'),
 var pingdomJob = function () {
     async.parallel([
         function (callback) {
-            pingdom.getDashboardUptime(function (err, data) {
-                if (err) {
-                    callback(err);
-                }
-                else {
-                    uptime_dao.saveUptimeStats(data, 'Dashboard', function (err) {
-                        if (err) {
-                            callback(err);
-                        }
-                        else {
-                            logger.info('Uptime stats saved for dashboard.optify.net');
-                            callback(null);
-                        }
-                    });
-                }
-            });
-        },
-        function (callback) {
             pingdom.getServiceUptime(function (err, data) {
                 if (err) {
                     callback(err);
@@ -46,6 +28,42 @@ var pingdomJob = function () {
                         else {
                             logger.info('Uptime stats saved for service.optify.net');
                             callback();
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {
+            pingdom.getDashboardUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'Dashboard', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for dashboard.optify.net excluding planned');
+                            callback(null);
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {
+            pingdom.getDashboardOrMaintUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'Dashboard & Maint', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for dashboard.optify.net including planned');
+                            callback(null);
                         }
                     });
                 }

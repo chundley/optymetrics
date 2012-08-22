@@ -26,11 +26,19 @@ var pingdomId = {
     'speakeasy': 198776
 }
 
-
+/**
+* Create a Url for pulling uptime data by day
+*
+* NOTE: temporary parameter to do a longer backfill (180 days available). Once
+* backfilled in production the last parameter should be taken off
+*/
 var getUptimeUrl = function (id) {
-    return baseUrl + 'summary.performance/' + id + '?includeuptime=true&resolution=day';
+    return baseUrl + 'summary.performance/' + id + '?includeuptime=true&resolution=day&from=1329980400';
 };
 
+/**
+* Generic function to get uptime results data from the API
+*/
 var getAPIResults = function (url, callback) {
     rest.get(url, {
         username: login,
@@ -47,6 +55,9 @@ var getAPIResults = function (url, callback) {
     });
 }
 
+/**
+* Wrapper for getting uptime for service.optify.net
+*/
 var getServiceUptime = function (callback) {
     getAPIResults(getUptimeUrl(pingdomId['service']), function (err, results) {
         if (err) { callback(err, null); }
@@ -54,6 +65,10 @@ var getServiceUptime = function (callback) {
     });
 }
 
+/**
+* Wrapper for getting uptime for dashboard.optify.net
+* Note that this will show downtime for planned downtime
+*/
 var getDashboardUptime = function (callback) {
     getAPIResults(getUptimeUrl(pingdomId['dashboard']), function (err, results) {
         if (err) { callback(err, null); }
@@ -61,6 +76,20 @@ var getDashboardUptime = function (callback) {
     });
 }
 
+/**
+* Wrapper for getting uptime for dashboard.optify.net
+* Note that this will count planned maintenance as 'uptime'
+*/
+var getDashboardOrMaintUptime = function (callback) {
+    getAPIResults(getUptimeUrl(pingdomId['maint']), function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
+    });
+}
+
+/**
+* Wrapper for getting uptime for pages.optify.net
+*/
 var getLandingPagesUptime = function (callback) {
     getAPIResults(getUptimeUrl(pingdomId['landingpages']), function (err, results) {
         if (err) { callback(err, null); }
@@ -70,4 +99,5 @@ var getLandingPagesUptime = function (callback) {
 
 exports.getServiceUptime = getServiceUptime;
 exports.getDashboardUptime = getDashboardUptime;
+exports.getDashboardOrMaintUptime = getDashboardOrMaintUptime;
 exports.getLandingPagesUptime = getLandingPagesUptime;

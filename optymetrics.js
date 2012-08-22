@@ -18,7 +18,8 @@ var logger = require('./util/logger'),
     coredb_dao = require('./data_access/coredb_dao.js'),
     tco_dao = require('./data_access/tco_dao.js'),
     trello = require('./data_access/trello_api.js'),
-    trello_backfill = require('./jobs/trello_backfill.js');
+    trello_backfill = require('./jobs/trello_backfill.js'),
+    pingdom = require('./jobs/pingdom-job.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
@@ -36,6 +37,13 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
     trello_backfill.trelloBackfill();
 });
 trelloBackfillJob.start();
+
+// Run the Pingdom backfill hourly (five minutes after the hour)
+var pingdomJobSchedule = new cronJob("0 5 * * *", function () {
+    logger.into('Running Pingdom job');
+    pingdom.pingdomJob();
+});
+pingdomJobSchedule.start();
 
 // The web server instance
 var app = express.createServer();

@@ -17,14 +17,14 @@ var saveUptimeStats = function (data, monitorName, callback) {
     async.forEach(data.summary.days, function (day, callback_inner) {
         var dateFormatted = new Date(0);
         dateFormatted.setUTCSeconds(day.starttime);
-        uptime_model.UptimeModel.findOne({ 'monitor': monitorName, 'starttime': dateFormatted }, function (err, doc) {
+        uptime_model.UptimeModel.findOne({ 'monitorName': monitorName, 'monitorDate': dateFormatted }, function (err, doc) {
             if (err) {
                 callback_inner(err);
             }
             else {
                 if (doc) {
                     // found, so just update
-                    doc.avgresponse = day.avgresponse;
+                    doc.avgResponse = day.avgresponse;
                     doc.uptime = day.uptime;
                     doc.downtime = day.downtime;
                     doc.unmonitored = day.unmonitored;
@@ -38,9 +38,9 @@ var saveUptimeStats = function (data, monitorName, callback) {
                 else {
                     // new data for this monitor, save new document
                     var model = new uptime_model.UptimeModel({
-                        monitor: monitorName,
-                        starttime: dateFormatted,
-                        avgresponse: day.avgresponse,
+                        monitorName: monitorName,
+                        monitorDate: dateFormatted,
+                        avgResponse: day.avgresponse,
                         uptime: day.uptime,
                         downtime: day.downtime,
                         unmonitored: day.unmonitored

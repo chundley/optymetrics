@@ -8,9 +8,9 @@ var Schema = mongoose.Schema,
     Model = mongoose.Model;
 
 var UptimeSchema = new Schema({
-    monitor: String,
-    starttime: Date,
-    avgresponse: Number,
+    monitorName: String,
+    monitorDate: Date,
+    avgResponse: Number,
     uptime: Number,
     downtime: Number,
     unmonitored: Number
