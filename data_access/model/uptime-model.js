@@ -13,7 +13,8 @@ var UptimeSchema = new Schema({
     avgResponse: Number,
     uptime: Number,
     downtime: Number,
-    unmonitored: Number
+    unmonitored: Number,
+    percUptime: Number
 });
 
 var UptimeModel = mongoose.model('Uptime', UptimeSchema);

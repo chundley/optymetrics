@@ -29,8 +29,8 @@ var pingdomId = {
 /**
 * Create a Url for pulling uptime data by day
 *
-* NOTE: temporary parameter to do a longer backfill (180 days available). Once
-* backfilled in production the last parameter should be taken off
+* NOTE: if we ever need a longer backfill, add this parameter
+* to the end (after day):  &from=1329980400
 */
 var getUptimeUrl = function (id) {
     return baseUrl + 'summary.performance/' + id + '?includeuptime=true&resolution=day&from=1329980400';
@@ -97,7 +97,40 @@ var getLandingPagesUptime = function (callback) {
     });
 }
 
+/**
+* Wrapper for getting uptime for www.optify.net
+*/
+var getWWWUptime = function (callback) {
+    getAPIResults(getUptimeUrl(pingdomId['www']), function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
+    });
+}
+
+/**
+* Wrapper for getting uptime for our office internet service
+*/
+var getTWTelecomUptime = function (callback) {
+    getAPIResults(getUptimeUrl(pingdomId['twtelecom']), function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
+    });
+}
+
+/**
+* Wrapper for getting uptime for our backup office internet service
+*/
+var getSpeakeasyUptime = function (callback) {
+    getAPIResults(getUptimeUrl(pingdomId['speakeasy']), function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
+    });
+}
+
 exports.getServiceUptime = getServiceUptime;
 exports.getDashboardUptime = getDashboardUptime;
 exports.getDashboardOrMaintUptime = getDashboardOrMaintUptime;
 exports.getLandingPagesUptime = getLandingPagesUptime;
+exports.getWWWUptime = getWWWUptime;
+exports.getTWTelecomUptime = getTWTelecomUptime;
+exports.getSpeakeasyUptime = getSpeakeasyUptime

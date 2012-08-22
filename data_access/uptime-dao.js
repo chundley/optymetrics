@@ -50,6 +50,7 @@ var saveUptimeStats = function (data, monitorName, callback) {
                     doc.uptime = day.uptime;
                     doc.downtime = day.downtime;
                     doc.unmonitored = day.unmonitored;
+                    doc.percUptime = day.uptime / (day.uptime + day.downtime);
                     doc.save(function () {
                         if (err) {
                             callback_inner(err);
@@ -65,7 +66,8 @@ var saveUptimeStats = function (data, monitorName, callback) {
                         avgResponse: day.avgresponse,
                         uptime: day.uptime,
                         downtime: day.downtime,
-                        unmonitored: day.unmonitored
+                        unmonitored: day.unmonitored,
+                        percUptime: day.uptime / (day.uptime + day.downtime)
                     });
                     model.save(function () {
                         if (err) {

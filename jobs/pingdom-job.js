@@ -86,6 +86,60 @@ var pingdomJob = function () {
                     });
                 }
             });
+        },
+        function (callback) {
+            pingdom.getWWWUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'www', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for www.optify.net');
+                            callback();
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {
+            pingdom.getTWTelecomUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'twtelecom', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for corp internet service');
+                            callback();
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {
+            pingdom.getSpeakeasyUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'speakeasy', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for corp backup internet service');
+                            callback();
+                        }
+                    });
+                }
+            });
         }
     ],
     function (err) {
@@ -93,7 +147,7 @@ var pingdomJob = function () {
             logger.error('Pingdom job failed: ' + err);
         }
         else {
-            logger.info('Pingdom job completed');
+            logger.info('Pingdom job completed successfully');
         }
     });
 };
