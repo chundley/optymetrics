@@ -7,6 +7,12 @@ opty.PeriodCompareWidgetView = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, 'render'); //, 'dataChanged');
 
+        this.title = options.title;
+        this.goal = options.goal;
+        this.actual = options.actual;
+        this.type = options.type;
+        this.delta = options.delta;
+        this.period = options.period;
         //this.collection = options.collection;
         //this.table_fields = options.table_fields;
 
@@ -17,23 +23,43 @@ opty.PeriodCompareWidgetView = Backbone.View.extend({
     render: function () {
         this.$el.empty();
 
-        var table_template = _.template(
+        var table_template_up = _.template(
             '<div class="period-compare-widget"> \
                 <div> \
-                    <div class="period-compare-widget-title">dashboard uptime</div> \
-                    <div class="period-compare-widget-goal">99.99%</div> \
+                    <div class="period-compare-widget-title"><%= title %></div> \
+                    <div class="period-compare-widget-goal"><%= goal %></div> \
                 </div> \
-                <div class="period-compare-widget-actual">99.981%</div> \
+                <div class="period-compare-widget-actual"><%= actual %></div> \
                 <div> \
-                    <div class="period-compare-widget-arrow-down">&#x25BC;</div> \
-                    <div class="period-compare-widget-down">0.008%</div> \
-                    <div class="period-compare-widget-period">30 days</div> \
+                    <div class="period-compare-widget-arrow-up">&#x25B2;</div> \
+                    <div class="period-compare-widget-up"><%= delta %></div> \
+                    <div class="period-compare-widget-period"><%= period %></div> \
                 </div> \
-                <div style="clear: both;" /> \
+                <div style="clear: both" /> \
             </div>');
 
-        this.$el.append(table_template());
-        
+        var table_template_down = _.template(
+            '<div class="period-compare-widget"> \
+                <div> \
+                    <div class="period-compare-widget-title"><%= title %></div> \
+                    <div class="period-compare-widget-goal"><%= goal %></div> \
+                </div> \
+                <div class="period-compare-widget-actual"><%= actual %></div> \
+                <div> \
+                    <div class="period-compare-widget-arrow-down">&#x25BC;</div> \
+                    <div class="period-compare-widget-down"><%= delta %></div> \
+                    <div class="period-compare-widget-period"><%= period %></div> \
+                </div> \
+                <div style="clear: both" /> \
+            </div>');
+
+        if (this.type == 'up') {
+            this.$el.append(table_template_up({ title: this.title, goal: this.goal, actual: this.actual, delta: this.delta, period: this.period }));
+        }
+        else {
+            this.$el.append(table_template_down({ title: this.title, goal: this.goal, actual: this.actual, delta: this.delta, period: this.period }));
+        }
+
         /*
         var header_template = _.template(
         '<thead><tr> \
