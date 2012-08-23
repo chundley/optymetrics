@@ -23,7 +23,8 @@ var pingdomId = {
     'landingpages': 442156,
     'www': 113004,
     'twtelecom': 425959,
-    'speakeasy': 198776
+    'speakeasy': 198776,
+    'api': 632118
 }
 
 /**
@@ -37,7 +38,7 @@ var getUptimeUrl = function (id) {
 };
 
 /**
-* Generic function to get uptime results data from the API
+* Generic function to get data from the Pingdom API
 */
 var getAPIResults = function (url, callback) {
     rest.get(url, {
@@ -52,6 +53,16 @@ var getAPIResults = function (url, callback) {
         else {
             callback(null, results);
         }
+    });
+}
+
+/**
+* Gets a list of all montiors currently configured in Pingdom
+*/
+var getAllMonitors = function (callback) {
+    getAPIResults(baseUrl + 'checks', function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
     });
 }
 
@@ -98,6 +109,16 @@ var getLandingPagesUptime = function (callback) {
 }
 
 /**
+* Wrapper for getting uptime for api.optify.net
+*/
+var getAPIUptime = function (callback) {
+    getAPIResults(getUptimeUrl(pingdomId['api']), function (err, results) {
+        if (err) { callback(err, null); }
+        else { callback(null, results); }
+    });
+}
+
+/**
 * Wrapper for getting uptime for www.optify.net
 */
 var getWWWUptime = function (callback) {
@@ -127,10 +148,12 @@ var getSpeakeasyUptime = function (callback) {
     });
 }
 
+exports.getAllMonitors = getAllMonitors;
 exports.getServiceUptime = getServiceUptime;
 exports.getDashboardUptime = getDashboardUptime;
 exports.getDashboardOrMaintUptime = getDashboardOrMaintUptime;
 exports.getLandingPagesUptime = getLandingPagesUptime;
+exports.getAPIUptime = getAPIUptime;
 exports.getWWWUptime = getWWWUptime;
 exports.getTWTelecomUptime = getTWTelecomUptime;
 exports.getSpeakeasyUptime = getSpeakeasyUptime

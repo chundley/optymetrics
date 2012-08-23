@@ -88,6 +88,24 @@ var pingdomJob = function () {
             });
         },
         function (callback) {
+            pingdom.getAPIUptime(function (err, data) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    uptime_dao.saveUptimeStats(data, 'api', function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('Uptime stats saved for api.optify.net');
+                            callback();
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {
             pingdom.getWWWUptime(function (err, data) {
                 if (err) {
                     callback(err);

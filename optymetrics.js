@@ -20,6 +20,7 @@ var logger = require('./util/logger'),
     tco_dao = require('./data_access/tco_dao.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
     pingdom = require('./jobs/pingdom-job.js'),
+    pingdom_api = require('./data_access/pingdom-api.js'),
     uptime = require('./data_access/uptime-dao.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
@@ -117,6 +118,18 @@ app.get('/ops/tco', function (req, res, next) {
         }
 
         res.send(customers);
+    });
+});
+
+app.get('/ops/monitors', function (req, res, next) {
+    pingdom_api.getAllMonitors(function (err, monitors) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(monitors);
     });
 });
 
