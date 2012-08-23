@@ -1,0 +1,27 @@
+/**
+ * General site-wide styles
+ */
+
+/* Support for jQuery tablesorter w/ bootstrap */
+table .tablesorter-header {
+    cursor: pointer;
+}
+table.tablesorter .header,
+table.tablesorter .tablesorter-header {
+    /* black double arrow */
+    background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding: 4px 20px 4px 4px;
+    cursor: pointer;
+}
+table.tablesorter th.headerSortUp,
+table.tablesorter th.tablesorter-headerSortUp {
+    background-color: #9fbfdf;
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+}
+table.tablesorter th.headerSortDown,
+table.tablesorter th.tablesorter-headerSortDown {
+    background-color: #8cb3d9; /* black desc arrow */
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+}
