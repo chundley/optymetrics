@@ -9,11 +9,21 @@ opty.UptimeCollection = Backbone.Collection.extend({
     },
     model: opty.UptimeModel,
     url: function () {
-        if (this.count) {
-            return '/ops/uptime/' + this.monitorName + '?count=' + this.count;
+        if (this.monitorName) {
+            if (this.count) {
+                return '/ops/uptime/' + this.monitorName + '?count=' + this.count;
+            }
+            else {
+                return '/ops/uptime/' + this.monitorName;
+            }
         }
         else {
-            return '/ops/uptime/' + this.monitorName;
+            if (this.count) {
+                return '/ops/uptime' + '?count=' + this.count;
+            }
+            else {
+                return '/ops/uptime';
+            }
         }
     }
 });

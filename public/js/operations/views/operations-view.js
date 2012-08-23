@@ -48,7 +48,6 @@ opty.OperationsView = Backbone.View.extend({
                                 currentPerc = uTotal / (uTotal + dTotal) * 100;
                                 oldPerc = currentPerc;
                             }
-                            console.log(oldPerc + ' : ' + currentPerc);
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
                             var widget_table = new opty.PeriodCompareWidgetView({
                                 title: 'dashboard uptime',
@@ -89,7 +88,6 @@ opty.OperationsView = Backbone.View.extend({
                                 currentPerc = uTotal / (uTotal + dTotal) * 100;
                                 oldPerc = currentPerc;
                             }
-                            console.log(oldPerc + ' : ' + currentPerc);
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
                             var widget_table = new opty.PeriodCompareWidgetView({
                                 title: 'service uptime',
@@ -131,7 +129,6 @@ opty.OperationsView = Backbone.View.extend({
                                 currentPerc = uTotal / (uTotal + dTotal) * 100;
                                 oldPerc = currentPerc;
                             }
-                            console.log(oldPerc + ' : ' + currentPerc);
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
                             var widget_table = new opty.PeriodCompareWidgetView({
                                 title: 'pages uptime',

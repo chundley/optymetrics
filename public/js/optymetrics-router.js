@@ -26,8 +26,16 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
     },
 
     defaultRoute: function () {
-        this.updateNavState();
-        $('div.tab-content').empty();
+        this.updateNavState('default');
+        
+        var default_view = new opty.DefaultView({});
+        var optymetrics_subnav = new opty.OptyMetricSubNav({
+            root_hash: '#'
+        });
+
+        $('div.tab-content').empty()
+            .append(optymetrics_subnav.render())
+            .append(default_view.render());
     },
 
     productdevRoute: function (subpage) {

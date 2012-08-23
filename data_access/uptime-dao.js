@@ -8,13 +8,16 @@ var async = require('async'),
     uptime_model = require('./model/uptime-model.js');
 
 /**
-* Get Uptime data for a specified monitor
+* Get Uptime data for a specified monitor, sorted by date descending
+* If no monitor name is provided, default to the group of standard
+* monitors that account for our overall uptime metric
 *
 * @param monitorName   The monitor to get uptime stats for
 * @param count         The number of days to return
 */
 var getUptimeData = function (monitorName, count, callback) {
-    uptime_model.UptimeModel
+    if (monitorName) {
+        uptime_model.UptimeModel
         .find({ 'monitorName': monitorName })
         .sort('monitorDate', -1)
         .limit(count)
@@ -26,6 +29,21 @@ var getUptimeData = function (monitorName, count, callback) {
                 callback(null, uptimes);
             }
         });
+    }
+    else {
+        uptime_model.UptimeModel
+        .find({ $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }/*, { 'monitorName': 'api' },*/ ] })
+        .sort('monitorDate', -1)
+        .limit(count)
+        .exec(function (err, uptimes) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, uptimes);
+            }
+        });
+    }
 };
 
 

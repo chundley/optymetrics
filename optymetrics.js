@@ -135,7 +135,12 @@ app.get('/ops/monitors', function (req, res, next) {
 
 // fetch Uptime data (default)
 app.get('/ops/uptime', function (req, res, next) {
-    uptime.getUptimeData('service', 30, function (err, uptimes) {
+    var params = url.parse(req.url, true).query;
+    var count = 30;
+    if (params.count) {
+        count = params.count;
+    }
+    uptime.getUptimeData(null, count, function (err, uptimes) {
         if (err) {
             logger.error(err);
             res.statusCode = 500;
