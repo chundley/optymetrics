@@ -15,7 +15,7 @@ Opty.ProductDevView = Backbone.View.extend({
             case 'bug-metrics': {
                 break;
             }
-            default: {
+            case 'sprint-metrics': {
                 // Define basic top-level view infrastructure
                 var $velocityRow = $('<div>', { 'class': 'row-fluid' });
                 var $velocityChartColumn = $('<div>', { 'class': 'span6' });
@@ -72,6 +72,10 @@ Opty.ProductDevView = Backbone.View.extend({
                 $velocityTableColumn.append(velocityTable.$el);
                 
                 velocityCollection.fetch();
+                break;
+            }
+            default: {
+                this.$el.append('TODO');
                 break;
             }
         }
