@@ -66,7 +66,8 @@ Opty.ProductDevView = Backbone.View.extend({
                       }
                     ],
                     collection: velocityCollection,
-                    sortable: true
+                    sortable: true,
+                    defaultSort: [[0,0]]
                 });
                
                 $velocityTableColumn.append(velocityTable.$el);
