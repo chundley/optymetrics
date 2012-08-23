@@ -1,7 +1,7 @@
 if(!window.Opty) { window.Opty = {}; }
 
-Opty.EngineeringView = Backbone.View.extend({
-    id: 'engineering-view',
+Opty.ProductDevView = Backbone.View.extend({
+    id: 'productdev-view',
 
     initialize: function(options) {
         var me = this;
