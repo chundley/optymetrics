@@ -251,7 +251,10 @@ opty.OperationsView = Backbone.View.extend({
                         }
                     }
                     ],
-                        collection: tco_collection
+                    
+                    sortable: true,
+                    defaultSort: [[6,0]],
+                    collection: tco_collection
                     });
 
                     this.$el.append($('<div>', { 'class': 'span9' }).append(tco_table.$el));
