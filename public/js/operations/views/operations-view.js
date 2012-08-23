@@ -14,7 +14,7 @@ opty.OperationsView = Backbone.View.extend({
         switch (this.options.selected) {
             case 'uptime':
                 {
-                    var uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'dashboard', 'count' : '30' });
+                    var uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'dashboard', 'count': '30' });
                     var uptime_table = new opty.TableView({
                         table_fields: [
                     {
@@ -36,7 +36,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return opty.util.formatNumber(data/60, 0);
+                                return opty.util.formatNumber(data / 60, 0);
                             } else {
                                 return '0';
                             }
@@ -56,7 +56,7 @@ opty.OperationsView = Backbone.View.extend({
                         }
                     }
                     ],
-                    collection: uptime_collection
+                        collection: uptime_collection
 
                     });
                     this.$el.append($('<div>', { 'class': 'span3' }).append(uptime_table.$el));
@@ -190,7 +190,9 @@ opty.OperationsView = Backbone.View.extend({
                 }
             default:
                 {
-                    this.$el.append($('<div>Not implemented</div>'));
+                    var widget_table = new opty.PeriodCompareWidgetView();
+                    this.$el.append($('<div>', { 'class': 'span4' }).append(widget_table.$el));
+                    console.log(this.$el);
                     break;
                 }
         }
