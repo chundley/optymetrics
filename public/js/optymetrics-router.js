@@ -3,14 +3,12 @@ if(!window.Opty) { window.Opty = {}; }
 Opty.OptyMetricsRouter = Backbone.Router.extend({
     routes: {
         '': 'defaultRoute',
-        'engineering': 'engineeringRoute',
-        'engineering/:subpage': 'engineeringRoute',
         'marketing': 'marketingRoute',
         'marketing/:subpage': 'marketingRoute',
         'operations': 'operationsRoute',
         'operations/:subpage': 'operationsRoute',
-        'product': 'productRoute',
-        'product/:subpage': 'productRoute',
+        'productdev': 'productdevRoute',
+        'productdev/:subpage': 'productdevRoute',
         'sales': 'salesRoute',
         'sales/:subpage': 'salesRoute'
     },
@@ -20,10 +18,9 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
 
         _.bindAll(this,
                   'defaultRoute',
-                  'engineeringRoute',
                   'marketingRoute',
                   'operationsRoute',
-                  'productRoute',
+                  'productdevRoute',
                   'salesRoute',
                   'updateNavState');
     },
@@ -33,8 +30,8 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty();
     },
 
-    engineeringRoute: function (subpage) {
-        this.updateNavState('engineering');
+    productdevRoute: function (subpage) {
+        this.updateNavState('productdev');
 
         var nav_options = [
             {
@@ -54,15 +51,15 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
             });
         }
 
-        var engineering_view = new Opty.EngineeringView({ selected: subpage });
+        var productdev_view = new Opty.ProductDevView({ selected: subpage });
         var optymetrics_subnav = new opty.OptyMetricSubNav({
-            root_hash: '#engineering',
+            root_hash: '#productdev',
             nav_options: nav_options
         });
 
         $('div.tab-content').empty()
             .append(optymetrics_subnav.render())
-            .append(engineering_view.render());
+            .append(productdev_view.render());
     },
 
     marketingRoute: function () {
