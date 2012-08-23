@@ -19,7 +19,7 @@ var baseUrl = 'https://api.pingdom.com/api/2.0/',
 var pingdomId = {
     'service': 115013,
     'dashboard': 113000,
-    'maint': 232506,
+    'dashboardormaint': 232506,
     'landingpages': 442156,
     'www': 113004,
     'twtelecom': 425959,
@@ -81,7 +81,7 @@ var getDashboardUptime = function (callback) {
 * Note that this will count planned maintenance as 'uptime'
 */
 var getDashboardOrMaintUptime = function (callback) {
-    getAPIResults(getUptimeUrl(pingdomId['maint']), function (err, results) {
+    getAPIResults(getUptimeUrl(pingdomId['dashboardormaint']), function (err, results) {
         if (err) { callback(err, null); }
         else { callback(null, results); }
     });
