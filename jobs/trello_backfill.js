@@ -1,6 +1,6 @@
 var async = require('async'),
     logger = require('../util/logger.js'),
-    trello = require('../data_access/trello_api.js');
+    trello = require('../data_access/trello-api.js');
 
 var trelloBackfill = function() {
     async.series([

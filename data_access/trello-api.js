@@ -1,16 +1,17 @@
 // Trello API client
-// TODO: The token is only good for 30 days. How can I refresh this
-// programmatically?
-
 var async = require('async'),
     logger = require('../util/logger.js'),
     metrics_dao = require('./metrics_dao.js'),
+    oauth = require('oauth'),
     rest = require('restler'),
     _ = require('underscore');
 
 var key = 'df90ea5c83fc1d11eba9510bc5006ad6',
     secret = '95a9ca0722ab5804699652e49506fc4bef726af2f83c7c953a17a6abf113c9ff',
-    token = '0eb6da1fc99fdaec8e66af314d7d902c5acacb3fd5128697bb7ef8f583fd3251',
+    // Requested OAuth token that never expires. This is the only way to manually obtain a token without manual
+    // intervention. Yay, OAuth! If you need to generate a new token, use the following URL:
+    // https://trello.com/1/authorize?response_type=token&key=df90ea5c83fc1d11eba9510bc5006ad6&scope=read&expiration=never
+    token = '08dc249caa9085154b58f4be3cb22b96adac735318c7a33eaa81d86aec421016',
     kanban_board_id = '4feb247bb42644e7707c305c',
     baseUrl = 'https://trello.com/1/';
 

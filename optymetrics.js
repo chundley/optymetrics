@@ -18,7 +18,6 @@ var logger = require('./util/logger'),
     metrics_dao = require('./data_access/metrics_dao.js'),
     coredb_dao = require('./data_access/coredb_dao.js'),
     tco_dao = require('./data_access/tco_dao.js'),
-    trello = require('./data_access/trello_api.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
     pingdom = require('./jobs/pingdom-job.js'),
     uptime = require('./data_access/uptime-dao.js');
