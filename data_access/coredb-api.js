@@ -13,7 +13,9 @@ _ = require('underscore');
 * Local project libraries
 */
 var logger = require('../util/logger.js'),
-    shard_model = require('./model/shard-model.js');
+    shard_model = require('./model/shard-model.js'),
+    customer_model = require('./model/customer-model.js'),
+    array_util = require('../util/array_util.js');
 
 var coredb_config = require('config').CoreDb;
 
@@ -61,7 +63,111 @@ var formatShardConnectionString = function (jdbcUrl, user, password, callback) {
     callback('postgres://' + user + ':' + password + '@' + jdbcUrl.match(/(\/\/)(.*)(?=\?)/)[2]);
 };
 
+/**
+* Queries core for customer data, returns array of CustomerModelETL
+*/
+var getCustomers = function (callback) {
+    pg.connect(coredb_config.connectionString, function (err, client) {
+        if (err) {
+            logger.log('error', err);
+        }
+
+        client.query(QUERY_CUSTOMERS, function (err, result) {
+            if (err) {
+                logger.log('error', 'Error: ' + err);
+            }
+            else {
+                var customers = {};
+                var customermodel;
+                for (var row = 0; row < result.rows.length; row++) {
+                    if (!(result.rows[row].id in customers)) {
+                        customermodel = new customer_model.CustomerModelETL({
+                            'id': result.rows[row].id,
+                            'name': result.rows[row].name,
+                            'createdAt': result.rows[row].created_at,
+                            'sku': result.rows[row].display_name,
+                            'skuShort': result.rows[row].short_name,
+                            'visitors': 0,
+                            'visits': 0,
+                            'pageviews': 0,
+                            'keywords': 0,
+                            'percTraffic': 0,
+                            'percSEO': 0,
+                            'tcoTraffic': 0,
+                            'tcoSEO': 0,
+                            'tcoTotal': 0,
+                            'salesforceName': 'n/a',
+                            'mrr': 0,
+                            'netRevenue': 0,
+                            'organizations': []
+                        });
+                        customers[result.rows[row].id] = customermodel;
+                    }
+
+                    organizationmodel = new customer_model.OrganizationModel({
+                        'id': result.rows[row].org_id,
+                        'name': result.rows[row].org_name,
+                        'createdAt': result.rows[row].org_created_at,
+                        'siteDomain': result.rows[row].domain,
+                        'disabled': result.rows[row].disabled,
+                        'shardConfigurationId': result.rows[row].shard_configuration_id,
+                        'visitors': 0,
+                        'visits': 0,
+                        'pageviews': 0,
+                        'keywords': 0,
+                        'percTraffic': 0,
+                        'percSEO': 0,
+                        'tcoTraffic': 0,
+                        'tcoSEO': 0,
+                        'tcoTotal': 0
+                    });
+                    customers[result.rows[row].id].organizations.push(organizationmodel);
+                }
+                callback(err, array_util.hashToArray(customers));
+            }
+        });
+    });
+};
+
+var getCustomerKeywordCount = function (customer, callback) {
+    pg.connect(coredb_config.connectionString, function (err, client) {
+        if (err) {
+            callback(err, null);
+        }
+        client.query(QUERY_KEYWORDS, [customer.id], function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            // fetch a row at a time, fire callback when all orgs have been updated for the customer
+            async.forEach(result.rows, function (row, callback) {
+                for (var i = 0; i < customer.organizations.length; i++) {
+                    if (customer.organizations[i].id == row.organization_id) {
+                        customer.organizations[i].keywords = row.keywords;
+                    }
+                }
+                callback();
+            },
+            function () {
+                // all rows have been updated with keyword counts
+                async.forEach(customer.organizations, function (organization, callback) {
+                    // update customer with cumulative data, fire callback when all done to trigger a save
+                    customer.keywords += organization.keywords;
+                    callback();
+                },
+                function () {
+                    callback(null, customer);
+                });
+            });
+
+        }); // end query
+        // no keywords found, but still need callback
+        callback(null, customer);
+    }); // end pg.connect
+};
+
 exports.getShards = getShards;
+exports.getCustomers = getCustomers;
+exports.getCustomerKeywordCount = getCustomerKeywordCount;
 
 /**
 * Query "constants"

@@ -49,6 +49,8 @@ var CustomerSchema = new Schema({
 
 var OrganizationModel = mongoose.model('Organization', OrganizationSchema);
 var CustomerModel = mongoose.model('Customer', CustomerSchema);
+var CustomerModelETL = mongoose.model('etlCustomer', CustomerSchema);
 
 exports.OrganizationModel = OrganizationModel;
 exports.CustomerModel = CustomerModel;
+exports.CustomerModelETL = CustomerModelETL;
