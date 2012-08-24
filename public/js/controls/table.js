@@ -45,9 +45,9 @@ opty.TableView = Backbone.View.extend({
         if (this.options.sortable) {
             this.$el.addClass('tablesorter');
             if (this.options.defaultSort) {
-                this.$el.tablesorter({ 
-                    sortInitialOrder: this.options.sortOrder,
-                    sortList: this.options.defaultSort
+                this.$el.tablesorter({
+                    sortList: this.options.defaultSort,
+                    sortInitialOrder: this.options.sortInitialOrder
                 });
             } else {
                 this.$el.tablesorter();
