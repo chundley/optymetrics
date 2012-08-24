@@ -21,7 +21,8 @@ var logger = require('./util/logger'),
     trello_backfill = require('./jobs/trello_backfill.js'),
     pingdom = require('./jobs/pingdom-job.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
-    uptime = require('./data_access/uptime-dao.js');
+    uptime = require('./data_access/uptime-dao.js'),
+    tcojob = require('./jobs/tco-job.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();

@@ -1,4 +1,6 @@
-﻿// Mongoose model for shard data
+﻿/**
+* Mongoose model for the shards collection
+*/
 
 mongoose = require('mongoose');
 
@@ -16,5 +18,8 @@ var ShardSchema = new Schema({
     disabled: Boolean
 });
 
+var ShardModelETL = mongoose.model('etlShard', ShardSchema);
 var ShardModel = mongoose.model('Shard', ShardSchema);
+
+exports.ShardModelETL = ShardModelETL;
 exports.ShardModel = ShardModel;
