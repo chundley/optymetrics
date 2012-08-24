@@ -11,11 +11,23 @@ Opty.ProductDevView = Backbone.View.extend({
     },
 
     render: function() {
+        // Unbind all reportrange:changed listeners. TODO: More robust view cleanup
+        Opty.pubsub.unbind('reportrange:changed');
         switch(this.options.selected) {
             case 'bug-metrics': {
                 break;
             }
             case 'sprint-metrics': {
+                // Configure report date range picker
+                var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+                var datePickerView = new Opty.DateRangeView({});
+                
+                $datePickerRow.append(datePickerView.$el);
+                this.$el.append($datePickerRow);
+
+                var velocityCollection = new Opty.VelocityCollection();
+                var featureGroupCollection = new Opty.FeatureGroupCollection({});
+                
                 // Define basic top-level view infrastructure
                 var $velocityRow = $('<div>', { 'class': 'row-fluid' });
                 var $velocityChartColumn = $('<div>', { 'class': 'span6' });
@@ -24,8 +36,6 @@ Opty.ProductDevView = Backbone.View.extend({
                 $velocityRow.append($velocityChartColumn);
                 $velocityRow.append($velocityTableColumn);
 
-                var velocityCollection = new Opty.VelocityCollection();
-                
                 // Chart view 
                 var velocityChart = new Opty.VelocityChart({ collection: velocityCollection }); 
                 $velocityChartColumn.append(velocityChart.$el);
@@ -38,7 +48,8 @@ Opty.ProductDevView = Backbone.View.extend({
                           formatter: function(data) {
                               if(data) {
                                   var date = new Date(data);
-                                  return date.getFullYear() + '-' + opty.util.padNumber(date.getMonth() + 1, 2) + '-' + opty.util.padNumber(date.getDate(), 2); 
+                                  return date.getFullYear() + '-' + opty.util.padNumber(date.getMonth() + 1, 2) + 
+                                      '-' + opty.util.padNumber(date.getDate(), 2); 
                               } else {
                                   return "";
                               }
@@ -72,7 +83,25 @@ Opty.ProductDevView = Backbone.View.extend({
                
                 $velocityTableColumn.append(velocityTable.$el);
                 
-                velocityCollection.fetch();
+                //velocityCollection.fetch();
+
+                // Feature group section
+                var $featureGroupRow = $('<div>', { 'class': 'row-fluid' });
+                var $featureGroupTableColumn = $('<div>', { 'class': 'span6' });
+                var $featureGroupChartColumn = $('<div>', { 'class': 'span6' });
+                this.$el.append($featureGroupRow);
+                $featureGroupRow.append($featureGroupChartColumn);
+                $featureGroupRow.append($featureGroupTableColumn);
+               
+
+                var featureGroupChart = new Opty.FeatureGroupChartView({ collection: featureGroupCollection });
+                $featureGroupChartColumn.append(featureGroupChart.$el);
+
+                //featureGroupCollection.fetch();
+
+                // Render the date picker last as it is the main driver of events impacted data fetch
+                datePickerView.render();
+                
                 break;
             }
             default: {
@@ -80,7 +109,7 @@ Opty.ProductDevView = Backbone.View.extend({
                 break;
             }
         }
-      
+        
         return this.$el;
     }
 });

@@ -50,7 +50,7 @@ var getFeatureGroups = function(name) {
     var featureGroupRegex = /\[(.+)\]$/;
     var matches = featureGroupRegex.exec(name.trim());
     if(matches && matches.length == 2) {
-        return matches[1].split(',');
+        return matches[1];
     }
     return null;
 };

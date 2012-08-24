@@ -59,22 +59,40 @@ app.configure(function() {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
+app.get('/rest/productdev/velocity/feature', function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    
+    metrics_dao.getPointsByFeatureGroup(startDate, endDate, function(err, results) {
+        if(err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('InternalServerError');
+            return;
+        }
+        res.send(results);
+    });
+});
+
 // Fetches velocity data as JSON
-app.get('/dev/velocity', function(req, res, next) {
-    metrics_dao.getDeploymentVelocity(function(err, results) {
+app.get('/rest/productdev/velocity', function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    
+    metrics_dao.getDeploymentVelocity(startDate, endDate, function(err, results) {
          if(err) {
             logger.log('info',err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
         }
-        
+
         res.send(results);
     });
 });
 
 // Fetches velocity data as CSV. 
-app.get('/dev/velocity/csv', function(req, res, next) {
+app.get('/rest/productdev/velocity/csv', function(req, res, next) {
     metrics_dao.getDeploymentVelocity(function(err, results) {
         if(err) {
             logger.log('info',err);

@@ -86,10 +86,12 @@ Opty.VelocityChart = Backbone.View.extend({
         var features = [], defects = [], excellence = [];
         var categories = [];
         me.collection.each(function(model) {
-            categories.push(Highcharts.dateFormat('Week of %b %e', me.convertDateToUTC(new Date(model.get('week_of')))));
-            features.push(model.get('feature_velocity'));
-            defects.push(model.get('defect_velocity'));
-            excellence.push(model.get('excellence_velocity'));
+            if(model.get('total')) {
+                categories.push(Highcharts.dateFormat('Week of %b %e', me.convertDateToUTC(new Date(model.get('week_of')))));
+                features.push(model.get('feature_velocity'));
+                defects.push(model.get('defect_velocity'));
+                excellence.push(model.get('excellence_velocity'));
+            }
         });
       
         this.velocityChartOptions.xAxis.categories = categories;

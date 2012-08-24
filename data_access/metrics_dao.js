@@ -90,7 +90,7 @@ var insertList = function(id, name, callback) {
     });
 };
 
-var getDeploymentVelocity = function(callback) {
+var getDeploymentVelocity = function(startDate, endDate, callback) {
     var map = function() {
         var getWeek = function(d) {
             /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
@@ -175,7 +175,7 @@ var getDeploymentVelocity = function(callback) {
 
     var command = {
         mapreduce: 'stories',
-        query: { deployed: true },
+        query: { deployed: true, deployedOn: {$gte: startDate, $lt: endDate} },
         map:  map.toString(),
         reduce: reduce.toString(), // map and reduce functions need to be strings
         out: { inline: 1 }
@@ -196,10 +196,61 @@ var getDeploymentVelocity = function(callback) {
                               var split_key = result._id.split('-');
                               weeknum = split_key[0];
                               year = split_key[1];
-                              return {  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), defect_velocity: result.value.defect_velocity, 
-                                        feature_velocity: result.value.feature_velocity, excellence_velocity: result.value.excellence_velocity, total: result.value.defect_velocity + result.value.feature_velocity + result.value.excellence_velocity }; 
+                              
+                              var result = {  
+                                  week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), 
+                                  defect_velocity: result.value.defect_velocity, 
+                                  feature_velocity: result.value.feature_velocity, 
+                                  excellence_velocity: result.value.excellence_velocity, 
+                                  total: result.value.defect_velocity + result.value.feature_velocity + result.value.excellence_velocity 
+                              }; 
+                            
+                              return result;
                           }
                     )
+                );
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+};
+
+var getPointsByFeatureGroup = function(startDate, endDate, callback) {
+    var map = function() {
+        if(this.featureGroups && this.featureGroups.length > 0 && this.size) {
+            emit(this.featureGroups[0], this.size);
+        }
+    };
+
+    var reduce = function(key, values) {
+        var size = 0;
+        values.forEach(function(value) {
+            size += value;
+        });
+
+        return size;
+    };
+
+    var command = {
+        mapreduce: 'stories',
+        map:  map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: { deployed: true, deployedOn: {$gte: startDate, $lt: endDate} },
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function(err, results) {
+            if(err) {
+                logger.log('error', err);
+            }
+
+            if(results.numberReturned > 0) {
+                callback(err, 
+                    _.map(results.documents[0].results, function(result, key) {
+                            return { featureGroup: result._id, size: result.value };
+                    })
                 );
             } else {
                 callback(err, []);
@@ -214,5 +265,6 @@ exports.ListModel = ListModel;
 exports.MemberModel = MemberModel;
 exports.StoryModel = StoryModel;
 exports.getDeploymentVelocity = getDeploymentVelocity;
+exports.getPointsByFeatureGroup = getPointsByFeatureGroup;
 exports.insertMember = insertMember;
 exports.insertList = insertList;

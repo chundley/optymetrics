@@ -1,5 +1,8 @@
 if(!window.Opty) { window.Opty = {}; }
 
+Opty.pubsub = {};
+_.extend(Opty.pubsub, Backbone.Events);
+
 Opty.OptyMetricsRouter = Backbone.Router.extend({
     routes: {
         '': 'defaultRoute',
