@@ -149,7 +149,7 @@ opty.OperationsView = Backbone.View.extend({
             case 'tco':
                 {
 
-                    var tco_collection = new opty.TCOCollection();
+                    var tco_collection = new opty.TCOCollection({}, { 'count': '100' });
 
                     var tco_table = new opty.TableView({
                         table_fields: [
@@ -251,14 +251,14 @@ opty.OperationsView = Backbone.View.extend({
                         }
                     }
                     ],
-                    
-                    sortable: true,
-                    defaultSort: [[6, 1]],
-                    sortInitialOrder: 'desc',
-                    collection: tco_collection
+
+                        sortable: true,
+                        defaultSort: [[6, 1]],
+                        sortInitialOrder: 'desc',
+                        collection: tco_collection
                     });
 
-                    this.$el.append($('<div>', { 'class': 'span9' }).append(tco_table.$el));
+                    this.$el.append($('<div>', { 'class': 'span12' }).append(tco_table.$el));
 
                     tco_collection.fetch();
 

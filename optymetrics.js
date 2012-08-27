@@ -127,7 +127,13 @@ app.get('/rest/productdev/velocity/csv', function(req, res, next) {
 
 // fetch TCO data
 app.get('/ops/tco', function (req, res, next) {
-    tco_dao.getCustomerTCOData(50, function (err, customers) {
+    var params = url.parse(req.url, true).query;
+    var count = 50;
+    if (params.count) {
+        count = params.count;
+    }
+    console.log(count);
+    tco_dao.getCustomerTCOData(count, function (err, customers) {
         if (err) {
             logger.log('error', err);
             res.statusCode = 500;
