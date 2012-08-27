@@ -75,4 +75,19 @@ var saveShards = function (shards, callback) {
     });
 }
 
+/**
+* Gets a shard based on the shard_configuration_id passed in
+*/
+var getShard = function (shardId, callback) {
+    shard_model.ShardModel.findOne({ id: shardId }, function (err, shard) {
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, shard);
+        }
+    });
+}
+
 exports.saveShards = saveShards;
+exports.getShard = getShard;

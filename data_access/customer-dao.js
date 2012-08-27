@@ -102,6 +102,49 @@ var saveCustomer = function (customer, callback) {
     });
 };
 
+/**
+* Returns one customer by customer id
+*/
+var getCustomerById = function (customerId, callback) {
+    customer_model.CustomerModel.findOne({ id: customerId }, function (err, doc) {
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, doc);
+        }
+    });
+};
+
+/**
+* Gets summary counts for all customers in the customers collection
+*/
+var getSummaryCounts = function (callback) {
+    var counts = {
+        keywords: 0,
+        visitors: 0,
+        visits: 0,
+        pageviews: 0
+    };
+    customer_model.CustomerModel.find({}, function (err, docs) {
+        async.forEach(docs, function (doc, callback_inner) {
+            counts.keywords += doc.keywords;
+            counts.visitors += doc.visitors;
+            counts.visits += doc.visits;
+            counts.pageviews += doc.pageviews;
+            callback_inner();
+        },
+        function (err) { // callback_inner
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, counts);
+        });
+    });
+};
+
 exports.getAllCustomers = getAllCustomers;
 exports.refreshAllCustomers = refreshAllCustomers;
 exports.saveCustomer = saveCustomer;
+exports.getCustomerById = getCustomerById;
+exports.getSummaryCounts = getSummaryCounts

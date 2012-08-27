@@ -6,8 +6,8 @@
 * node.js libraries
 */
 var async = require('async'),
-pg = require('pg'),
-_ = require('underscore');
+    pg = require('pg'),
+    _ = require('underscore');
 
 /**
 * Local project libraries
@@ -19,6 +19,9 @@ var logger = require('../util/logger.js'),
 
 var coredb_config = require('config').CoreDb;
 
+/**
+* Queries for list of shards, returns array of ShardModelETL
+*/
 var getShards = function (callback) {
     pg.connect(coredb_config.connectionString, function (err, client) {
         if (err) {
@@ -139,29 +142,26 @@ var getCustomerKeywordCount = function (customer, callback) {
                 callback(err, null);
             }
             // fetch a row at a time, fire callback when all orgs have been updated for the customer
-            async.forEach(result.rows, function (row, callback) {
+            async.forEach(result.rows, function (row, callback_inner) {
                 for (var i = 0; i < customer.organizations.length; i++) {
                     if (customer.organizations[i].id == row.organization_id) {
                         customer.organizations[i].keywords = row.keywords;
                     }
                 }
-                callback();
+                callback_inner();
             },
-            function () {
+            function () { // callback_inner
                 // all rows have been updated with keyword counts
-                async.forEach(customer.organizations, function (organization, callback) {
+                async.forEach(customer.organizations, function (organization, callback_inner) {
                     // update customer with cumulative data, fire callback when all done to trigger a save
                     customer.keywords += organization.keywords;
-                    callback();
+                    callback_inner();
                 },
-                function () {
+                function () { // callback_inner
                     callback(null, customer);
                 });
             });
-
         }); // end query
-        // no keywords found, but still need callback
-        callback(null, customer);
     }); // end pg.connect
 };
 

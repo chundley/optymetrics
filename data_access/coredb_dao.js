@@ -12,7 +12,7 @@ var async = require('async'),
     number_util = require('../util/number_util.js'),
     customer_model = require('./model/customer-model.js'),
     cost_model = require('./model/cost-model.js'),
-    cost_dao = require('./cost_dao.js'),
+    cost_dao = require('./cost-dao.js'),
     shard_model = require('./model/shard-model.js'),
     coredb_config = require('config').CoreDb;
 
@@ -373,7 +373,7 @@ var updateStats = function (callback) {
                     });
                 },
                 function (callback_inner) {
-                    cost_dao.costBackfill('./data_access/data_feed/costs-data.csv', function () {
+                    cost_dao.costBackfill(function () {
                         logger.log('info', 'Cost baseline data updated');
                         callback_inner();
                     });
