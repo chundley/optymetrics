@@ -51,8 +51,8 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
                 selected: true // default
             },
             {
-                url_fragment: 'sprint-metrics',
-                title: 'Sprint Metrics'
+                url_fragment: 'story-detail',
+                title: 'Story Detail'
             },
             {
                 url_fragment: 'bug-metrics',
