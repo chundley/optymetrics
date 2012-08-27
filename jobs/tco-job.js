@@ -18,6 +18,11 @@ var logger = require('../util/logger.js'),
     cost_dao = require('../data_access/cost-dao.js'),
     mrr_api = require('../data_access/mrr-api.js');
 
+/**
+* Fixed amount - assume the system will scale and always have 20% headroom when calculating TCO
+*/
+var TRAFFIC_CAPACITY = .8;
+
 var tcoJob = function () {
     async.series([
         function (callback) {  // ETL STEP 1: Shards
@@ -172,7 +177,7 @@ var tcoJob = function () {
                         async.forEach(customers, function (customer, callback_inner) {
                             customer.percTraffic = customer.pageviews / counts.pageviews;
                             customer.percSEO = customer.keywords / counts.keywords;
-                            customer.tcoTraffic = customer.percTraffic * costs.tcoTraffic;
+                            customer.tcoTraffic = customer.percTraffic * costs.tcoTraffic * TRAFFIC_CAPACITY;
                             customer.tcoSEO = customer.percSEO * costs.tcoKeywords;
                             customer.tcoTotal = customer.tcoTraffic + customer.tcoSEO;
 
@@ -183,7 +188,7 @@ var tcoJob = function () {
                             for (var i = 0; i < customer.organizations.length; i++) {
                                 customer.organizations[i].percTraffic = customer.organizations[i].pageviews / counts.pageviews;
                                 customer.organizations[i].percSEO = customer.organizations[i].keywords / counts.keywords;
-                                customer.organizations[i].tcoTraffic = customer.organizations[i].percTraffic * costs.tcoTraffic;
+                                customer.organizations[i].tcoTraffic = customer.organizations[i].percTraffic * costs.tcoTraffic * TRAFFIC_CAPACITY;
                                 customer.organizations[i].tcoSEO = customer.organizations[i].percSEO * costs.tcoKeywords;
                                 customer.organizations[i].tcoTotal = customer.organizations[i].tcoTraffic + customer.organizations[i].tcoSEO;
                             }
