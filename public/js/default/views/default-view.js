@@ -1,6 +1,6 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.DefaultView = Backbone.View.extend({
+Opty.DefaultView = Backbone.View.extend({
     id: 'default-view',
     className: 'row-fluid',
 
@@ -20,7 +20,7 @@ opty.DefaultView = Backbone.View.extend({
                     var div1 = that.$el.append($('<div>', { 'class': 'span3', 'id': 'div1' }));
 
                     // uptime widget for Optify's main services
-                    var uptime_collection = new opty.UptimeCollection({}, { 'count': '180' });
+                    var uptime_collection = new Opty.UptimeCollection({}, { 'count': '180' });
                     uptime_collection.fetch({
                         success: function (uptimes) {
                             var currentPerc = 0;
@@ -47,12 +47,12 @@ opty.DefaultView = Backbone.View.extend({
                                 oldPerc = currentPerc;
                             }
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new opty.PeriodCompareWidgetView({
+                            var widget_table = new Opty.PeriodCompareWidgetView({
                                 title: 'system uptime',
                                 goal: '99.99%',
-                                actual: opty.util.formatNumber(currentPerc, 3) + '%',
+                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
                                 type: updown,
-                                delta: opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
+                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
                                 period: '30 days'
                             });
                             that.$el.append($('#div1').append(widget_table.$el));

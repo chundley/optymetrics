@@ -1,13 +1,13 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.UptimeModel = Backbone.Model.extend({});
+Opty.UptimeModel = Backbone.Model.extend({});
 
-opty.UptimeCollection = Backbone.Collection.extend({
+Opty.UptimeCollection = Backbone.Collection.extend({
     initialize: function (attributes, options) {
         this.monitorName = options.monitorName;
         this.count = options.count;
     },
-    model: opty.UptimeModel,
+    model: Opty.UptimeModel,
     url: function () {
         if (this.monitorName) {
             if (this.count) {

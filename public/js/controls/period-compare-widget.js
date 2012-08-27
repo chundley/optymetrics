@@ -1,6 +1,6 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.PeriodCompareWidgetView = Backbone.View.extend({
+Opty.PeriodCompareWidgetView = Backbone.View.extend({
     //className: 'period-compare-widget',
     //tagName: 'div',
 

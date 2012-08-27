@@ -1,9 +1,7 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.OperationsView = Backbone.View.extend({
+Opty.OperationsView = Backbone.View.extend({
     id: 'operations-view',
-    className: 'row-fluid',
-
     initialize: function (options) {
         var me = this;
         me.options = options;
@@ -17,12 +15,26 @@ opty.OperationsView = Backbone.View.extend({
                     var that = this;
 
                     // pre-render divs or the widgets will render in random order
-                    var div1 = that.$el.append($('<div>', { 'class': 'span3', 'id': 'div1' }));
-                    var div2 = that.$el.append($('<div>', { 'class': 'span3', 'id': 'div2' }));
-                    var div3 = that.$el.append($('<div>', { 'class': 'span3', 'id': 'div3' }));
+                    var $row1 = $('<div>', { 'class': 'row-fluid' });
+                    var $divservice = $('<div>', { 'class': 'span3' });
+                    var $divdashboard = $('<div>', { 'class': 'span3' });
+                    var $divpages = $('<div>', { 'class': 'span3' });
+                    var $divapi = $('<div>', { 'class': 'span3' });
+
+                    var $row2 = $('<div>', { 'class': 'row-fluid' });
+                    that.$el.append($row1);
+                    $row1.append($divservice);
+                    $row1.append($divdashboard);
+                    $row1.append($divpages);
+                    $row1.append($divapi);
+
+                    /*
+                    var uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
+                    var uptime_view = new Opty.UptimeWidgetView({ collection: uptime_collection, title: 'dashboard uptime', goal: '99.99%', period: '30 days' });
+                    */
 
                     // uptime widget for dashboard.optify.net
-                    var uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
+                    var uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
                     uptime_collection.fetch({
                         success: function (uptimes) {
                             var currentPerc = 0;
@@ -49,20 +61,20 @@ opty.OperationsView = Backbone.View.extend({
                                 oldPerc = currentPerc;
                             }
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new opty.PeriodCompareWidgetView({
+                            var widget_table = new Opty.PeriodCompareWidgetView({
                                 title: 'dashboard uptime',
                                 goal: '99.99%',
-                                actual: opty.util.formatNumber(currentPerc, 3) + '%',
+                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
                                 type: updown,
-                                delta: opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
+                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
                                 period: '30 days'
                             });
-                            that.$el.append($('#div1').append(widget_table.$el));
+                            $divdashboard.append(widget_table.$el);
                         }
 
                     });
 
-                    uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'service', 'count': '60' });
+                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'count': '60' });
                     uptime_collection.fetch({
                         success: function (uptimes) {
                             var currentPerc = 0;
@@ -89,21 +101,21 @@ opty.OperationsView = Backbone.View.extend({
                                 oldPerc = currentPerc;
                             }
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new opty.PeriodCompareWidgetView({
+                            var widget_table = new Opty.PeriodCompareWidgetView({
                                 title: 'service uptime',
                                 goal: '99.99%',
-                                actual: opty.util.formatNumber(currentPerc, 3) + '%',
+                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
                                 type: updown,
-                                delta: opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
+                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
                                 period: '30 days'
                             });
 
-                            that.$el.append($('#div2').append(widget_table.$el));
+                            $divservice.append(widget_table.$el);
                         }
 
                     });
 
-                    uptime_collection = new opty.UptimeCollection({}, { 'monitorName': 'www', 'count': '60' });
+                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'landingpages', 'count': '60' });
                     uptime_collection.fetch({
                         success: function (uptimes) {
                             var currentPerc = 0;
@@ -130,16 +142,57 @@ opty.OperationsView = Backbone.View.extend({
                                 oldPerc = currentPerc;
                             }
                             var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new opty.PeriodCompareWidgetView({
-                                title: 'pages uptime',
+                            var widget_table = new Opty.PeriodCompareWidgetView({
+                                title: 'land. pages uptime',
                                 goal: '99.99%',
-                                actual: opty.util.formatNumber(currentPerc, 3) + '%',
+                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
                                 type: updown,
-                                delta: opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
+                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
                                 period: '30 days'
                             });
 
-                            that.$el.append($('#div3').append(widget_table.$el));
+                            $divpages.append(widget_table.$el);
+                        }
+
+                    });
+
+                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'api', 'count': '60' });
+                    uptime_collection.fetch({
+                        success: function (uptimes) {
+                            var currentPerc = 0;
+                            var oldPerc = 0;
+                            var uTotal = 0, dTotal = 0;
+                            var count = 1;
+                            uptimes.forEach(function (u) {
+                                uTotal += u.get('uptime');
+                                dTotal += u.get('downtime');
+                                count++;
+                                if (count == 30) {
+                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
+                                    uTotal = 0;
+                                    dTotal = 0;
+                                }
+                            });
+
+                            // account for the case where there are less than 30 data points
+                            if (currentPerc > 0) {
+                                oldPerc = uTotal / (uTotal + dTotal) * 100;
+                            }
+                            else {
+                                currentPerc = uTotal / (uTotal + dTotal) * 100;
+                                oldPerc = currentPerc;
+                            }
+                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
+                            var widget_table = new Opty.PeriodCompareWidgetView({
+                                title: 'api uptime',
+                                goal: '99.99%',
+                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
+                                type: updown,
+                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
+                                period: '30 days'
+                            });
+
+                            $divapi.append(widget_table.$el);
                         }
 
                     });
@@ -149,9 +202,9 @@ opty.OperationsView = Backbone.View.extend({
             case 'tco':
                 {
 
-                    var tco_collection = new opty.TCOCollection({}, { 'count': '100' });
+                    var tco_collection = new Opty.TCOCollection({}, { 'count': '100' });
 
-                    var tco_table = new opty.TableView({
+                    var tco_table = new Opty.TableView({
                         table_fields: [
                     {
                         field: 'name',
@@ -167,7 +220,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return opty.util.formatNumber(data, 0);
+                                return Opty.util.formatNumber(data, 0);
                             } else {
                                 return '0';
                             }
@@ -179,7 +232,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return '$' + opty.util.formatNumber(data, 2);
+                                return '$' + Opty.util.formatNumber(data, 2);
                             } else {
                                 return '$0.00';
                             }
@@ -191,7 +244,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return opty.util.formatNumber(data, 0);
+                                return Opty.util.formatNumber(data, 0);
                             } else {
                                 return '0';
                             }
@@ -203,7 +256,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return '$' + opty.util.formatNumber(data, 2);
+                                return '$' + Opty.util.formatNumber(data, 2);
                             } else {
                                 return '$0.00';
                             }
@@ -215,7 +268,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return '$' + opty.util.formatNumber(data, 2);
+                                return '$' + Opty.util.formatNumber(data, 2);
                             } else {
                                 return '$0.00';
                             }
@@ -227,7 +280,7 @@ opty.OperationsView = Backbone.View.extend({
                         text_align: 'right',
                         formatter: function (data) {
                             if (data) {
-                                return '$' + opty.util.formatNumber(data, 2);
+                                return '$' + Opty.util.formatNumber(data, 2);
                             } else {
                                 return '$0.00';
                             }
@@ -240,10 +293,10 @@ opty.OperationsView = Backbone.View.extend({
                         formatter: function (data) {
                             if (data) {
                                 if (data < 0) {
-                                    return '($' + opty.util.formatNumber(data, 2).replace(/-/, '') + ')';
+                                    return '($' + Opty.util.formatNumber(data, 2).replace(/-/, '') + ')';
                                 }
                                 else {
-                                    return '$' + opty.util.formatNumber(data, 2);
+                                    return '$' + Opty.util.formatNumber(data, 2);
                                 }
                             } else {
                                 return '$0.00';
@@ -264,10 +317,10 @@ opty.OperationsView = Backbone.View.extend({
 
 
                     /*
-                    var tco_collection = new opty.TCOCollection();
+                    var tco_collection = new Opty.TCOCollection();
 
 
-                    var tcotable_view = new opty.TCOTableView({ collection: tco_collection });
+                    var tcotable_view = new Opty.TCOTableView({ collection: tco_collection });
                     this.$el.append(tcotable_view.$el);
                     tco_collection.fetch();
                     */

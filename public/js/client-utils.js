@@ -1,7 +1,7 @@
-var opty = opty || {};
-opty.util = opty.util || {};
+if (!window.Opty) { window.Opty = {}; }
+Opty.util = Opty.util || {};
 
-opty.util.padNumber = function pad(number, length) {
+Opty.util.padNumber = function pad(number, length) {
     var str = '' + number;
     while (str.length < length) {
       str = '0' + str;
@@ -11,7 +11,7 @@ opty.util.padNumber = function pad(number, length) {
 }
 
 
-opty.util.formatNumber = function(number, decimals, dec_point, thousands_sep) {
+Opty.util.formatNumber = function(number, decimals, dec_point, thousands_sep) {
     // Pulled from StackOverflow:
     // http://stackoverflow.com/questions/2901102/how-to-print-number-with-commas-as-thousands-separators-in-javascript
     var n = !isFinite(+number) ? 0 : +number,

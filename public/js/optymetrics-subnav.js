@@ -1,6 +1,6 @@
-var opty = opty || {};
+if (!window.Opty) { window.Opty = {}; }
 
-opty.OptyMetricSubNav = Backbone.View.extend({
+Opty.OptyMetricSubNav = Backbone.View.extend({
     className: 'nav nav-pills',
     tagName: 'ul',
 

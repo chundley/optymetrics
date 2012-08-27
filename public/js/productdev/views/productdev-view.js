@@ -55,7 +55,7 @@ Opty.ProductDevView = Backbone.View.extend({
         var velocityChart = new Opty.VelocityChart({ collection: velocityCollection }); 
         $velocityChartColumn.append(velocityChart.$el);
         
-        var velocityTable = new opty.TableView({
+        var velocityTable = new Opty.TableView({
             table_fields: [
               {
                   field: 'week_of',
@@ -63,8 +63,8 @@ Opty.ProductDevView = Backbone.View.extend({
                   formatter: function(data) {
                       if(data) {
                           var date = new Date(data);
-                          return date.getFullYear() + '-' + opty.util.padNumber(date.getMonth() + 1, 2) + 
-                              '-' + opty.util.padNumber(date.getDate(), 2); 
+                          return date.getFullYear() + '-' + Opty.util.padNumber(date.getMonth() + 1, 2) + 
+                              '-' + Opty.util.padNumber(date.getDate(), 2); 
                       } else {
                           return "";
                       }

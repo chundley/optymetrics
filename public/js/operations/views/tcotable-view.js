@@ -1,6 +1,6 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.TCOTableView = Backbone.View.extend({
+Opty.TCOTableView = Backbone.View.extend({
 
     initialize: function (options) {
         var me = this;
@@ -18,7 +18,7 @@ opty.TCOTableView = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        var tco_table = new opty.TableView({
+        var tco_table = new Opty.TableView({
             table_fields: [
                           {
                               field: 'name',
@@ -34,7 +34,7 @@ opty.TCOTableView = Backbone.View.extend({
                               text_align: 'right',
                               formatter: function (data) {
                                   if (data) {
-                                      return '$ ' + opty.util.formatNumber(data, 2);
+                                      return '$ ' + Opty.util.formatNumber(data, 2);
                                   } else {
                                       return "";
                                   }
@@ -46,7 +46,7 @@ opty.TCOTableView = Backbone.View.extend({
                               text_align: 'right',
                               formatter: function (data) {
                                   if (data) {
-                                      return '$ ' + opty.util.formatNumber(data, 2);
+                                      return '$ ' + Opty.util.formatNumber(data, 2);
                                   } else {
                                       return "";
                                   }

@@ -1,6 +1,6 @@
-var opty = opty || {};
+if (!window.Opty) { window.Opty = {}; }
 
-opty.TableView = Backbone.View.extend({
+Opty.TableView = Backbone.View.extend({
     className: 'table table-striped table-bordered table-condensed',
     tagName: 'table',
 

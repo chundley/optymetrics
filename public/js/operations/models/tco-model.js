@@ -1,12 +1,12 @@
-﻿var opty = opty || {};
+﻿if (!window.Opty) { window.Opty = {}; }
 
-opty.TCOModel = Backbone.Model.extend({});
+Opty.TCOModel = Backbone.Model.extend({});
 
-opty.TCOCollection = Backbone.Collection.extend({
+Opty.TCOCollection = Backbone.Collection.extend({
     initialize: function (attributes, options) {
         this.count = options.count;
     },
-    model: opty.TCOModel,
+    model: Opty.TCOModel,
     url: function () {
         if (this.count) {
             return '/ops/tco' + '?count=' + this.count;
