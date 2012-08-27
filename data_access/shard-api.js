@@ -54,5 +54,5 @@ var QUERY_VISITORS = "select " +
                              "sum(va.total_pageviews) as \"pageviews\" " +
                         "from visitor_aggregate va " +
                         "where va.organization_id = $1 " +
-                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '91 DAY' " +
+                        "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '31 DAY' " +
                         "group by va.organization_id";
