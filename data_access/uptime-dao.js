@@ -13,14 +13,14 @@ var async = require('async'),
 * monitors that account for our overall uptime metric
 *
 * @param monitorName   The monitor to get uptime stats for
-* @param count         The number of days to return
+* @param startDate     Start date for uptime statistics
+* @param endDate       End date for uptime statistics
 */
-var getUptimeData = function (monitorName, count, callback) {
+var getUptimeData = function (monitorName, startDate, endDate, callback) {
     if (monitorName) {
         uptime_model.UptimeModel
-        .find({ 'monitorName': monitorName })
+        .find({ 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} })
         .sort('monitorDate', -1)
-        .limit(count)
         .exec(function (err, uptimes) {
             if (err) {
                 callback(err, null);
@@ -46,6 +46,47 @@ var getUptimeData = function (monitorName, count, callback) {
     }
 };
 
+var getUptimeAggregate = function (monitorName, startDate, endDate, callback) {
+    var map = function () {
+        emit('uptime', this.uptime);
+    };
+
+    var reduce = function (key, values) {
+        var sum = 0;
+        values.forEach(function (value) {
+            sum += value;
+        });
+
+        return sum;
+    };
+
+    var command = {
+        mapreduce: 'uptimes',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: { 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} },
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+
+            if (results.numberReturned > 0) {
+                callback(err,
+                    _.map(results.documents[0].results, function (result, key) {
+                        return { featureGroup: result._id, size: result.value };
+                    })
+                );
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+    
+};
 
 /**
 * Parse results from a call to Pingdom's API to get uptime for

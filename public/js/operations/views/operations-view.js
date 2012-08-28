@@ -30,12 +30,15 @@ Opty.OperationsView = Backbone.View.extend({
                     // ROW 2
                     var $row2 = $('<div>', { 'class': 'row-fluid' });
 
+                    var endDate = Date.today();
+
                     // fetch and render uptime widget for service.optify.net
-                    var uptimeCollectionService = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'count': '60' });
+                    var uptimeCollectionService = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'startDate': Date.today().add({ days: -30 }), 'endDate': endDate });
                     var uptimeWidgetService = new Opty.UptimeWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%', period: '30 days' });
                     $divUptimeService.append(uptimeWidgetService.$el);
                     uptimeCollectionService.fetch();
 
+                    /*
                     // fetch and render uptime widget for dashboard.optify.net
                     var uptimeCollectionDashboard = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
                     var uptimeWidgetDashboard = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%', period: '30 days' });
@@ -53,7 +56,7 @@ Opty.OperationsView = Backbone.View.extend({
                     var uptimeWidgetApi = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%', period: '30 days' });
                     $divUptimeApi.append(uptimeWidgetApi.$el);
                     uptimeCollectionApi.fetch();
-
+                    */
                     break;
                 }
             case 'tco':

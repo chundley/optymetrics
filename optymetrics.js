@@ -178,12 +178,14 @@ app.get('/ops/uptime', function (req, res, next) {
 // @param monitorName            which monitor to pull data for
 // @param count (query string)   how many days to return (default 30)
 app.get('/ops/uptime/:monitorName', function (req, res, next) {
-    var params = url.parse(req.url, true).query;
-    var count = 30;
-    if (params.count) {
-        count = params.count;
-    }
-    uptime.getUptimeData(req.params.monitorName, count, function (err, uptimes) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+//    var params = url.parse(req.url, true).query;
+//    var count = 30;
+//    if (params.count) {
+//        count = params.count;
+    //    }
+    uptime.getUptimeData(req.params.monitorName, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
             res.statusCode = 500;
