@@ -196,6 +196,45 @@ app.get('/ops/uptime/:monitorName', function (req, res, next) {
     });
 });
 
+app.get('/ops/uptimeaggregate', function (req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    //    var params = url.parse(req.url, true).query;
+    //    var count = 30;
+    //    if (params.count) {
+    //        count = params.count;
+    //    }
+    
+    uptime.getUptimeDataAggregate(null, startDate, endDate, function (err, uptimes) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(uptimes);
+    });
+});
+
+app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    //    var params = url.parse(req.url, true).query;
+    //    var count = 30;
+    //    if (params.count) {
+    //        count = params.count;
+    //    }
+    uptime.getUptimeDataAggregate(req.params.monitorName, startDate, endDate, function (err, uptimes) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(uptimes);
+    });
+});
+
 // Start the web server
 var server = app.listen(3000);
 logger.log('info', 'Server started. Listening on port 3000');

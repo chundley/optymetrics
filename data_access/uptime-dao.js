@@ -46,25 +46,34 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
     }
 };
 
-var getUptimeAggregate = function (monitorName, startDate, endDate, callback) {
+var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback) {
+
     var map = function () {
-        emit('uptime', this.uptime);
+        emit('uptimes', { 'uptime': this.uptime, 'downtime': this.downtime });
     };
 
     var reduce = function (key, values) {
-        var sum = 0;
-        values.forEach(function (value) {
-            sum += value;
-        });
-
-        return sum;
+        var totals = { uptime: 0, downtime: 0 };
+        for (var i in values) {
+            totals.uptime += values[i].uptime;
+            totals.downtime += values[i].downtime;
+        }
+        return totals;
     };
+
+    var where = {};
+    if (monitorName) {
+        where = { 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} };
+    }
+    else {
+        where = { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} };
+    }
 
     var command = {
         mapreduce: 'uptimes',
         map: map.toString(),
         reduce: reduce.toString(), // map and reduce functions need to be strings
-        query: { 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} },
+        query: where,
         out: { inline: 1 }
     };
 
@@ -75,17 +84,13 @@ var getUptimeAggregate = function (monitorName, startDate, endDate, callback) {
             }
 
             if (results.numberReturned > 0) {
-                callback(err,
-                    _.map(results.documents[0].results, function (result, key) {
-                        return { featureGroup: result._id, size: result.value };
-                    })
-                );
+                callback(err, results.documents[0].results[0].value);
             } else {
                 callback(err, []);
             }
         }
     );
-    
+
 };
 
 /**
@@ -144,4 +149,5 @@ var saveUptimeStats = function (data, monitorName, callback) {
 };
 
 exports.getUptimeData = getUptimeData;
+exports.getUptimeDataAggregate = getUptimeDataAggregate;
 exports.saveUptimeStats = saveUptimeStats;
