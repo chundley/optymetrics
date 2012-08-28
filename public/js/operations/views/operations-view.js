@@ -15,187 +15,44 @@ Opty.OperationsView = Backbone.View.extend({
                     var that = this;
 
                     // pre-render divs or the widgets will render in random order
+                    // ROW 1
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
-                    var $divservice = $('<div>', { 'class': 'span3' });
-                    var $divdashboard = $('<div>', { 'class': 'span3' });
-                    var $divpages = $('<div>', { 'class': 'span3' });
-                    var $divapi = $('<div>', { 'class': 'span3' });
-
-                    var $row2 = $('<div>', { 'class': 'row-fluid' });
+                    var $divUptimeService = $('<div>', { 'class': 'span3' });
+                    var $divUptimeDashboard = $('<div>', { 'class': 'span3' });
+                    var $divUptimePages = $('<div>', { 'class': 'span3' });
+                    var $divUptimeApi = $('<div>', { 'class': 'span3' });
                     that.$el.append($row1);
-                    $row1.append($divservice);
-                    $row1.append($divdashboard);
-                    $row1.append($divpages);
-                    $row1.append($divapi);
+                    $row1.append($divUptimeService);
+                    $row1.append($divUptimeDashboard);
+                    $row1.append($divUptimePages);
+                    $row1.append($divUptimeApi);
 
-                    /*
-                    var uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
-                    var uptime_view = new Opty.UptimeWidgetView({ collection: uptime_collection, title: 'dashboard uptime', goal: '99.99%', period: '30 days' });
-                    */
+                    // ROW 2
+                    var $row2 = $('<div>', { 'class': 'row-fluid' });
 
-                    // uptime widget for dashboard.optify.net
-                    var uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
-                    uptime_collection.fetch({
-                        success: function (uptimes) {
-                            var currentPerc = 0;
-                            var oldPerc = 0;
-                            var uTotal = 0, dTotal = 0;
-                            var count = 1;
-                            uptimes.forEach(function (u) {
-                                uTotal += u.get('uptime');
-                                dTotal += u.get('downtime');
-                                count++;
-                                if (count == 30) {
-                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                    uTotal = 0;
-                                    dTotal = 0;
-                                }
-                            });
+                    // fetch and render uptime widget for service.optify.net
+                    var uptimeCollectionService = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'count': '60' });
+                    var uptimeWidgetService = new Opty.UptimeWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%', period: '30 days' });
+                    $divUptimeService.append(uptimeWidgetService.$el);
+                    uptimeCollectionService.fetch();
 
-                            // account for the case where there are less than 30 data points
-                            if (currentPerc > 0) {
-                                oldPerc = uTotal / (uTotal + dTotal) * 100;
-                            }
-                            else {
-                                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                oldPerc = currentPerc;
-                            }
-                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new Opty.PeriodCompareWidgetView({
-                                title: 'dashboard uptime',
-                                goal: '99.99%',
-                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-                                type: updown,
-                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-                                period: '30 days'
-                            });
-                            $divdashboard.append(widget_table.$el);
-                        }
+                    // fetch and render uptime widget for dashboard.optify.net
+                    var uptimeCollectionDashboard = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
+                    var uptimeWidgetDashboard = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%', period: '30 days' });
+                    $divUptimeDashboard.append(uptimeWidgetDashboard.$el);
+                    uptimeCollectionDashboard.fetch();
 
-                    });
+                    // fetch and render uptime widget for pages.optify.net
+                    var uptimeCollectionLandingPages = new Opty.UptimeCollection({}, { 'monitorName': 'landingpages', 'count': '60' });
+                    var uptimeWidgetLandingPages = new Opty.UptimeWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%', period: '30 days' });
+                    $divUptimePages.append(uptimeWidgetLandingPages.$el);
+                    uptimeCollectionLandingPages.fetch();
 
-                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'count': '60' });
-                    uptime_collection.fetch({
-                        success: function (uptimes) {
-                            var currentPerc = 0;
-                            var oldPerc = 0;
-                            var uTotal = 0, dTotal = 0;
-                            var count = 1;
-                            uptimes.forEach(function (u) {
-                                uTotal += u.get('uptime');
-                                dTotal += u.get('downtime');
-                                count++;
-                                if (count == 30) {
-                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                    uTotal = 0;
-                                    dTotal = 0;
-                                }
-                            });
-
-                            // account for the case where there are less than 30 data points
-                            if (currentPerc > 0) {
-                                oldPerc = uTotal / (uTotal + dTotal) * 100;
-                            }
-                            else {
-                                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                oldPerc = currentPerc;
-                            }
-                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new Opty.PeriodCompareWidgetView({
-                                title: 'service uptime',
-                                goal: '99.99%',
-                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-                                type: updown,
-                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-                                period: '30 days'
-                            });
-
-                            $divservice.append(widget_table.$el);
-                        }
-
-                    });
-
-                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'landingpages', 'count': '60' });
-                    uptime_collection.fetch({
-                        success: function (uptimes) {
-                            var currentPerc = 0;
-                            var oldPerc = 0;
-                            var uTotal = 0, dTotal = 0;
-                            var count = 1;
-                            uptimes.forEach(function (u) {
-                                uTotal += u.get('uptime');
-                                dTotal += u.get('downtime');
-                                count++;
-                                if (count == 30) {
-                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                    uTotal = 0;
-                                    dTotal = 0;
-                                }
-                            });
-
-                            // account for the case where there are less than 30 data points
-                            if (currentPerc > 0) {
-                                oldPerc = uTotal / (uTotal + dTotal) * 100;
-                            }
-                            else {
-                                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                oldPerc = currentPerc;
-                            }
-                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new Opty.PeriodCompareWidgetView({
-                                title: 'land. pages uptime',
-                                goal: '99.99%',
-                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-                                type: updown,
-                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-                                period: '30 days'
-                            });
-
-                            $divpages.append(widget_table.$el);
-                        }
-
-                    });
-
-                    uptime_collection = new Opty.UptimeCollection({}, { 'monitorName': 'api', 'count': '60' });
-                    uptime_collection.fetch({
-                        success: function (uptimes) {
-                            var currentPerc = 0;
-                            var oldPerc = 0;
-                            var uTotal = 0, dTotal = 0;
-                            var count = 1;
-                            uptimes.forEach(function (u) {
-                                uTotal += u.get('uptime');
-                                dTotal += u.get('downtime');
-                                count++;
-                                if (count == 30) {
-                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                    uTotal = 0;
-                                    dTotal = 0;
-                                }
-                            });
-
-                            // account for the case where there are less than 30 data points
-                            if (currentPerc > 0) {
-                                oldPerc = uTotal / (uTotal + dTotal) * 100;
-                            }
-                            else {
-                                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                oldPerc = currentPerc;
-                            }
-                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new Opty.PeriodCompareWidgetView({
-                                title: 'api uptime',
-                                goal: '99.99%',
-                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-                                type: updown,
-                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-                                period: '30 days'
-                            });
-
-                            $divapi.append(widget_table.$el);
-                        }
-
-                    });
+                    // fetch and render uptime widget for api.optify.net
+                    var uptimeCollectionApi = new Opty.UptimeCollection({}, { 'monitorName': 'api', 'count': '60' });
+                    var uptimeWidgetApi = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%', period: '30 days' });
+                    $divUptimeApi.append(uptimeWidgetApi.$el);
+                    uptimeCollectionApi.fetch();
 
                     break;
                 }

@@ -132,7 +132,6 @@ app.get('/ops/tco', function (req, res, next) {
     if (params.count) {
         count = params.count;
     }
-    console.log(count);
     tco_dao.getCustomerTCOData(count, function (err, customers) {
         if (err) {
             logger.log('error', err);
