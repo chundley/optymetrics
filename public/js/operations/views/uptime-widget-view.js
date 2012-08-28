@@ -24,6 +24,7 @@ Opty.UptimeWidgetView = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
+        /*
         var currentPerc = 0;
         var oldPerc = 0;
         var uTotal = 0, dTotal = 0;
@@ -48,6 +49,8 @@ Opty.UptimeWidgetView = Backbone.View.extend({
             currentPerc = uTotal / (uTotal + dTotal) * 100;
             oldPerc = currentPerc;
         }
+        */
+
         var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
         var widget_table = new Opty.PeriodCompareWidgetView({
             title: me.title,

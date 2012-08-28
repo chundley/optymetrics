@@ -8,7 +8,7 @@ var async = require('async'),
     uptime_model = require('./model/uptime-model.js');
 
 /**
-* Get Uptime data for a specified monitor, sorted by date descending
+* Get uptime data for a specified monitor, sorted by date descending
 * If no monitor name is provided, default to the group of standard
 * monitors that account for our overall uptime metric
 *
@@ -46,8 +46,18 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
     }
 };
 
+/**
+* Get aggregated uptime data for a specified monitor.
+* If no monitor name is provided, default to the group of standard
+* monitors that account for our overall uptime metric
+*
+* @param monitorName   The monitor to get uptime stats for
+* @param startDate     Start date for uptime statistics
+* @param endDate       End date for uptime statistics
+*
+* returns {'uptime': 200, 'downtime':10}
+*/
 var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback) {
-
     var map = function () {
         emit('uptimes', { 'uptime': this.uptime, 'downtime': this.downtime });
     };
@@ -90,7 +100,6 @@ var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback
             }
         }
     );
-
 };
 
 /**

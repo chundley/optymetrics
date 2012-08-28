@@ -156,35 +156,15 @@ app.get('/ops/monitors', function (req, res, next) {
     });
 });
 
-// fetch Uptime data (default)
-app.get('/ops/uptime', function (req, res, next) {
-    var params = url.parse(req.url, true).query;
-    var count = 30;
-    if (params.count) {
-        count = params.count;
-    }
-    uptime.getUptimeData(null, count, function (err, uptimes) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        res.send(uptimes);
-    });
-});
-
-// fetch Uptime data
-// @param monitorName            which monitor to pull data for
-// @param count (query string)   how many days to return (default 30)
+/**
+* fetch uptime data (detailed)
+* @param monitorName            which monitor to pull data for
+* @param start (query string)   start date (epoch)
+* @param end (query string)     end date (epoch)
+*/
 app.get('/ops/uptime/:monitorName', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
-//    var params = url.parse(req.url, true).query;
-//    var count = 30;
-//    if (params.count) {
-//        count = params.count;
-    //    }
     uptime.getUptimeData(req.params.monitorName, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
@@ -196,15 +176,15 @@ app.get('/ops/uptime/:monitorName', function (req, res, next) {
     });
 });
 
+/**
+* fetch uptime data aggregated for all app monitors combined
+*   - dashboard, service, landing pages, api
+* @param start (query string)   start date (epoch)
+* @param end (query string)     end date (epoch)
+*/
 app.get('/ops/uptimeaggregate', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
-    //    var params = url.parse(req.url, true).query;
-    //    var count = 30;
-    //    if (params.count) {
-    //        count = params.count;
-    //    }
-    
     uptime.getUptimeDataAggregate(null, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
@@ -216,14 +196,15 @@ app.get('/ops/uptimeaggregate', function (req, res, next) {
     });
 });
 
+/**
+* fetch Uptime data aggregated for the specified monitor
+* @param monitorName            which monitor to pull data for
+* @param start (query string)   start date (epoch)
+* @param end (query string)     end date (epoch)
+*/
 app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
-    //    var params = url.parse(req.url, true).query;
-    //    var count = 30;
-    //    if (params.count) {
-    //        count = params.count;
-    //    }
     uptime.getUptimeDataAggregate(req.params.monitorName, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
