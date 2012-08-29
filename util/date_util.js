@@ -50,6 +50,29 @@ function convertDateToUTC(date) {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); 
 }
 
+function dateDiff(date1, date2, period) {
+    switch (period.toLowerCase()) {
+        case 'second':
+            {
+                return Math.abs((date1.getTime() - date2.getTime()) / (1000));
+            }
+
+        case 'minute':
+            {
+                return Math.abs((date1.getTime() - date2.getTime()) / (1000 * 60));
+            }
+        case 'hour':
+            {
+                return Math.abs((date1.getTime() - date2.getTime()) / (1000 * 60 * 60));
+            }
+        default: // default to days
+            {
+                return Math.abs((date1.getTime() - date2.getTime()) / (1000 * 60 * 60 * 24));
+            }
+    }
+}
+
 exports.firstDayOfWeek = firstDayOfWeek;
 exports.firstDayOfYear = firstDayOfYear;
 exports.convertDateToUTC = convertDateToUTC;
+exports.dateDiff = dateDiff;

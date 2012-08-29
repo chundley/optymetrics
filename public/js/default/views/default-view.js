@@ -14,51 +14,24 @@ Opty.DefaultView = Backbone.View.extend({
         switch (this.options.selected) {
             default:
                 {
-                    var that = this;
+                    var me = this;
 
                     // pre-render divs or the widgets will render in random order
-                    var div1 = that.$el.append($('<div>', { 'class': 'span3', 'id': 'div1' }));
+                    var $divUptime = $('<div>', { 'class': 'span3' });
+
+                    me.$el.append($divUptime);
+
+                    var numDays = 30;
+
+                    var endDate = Date.today();
+                    var startDate = Date.today().add({ days: -numDays });
+
 
                     // uptime widget for Optify's main services
-                    var uptime_collection = new Opty.UptimeCollection({}, { 'count': '180' });
-                    uptime_collection.fetch({
-                        success: function (uptimes) {
-                            var currentPerc = 0;
-                            var oldPerc = 0;
-                            var uTotal = 0, dTotal = 0;
-                            var count = 1;
-                            uptimes.forEach(function (u) {
-                                uTotal += u.get('uptime');
-                                dTotal += u.get('downtime');
-                                count++;
-                                if (count == 90) {
-                                    currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                    uTotal = 0;
-                                    dTotal = 0;
-                                }
-                            });
-
-                            // account for the case where there are less than 90 data points
-                            if (currentPerc > 0) {
-                                oldPerc = uTotal / (uTotal + dTotal) * 100;
-                            }
-                            else {
-                                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                                oldPerc = currentPerc;
-                            }
-                            var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-                            var widget_table = new Opty.PeriodCompareWidgetView({
-                                title: 'system uptime',
-                                goal: '99.99%',
-                                actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-                                type: updown,
-                                delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-                                period: '30 days'
-                            });
-                            that.$el.append($('#div1').append(widget_table.$el));
-                        }
-
-                    });
+                    var uptimeCollection = new Opty.UptimeCollection({}, {'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidget = new Opty.UptimeWidgetView({ collection: uptimeCollection, title: 'system uptime', goal: '99.99%', period: numDays + ' days' });
+                    $divUptime.append(uptimeWidget.$el);
+                    uptimeCollection.fetch();
 
                     break;
                 }

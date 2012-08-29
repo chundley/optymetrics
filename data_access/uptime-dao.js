@@ -8,19 +8,19 @@ var async = require('async'),
     uptime_model = require('./model/uptime-model.js');
 
 /**
-* Get Uptime data for a specified monitor, sorted by date descending
+* Get uptime data for a specified monitor, sorted by date descending
 * If no monitor name is provided, default to the group of standard
 * monitors that account for our overall uptime metric
 *
 * @param monitorName   The monitor to get uptime stats for
-* @param count         The number of days to return
+* @param startDate     Start date for uptime statistics
+* @param endDate       End date for uptime statistics
 */
-var getUptimeData = function (monitorName, count, callback) {
+var getUptimeData = function (monitorName, startDate, endDate, callback) {
     if (monitorName) {
         uptime_model.UptimeModel
-        .find({ 'monitorName': monitorName })
+        .find({ 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} })
         .sort('monitorDate', -1)
-        .limit(count)
         .exec(function (err, uptimes) {
             if (err) {
                 callback(err, null);
@@ -46,6 +46,61 @@ var getUptimeData = function (monitorName, count, callback) {
     }
 };
 
+/**
+* Get aggregated uptime data for a specified monitor.
+* If no monitor name is provided, default to the group of standard
+* monitors that account for our overall uptime metric
+*
+* @param monitorName   The monitor to get uptime stats for
+* @param startDate     Start date for uptime statistics
+* @param endDate       End date for uptime statistics
+*
+* returns {'uptime': 200, 'downtime':10}
+*/
+var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback) {
+    var map = function () {
+        emit('uptimes', { 'uptime': this.uptime, 'downtime': this.downtime });
+    };
+
+    var reduce = function (key, values) {
+        var totals = { uptime: 0, downtime: 0 };
+        for (var i in values) {
+            totals.uptime += values[i].uptime;
+            totals.downtime += values[i].downtime;
+        }
+        return totals;
+    };
+
+    var where = {};
+    if (monitorName) {
+        where = { 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} };
+    }
+    else {
+        where = { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} };
+    }
+
+    var command = {
+        mapreduce: 'uptimes',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
+                callback(err, results.documents[0].results[0].value);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+};
 
 /**
 * Parse results from a call to Pingdom's API to get uptime for
@@ -103,4 +158,5 @@ var saveUptimeStats = function (data, monitorName, callback) {
 };
 
 exports.getUptimeData = getUptimeData;
+exports.getUptimeDataAggregate = getUptimeDataAggregate;
 exports.saveUptimeStats = saveUptimeStats;

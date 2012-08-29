@@ -24,31 +24,14 @@ Opty.UptimeWidgetView = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        var currentPerc = 0;
-        var oldPerc = 0;
-        var uTotal = 0, dTotal = 0;
-        var count = 1;
+        var model = me.collection.models[0];
+        var currentPerc = model.get('current').uptime / (model.get('current').uptime + model.get('current').downtime) * 100;
+        var oldPerc = model.get('previous').uptime / (model.get('previous').uptime + model.get('previous').downtime) * 100;
 
-        me.collection.each(function (model) {
-            uTotal += model.get('uptime');
-            dTotal += model.get('downtime');
-            count++;
-            if (count == 30) {
-                currentPerc = uTotal / (uTotal + dTotal) * 100;
-                uTotal = 0;
-                dTotal = 0;
-            }
-        });
-
-        // account for the case where there are less than 30 data points
-        if (currentPerc > 0) {
-            oldPerc = uTotal / (uTotal + dTotal) * 100;
+        if (Math.abs(currentPerc - oldPerc) < .001) {
+            currentPerc = oldPerc;
         }
-        else {
-            currentPerc = uTotal / (uTotal + dTotal) * 100;
-            oldPerc = currentPerc;
-        }
-        var updown = (oldPerc == currentPerc) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
+        var updown = (oldPerc == currentPerc || isNaN(currentPerc) || isNaN(oldPerc)) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
         var widget_table = new Opty.PeriodCompareWidgetView({
             title: me.title,
             goal: me.goal,
