@@ -92,8 +92,8 @@ var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback
             if (err) {
                 callback(err, null)
             }
-
-            if (results.numberReturned > 0) {
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
                 callback(err, results.documents[0].results[0].value);
             } else {
                 callback(err, []);

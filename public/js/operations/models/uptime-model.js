@@ -12,11 +12,10 @@ Opty.UptimeCollection = Backbone.Collection.extend({
     model: Opty.UptimeModel,
     url: function () {
         if (this.monitorName) {
-            //console.log('/ops/uptime/' + this.monitorName + '?start=' + this.startDate + '&end=' + this.endDate);
-            return '/ops/uptime/' + this.monitorName + '?start=' + this.startDate + '&end=' + this.endDate;
+            return '/ops/uptimeaggregate/' + this.monitorName + '?start=' + this.startDate + '&end=' + this.endDate;
         }
         else {
-            return '/ops/uptime?start=' + this.startDate + '&end=' + this.endDate;
+            return '/ops/uptimeaggregate?start=' + this.startDate + '&end=' + this.endDate;
         }
     }
 });

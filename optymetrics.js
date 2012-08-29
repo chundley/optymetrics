@@ -13,8 +13,9 @@ var application_root = __dirname,
     express = require('express');
 
 // Application includes
-var logger = require('./util/logger'),
-    mongodb_connection = require('./util/mongodb_connection'),
+var logger = require('./util/logger.js'),
+    date_util = require('./util/date_util.js'),
+    mongodb_connection = require('./util/mongodb_connection.js'),
     metrics_dao = require('./data_access/metrics_dao.js'),
     tco_dao = require('./data_access/tco_dao.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
@@ -181,10 +182,18 @@ app.get('/ops/uptime/:monitorName', function (req, res, next) {
 *   - dashboard, service, landing pages, api
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
+*
 */
 app.get('/ops/uptimeaggregate', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
+    var days = date_util.dateDiff(startDate, endDate, 'day');
+    var prevPeriodStartDate = new Date();
+    var prevPeriodEndDate = new Date();
+    prevPeriodEndDate.setTime(startDate.getTime() - 1);
+    prevPeriodStartDate.setTime(prevPeriodEndDate.getTime() - days * 24 * 60 * 60 * 1000);
+
+
     uptime.getUptimeDataAggregate(null, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
@@ -192,7 +201,21 @@ app.get('/ops/uptimeaggregate', function (req, res, next) {
             res.send('Internal Server Error');
             return;
         }
-        res.send(uptimes);
+        else {
+
+            uptime.getUptimeDataAggregate(null, prevPeriodStartDate, prevPeriodEndDate, function (err, uptimesprevious) {
+                if (err) {
+                    logger.error(err);
+                    res.statusCode = 500;
+                    res.send('Internal Server Error');
+                    return;
+                }
+                else {
+                    var ret = { 'current': uptimes, 'previous': uptimesprevious};
+                    res.send(ret);
+                }
+            });
+        }
     });
 });
 
@@ -205,6 +228,11 @@ app.get('/ops/uptimeaggregate', function (req, res, next) {
 app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
+    var days = date_util.dateDiff(startDate, endDate, 'day');
+    var prevPeriodStartDate = new Date();
+    var prevPeriodEndDate = new Date();
+    prevPeriodEndDate.setTime(startDate.getTime() - 1);
+    prevPeriodStartDate.setTime(prevPeriodEndDate.getTime() - days * 24 * 60 * 60 * 1000);
     uptime.getUptimeDataAggregate(req.params.monitorName, startDate, endDate, function (err, uptimes) {
         if (err) {
             logger.error(err);
@@ -212,7 +240,21 @@ app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
             res.send('Internal Server Error');
             return;
         }
-        res.send(uptimes);
+        else {
+
+            uptime.getUptimeDataAggregate(req.params.monitorName, prevPeriodStartDate, prevPeriodEndDate, function (err, uptimesprevious) {
+                if (err) {
+                    logger.error(err);
+                    res.statusCode = 500;
+                    res.send('Internal Server Error');
+                    return;
+                }
+                else {
+                    var ret = { 'current': uptimes, 'previous': uptimesprevious };
+                    res.send(ret);
+                }
+            });
+        }
     });
 });
 

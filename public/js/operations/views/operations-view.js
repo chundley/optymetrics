@@ -12,8 +12,8 @@ Opty.OperationsView = Backbone.View.extend({
         switch (this.options.selected) {
             case 'uptime':
                 {
-                    var that = this;
-
+                    var me = this;
+                    var numDays = 30;
                     // pre-render divs or the widgets will render in random order
                     // ROW 1
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
@@ -21,7 +21,7 @@ Opty.OperationsView = Backbone.View.extend({
                     var $divUptimeDashboard = $('<div>', { 'class': 'span3' });
                     var $divUptimePages = $('<div>', { 'class': 'span3' });
                     var $divUptimeApi = $('<div>', { 'class': 'span3' });
-                    that.$el.append($row1);
+                    me.$el.append($row1);
                     $row1.append($divUptimeService);
                     $row1.append($divUptimeDashboard);
                     $row1.append($divUptimePages);
@@ -31,32 +31,34 @@ Opty.OperationsView = Backbone.View.extend({
                     var $row2 = $('<div>', { 'class': 'row-fluid' });
 
                     var endDate = Date.today();
+                    var startDate = Date.today().add({ days: -numDays });
 
                     // fetch and render uptime widget for service.optify.net
-                    var uptimeCollectionService = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'startDate': Date.today().add({ days: -30 }), 'endDate': endDate });
-                    var uptimeWidgetService = new Opty.UptimeWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%', period: '30 days' });
+                    var uptimeCollectionService = new Opty.UptimeCollection({}, { 'monitorName': 'service', 'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidgetService = new Opty.UptimeWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%', period: numDays + ' days' });
                     $divUptimeService.append(uptimeWidgetService.$el);
                     uptimeCollectionService.fetch();
 
-                    /*
+
                     // fetch and render uptime widget for dashboard.optify.net
-                    var uptimeCollectionDashboard = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'count': '60' });
-                    var uptimeWidgetDashboard = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%', period: '30 days' });
+                    var uptimeCollectionDashboard = new Opty.UptimeCollection({}, { 'monitorName': 'dashboardormaint', 'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidgetDashboard = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%', period: numDays + ' days' });
                     $divUptimeDashboard.append(uptimeWidgetDashboard.$el);
                     uptimeCollectionDashboard.fetch();
 
+                    
                     // fetch and render uptime widget for pages.optify.net
-                    var uptimeCollectionLandingPages = new Opty.UptimeCollection({}, { 'monitorName': 'landingpages', 'count': '60' });
-                    var uptimeWidgetLandingPages = new Opty.UptimeWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%', period: '30 days' });
+                    var uptimeCollectionLandingPages = new Opty.UptimeCollection({}, { 'monitorName': 'landingpages', 'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidgetLandingPages = new Opty.UptimeWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%', period: numDays + ' days' });
                     $divUptimePages.append(uptimeWidgetLandingPages.$el);
                     uptimeCollectionLandingPages.fetch();
 
                     // fetch and render uptime widget for api.optify.net
-                    var uptimeCollectionApi = new Opty.UptimeCollection({}, { 'monitorName': 'api', 'count': '60' });
-                    var uptimeWidgetApi = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%', period: '30 days' });
+                    var uptimeCollectionApi = new Opty.UptimeCollection({}, { 'monitorName': 'api', 'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidgetApi = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%', period: numDays + ' days' });
                     $divUptimeApi.append(uptimeWidgetApi.$el);
                     uptimeCollectionApi.fetch();
-                    */
+                    
                     break;
                 }
             case 'tco':
