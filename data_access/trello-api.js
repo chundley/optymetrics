@@ -38,6 +38,10 @@ var getMemberUrl = function() {
     return baseUrl + 'boards/' + kanban_board_id + '/members?key=' + key + '&token=' + token;
 };
 
+var getCardListHistoryUrl = function(cardId) {
+    return baseUrl + 'cards/' + cardId + '/actions?filter=updateCard:idList&key=' + key + '&token=' + token;
+};
+
 var getLabelModel = function(resultLabels) {
     var labels = [];
     _.each(resultLabels, function(label) {
@@ -109,6 +113,31 @@ var backfillLists = function(callback) {
     }).on('error', function(error) { logger.log('info',error); });
 };
 
+var cleanListName = function(list) {
+    return list.replace(/\[\d+\]/, '').trim();
+};
+
+var getCardListHistory = function(story, callback) {
+    rest.get(getCardListHistoryUrl(story._id)).on('complete', function(results) {
+        var cardHistory = []; 
+        _.each(results, function(result) {
+            var listBefore = cleanListName(result.data.listBefore.name);
+            var listAfter = cleanListName(result.data.listAfter.name);
+            cardHistory.push({ 
+                'listBefore': listBefore,
+                'listAfter': listAfter,
+                'date': result.date
+            });
+        });
+
+        story.listHistory = cardHistory;
+        callback();
+    }).on('error', function(err) {
+        logger.log('error', err); 
+        callback(err);
+    });
+};
+
 var backfillStories = function(callback) {
     rest.get(getBoardUrl()).on('complete', function(results) {
         _.each(results, function(result) {
@@ -160,23 +189,7 @@ var backfillStories = function(callback) {
                     // Look up and assign the current list and add to list
                     // history
                     function(callback) {
-                        storyModel.ListModel.findById(result.idList, function(err, doc) {
-                            if(doc) {
-                                story.list = doc;
-                                story.listHistory.push({ date: new Date(), list: doc.name });
-
-                                var deployDate = getDeploymentDate(doc.name);
-                                if(deployDate && !story.deployed) {
-                                    if(deployDate > new Date()) {
-                                        logger.log('info','Deployment date for story ' + story.id + ' is in the future. Not marking it as deployed for now');
-                                    } else {
-                                        story.deployed = true;
-                                        story.deployedOn = deployDate;
-                                    }
-                                }
-                            }
-                            callback();
-                        });
+                        getCardListHistory(story, callback);
                     },
                     // Save the story
                     function(callback) {

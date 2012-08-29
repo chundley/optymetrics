@@ -35,7 +35,7 @@ var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
 tcoBackfillJob.start();
 
 // Run the Trello backfill hourly
-var trelloBackfillJob = new cronJob("0 * * * *", function() {
+var trelloBackfillJob = new cronJob("0 0 * * *", function() {
     logger.log('info','Running Trello backfill');
     trello_backfill.trelloBackfill();
 });

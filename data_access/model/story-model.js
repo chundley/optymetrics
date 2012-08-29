@@ -18,7 +18,8 @@ var LabelSchema = new Schema({
 });
 
 var HistorySchema = new Schema({
-    list        : String,
+    listBefore  : String,
+    listAfter   : String,
     date        : Date
 });
 
