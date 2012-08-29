@@ -1,10 +1,21 @@
-// Trello API client
+/**
+ * Trello API client
+ */
+
+/**
+ * Node includes
+ */
 var async = require('async'),
-    logger = require('../util/logger.js'),
-    metrics_dao = require('./metrics_dao.js'),
     oauth = require('oauth'),
     rest = require('restler'),
     _ = require('underscore');
+
+/**
+ * Project includes
+ */
+var logger = require('../util/logger.js'),
+    storyDao = require('./story-dao.js'),
+    storyModel = require('./model/story-model.js');
 
 var key = 'df90ea5c83fc1d11eba9510bc5006ad6',
     secret = '95a9ca0722ab5804699652e49506fc4bef726af2f83c7c953a17a6abf113c9ff',
@@ -30,7 +41,7 @@ var getMemberUrl = function() {
 var getLabelModel = function(resultLabels) {
     var labels = [];
     _.each(resultLabels, function(label) {
-        labels.push(new metrics_dao.LabelModel({ 'color': label.color, 'name': label.name }));
+        labels.push(new storyModel.LabelModel({ 'color': label.color, 'name': label.name }));
     });
 
     return labels;
@@ -70,7 +81,7 @@ var backfillMembers = function(callback) {
     rest.get(getMemberUrl()).on('complete', function(results) {
         var error;
         _.each(results, function(result) {
-            metrics_dao.insertMember(result.id, result.fullName, function(err) {
+            storyDao.insertMember(result.id, result.fullName, function(err) {
                 if(err) {
                     error = err;
                     logger.log('info','Unable to backfill member <' + result.fullName + '> ' + err);
@@ -86,7 +97,7 @@ var backfillLists = function(callback) {
     rest.get(getListUrl()).on('complete', function(results) {
         var error;
         _.each(results, function(result) {
-            metrics_dao.insertList(result.id, result.name, function(err) {
+            storyDao.insertList(result.id, result.name, function(err) {
                 if(err) {
                     error = err;
                     logger.log('info','Unable to backfill list <' + result.name + '> ' + err);
@@ -101,12 +112,12 @@ var backfillLists = function(callback) {
 var backfillStories = function(callback) {
     rest.get(getBoardUrl()).on('complete', function(results) {
         _.each(results, function(result) {
-            metrics_dao.StoryModel.findById(result.id, function(err, doc) {
+            storyModel.StoryModel.findById(result.id, function(err, doc) {
                 var story;
                 if(!doc) {
                     logger.log('info','No story found with id ' + result.id + '. Creating...');
 
-                    story = new metrics_dao.StoryModel({
+                    story = new storyModel.StoryModel({
                         _id: result.id,
                         name: result.name,
                         size: getStorySize(result.name),
@@ -129,13 +140,13 @@ var backfillStories = function(callback) {
                     // Look up and assign members
                     function(callback) {
                         async.forEach(result.idMembers, function(id, callback) {
-                            metrics_dao.MemberModel.findById(id, function(err, doc) {
+                            storyModel.MemberModel.findById(id, function(err, doc) {
                                 if(doc) {
                                     var member_found = _.any(story.members, function(value) {
                                         return value._id.toString() == id;
                                     }); 
                                     if(!member_found) {
-                                        story.members.push(new metrics_dao.MemberModel({ '_id': doc.id, 'name': doc.name }));
+                                        story.members.push(new storyModel.MemberModel({ '_id': doc.id, 'name': doc.name }));
                                     }
                                 }
                                 callback();
@@ -149,7 +160,7 @@ var backfillStories = function(callback) {
                     // Look up and assign the current list and add to list
                     // history
                     function(callback) {
-                        metrics_dao.ListModel.findById(result.idList, function(err, doc) {
+                        storyModel.ListModel.findById(result.idList, function(err, doc) {
                             if(doc) {
                                 story.list = doc;
                                 story.listHistory.push({ date: new Date(), list: doc.name });
