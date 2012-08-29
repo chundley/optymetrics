@@ -1,54 +1,27 @@
-// Metrics MongoDB data access
+/**
+ * Access to stories collection in MongoDB
+ * TODO: Split member and list access into separate dao
+ */
 
-var logger = require('../util/logger.js'), 
-    mongo_config = require('config').Mongo, 
+/**
+ * Node libraries
+ */
+var mongoConfig = require('config'), 
     mongoose = require('mongoose'),
-    _ = require('underscore'),
-    date_util = require('../util/date_util.js'),
-    logger = require('../util/logger.js');
+    _ = require('underscore')
 
-// Define our schema
-var Schema = mongoose.Schema,
-    ObjectId = Schema.ObjectId,
-    Model = mongoose.Model;
+/**
+ * Project includes
+ */
+var date_util = require('../util/date_util.js'),
+    logger = require('../util/logger.js'),
+    storyModel = require('./model/story-model.js'); 
 
-var MemberSchema = new Schema({
-    name        : String
-}); 
-
-var ListSchema = new Schema({
-    name        : String
-});
-
-var LabelSchema = new Schema({
-    name        : String,
-    color       : String
-});
-
-var HistorySchema = new Schema({
-    list        : String,
-    date        : Date
-});
-
-var StorySchema = new Schema({
-    name        : String,
-    size        : Number,
-    members     : [MemberSchema],
-    list        : String,
-    labels      : [LabelSchema],
-    listHistory : [HistorySchema],
-    deployed    : Boolean,
-    deployedOn  : Date,
-    featureGroups: [String]
-});
-
-var MemberModel = mongoose.model('Member', MemberSchema);
-var StoryModel = mongoose.model('Story', StorySchema);
-var ListModel = mongoose.model('List', ListSchema);
-var LabelModel = mongoose.model('Label', LabelSchema);
-
+/** 
+ * Inserts a member (Trello project user) into the members collection
+ */
 var insertMember = function(id, name, callback) {
-    MemberModel.findById(id, function(err, doc) {
+    storyModel.MemberModel.findById(id, function(err, doc) {
         if(err) {
             callback(err);
             return;
@@ -56,7 +29,7 @@ var insertMember = function(id, name, callback) {
 
         if(!doc) {
             logger.log('info','Inserting member <' + name + '>');
-            var member = new MemberModel({ '_id': id, 'name': name });
+            var member = new storyModel.MemberModel({ '_id': id, 'name': name });
             member.save(function(err) {
                 (err) ? callback(err) : callback(); 
             });
@@ -64,8 +37,11 @@ var insertMember = function(id, name, callback) {
     });
 };
 
+/**
+ * Inserts a list into the list collection
+ */
 var insertList = function(id, name, callback) {
-    ListModel.findById(id, function(err, doc) {
+    storyModel.ListModel.findById(id, function(err, doc) {
         if(err) {
             callback(err);
             return;
@@ -73,7 +49,7 @@ var insertList = function(id, name, callback) {
 
         if(!doc) {
             logger.log('info','Inserting list <' + name + '>');
-            var list = new ListModel({ '_id': id, 'name': name.replace(/\[\d+\]/, '').trim() });
+            var list = new storyModel.ListModel({ '_id': id, 'name': name.replace(/\[\d+\]/, '').trim() });
             list.save(function(err) { 
                 (err) ? callback(err) : callback(); 
             });
@@ -90,6 +66,9 @@ var insertList = function(id, name, callback) {
     });
 };
 
+/**
+ * MongoDB map/reduce that returns story velocity aggregated by week
+ */
 var getDeploymentVelocity = function(startDate, endDate, callback) {
     var map = function() {
         var getWeek = function(d) {
@@ -216,6 +195,9 @@ var getDeploymentVelocity = function(startDate, endDate, callback) {
     );
 };
 
+/**
+ * MongoDB map/reduce that returns point totals aggregated by feature groups for deployed stories
+ */
 var getPointsByFeatureGroup = function(startDate, endDate, callback) {
     var map = function() {
         if(this.featureGroups && this.featureGroups.length > 0 && this.size) {
@@ -260,10 +242,6 @@ var getPointsByFeatureGroup = function(startDate, endDate, callback) {
 };
 
 // The module's public API
-exports.LabelModel = LabelModel;
-exports.ListModel = ListModel;
-exports.MemberModel = MemberModel;
-exports.StoryModel = StoryModel;
 exports.getDeploymentVelocity = getDeploymentVelocity;
 exports.getPointsByFeatureGroup = getPointsByFeatureGroup;
 exports.insertMember = insertMember;

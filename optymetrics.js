@@ -16,11 +16,11 @@ var application_root = __dirname,
 var logger = require('./util/logger.js'),
     date_util = require('./util/date_util.js'),
     mongodb_connection = require('./util/mongodb_connection.js'),
-    metrics_dao = require('./data_access/metrics_dao.js'),
     tco_dao = require('./data_access/tco_dao.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
     pingdom = require('./jobs/pingdom-job.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
+    storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
     tcojob = require('./jobs/tco-job.js');
 
@@ -63,7 +63,7 @@ app.get('/rest/productdev/velocity/feature', function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     
-    metrics_dao.getPointsByFeatureGroup(startDate, endDate, function(err, results) {
+    storyDao.getPointsByFeatureGroup(startDate, endDate, function(err, results) {
         if(err) {
             logger.log('error', err);
             res.statusCode = 500;
@@ -79,7 +79,7 @@ app.get('/rest/productdev/velocity', function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     
-    metrics_dao.getDeploymentVelocity(startDate, endDate, function(err, results) {
+    storyDao.getDeploymentVelocity(startDate, endDate, function(err, results) {
          if(err) {
             logger.log('info',err);
             res.statusCode = 500;
@@ -93,7 +93,7 @@ app.get('/rest/productdev/velocity', function(req, res, next) {
 
 // Fetches velocity data as CSV. 
 app.get('/rest/productdev/velocity/csv', function(req, res, next) {
-    metrics_dao.getDeploymentVelocity(function(err, results) {
+    storyDao.getDeploymentVelocity(function(err, results) {
         if(err) {
             logger.log('info',err);
             res.statusCode = 500;

@@ -1,10 +1,21 @@
-// Trello API client
+/**
+ * Trello API client
+ */
+
+/**
+ * Node includes
+ */
 var async = require('async'),
-    logger = require('../util/logger.js'),
-    metrics_dao = require('./metrics_dao.js'),
     oauth = require('oauth'),
     rest = require('restler'),
     _ = require('underscore');
+
+/**
+ * Project includes
+ */
+var logger = require('../util/logger.js'),
+    storyDao = require('./story-dao.js'),
+    storyModel = require('./model/story-model.js');
 
 var key = 'df90ea5c83fc1d11eba9510bc5006ad6',
     secret = '95a9ca0722ab5804699652e49506fc4bef726af2f83c7c953a17a6abf113c9ff',
@@ -27,10 +38,14 @@ var getMemberUrl = function() {
     return baseUrl + 'boards/' + kanban_board_id + '/members?key=' + key + '&token=' + token;
 };
 
+var getCardListHistoryUrl = function(cardId) {
+    return baseUrl + 'cards/' + cardId + '/actions?filter=updateCard:idList&key=' + key + '&token=' + token;
+};
+
 var getLabelModel = function(resultLabels) {
     var labels = [];
     _.each(resultLabels, function(label) {
-        labels.push(new metrics_dao.LabelModel({ 'color': label.color, 'name': label.name }));
+        labels.push(new storyModel.LabelModel({ 'color': label.color, 'name': label.name }));
     });
 
     return labels;
@@ -70,7 +85,7 @@ var backfillMembers = function(callback) {
     rest.get(getMemberUrl()).on('complete', function(results) {
         var error;
         _.each(results, function(result) {
-            metrics_dao.insertMember(result.id, result.fullName, function(err) {
+            storyDao.insertMember(result.id, result.fullName, function(err) {
                 if(err) {
                     error = err;
                     logger.log('info','Unable to backfill member <' + result.fullName + '> ' + err);
@@ -86,7 +101,7 @@ var backfillLists = function(callback) {
     rest.get(getListUrl()).on('complete', function(results) {
         var error;
         _.each(results, function(result) {
-            metrics_dao.insertList(result.id, result.name, function(err) {
+            storyDao.insertList(result.id, result.name, function(err) {
                 if(err) {
                     error = err;
                     logger.log('info','Unable to backfill list <' + result.name + '> ' + err);
@@ -98,15 +113,40 @@ var backfillLists = function(callback) {
     }).on('error', function(error) { logger.log('info',error); });
 };
 
+var cleanListName = function(list) {
+    return list.replace(/\[\d+\]/, '').trim();
+};
+
+var getCardListHistory = function(story, callback) {
+    rest.get(getCardListHistoryUrl(story._id)).on('complete', function(results) {
+        var cardHistory = []; 
+        _.each(results, function(result) {
+            var listBefore = cleanListName(result.data.listBefore.name);
+            var listAfter = cleanListName(result.data.listAfter.name);
+            cardHistory.push({ 
+                'listBefore': listBefore,
+                'listAfter': listAfter,
+                'date': result.date
+            });
+        });
+
+        story.listHistory = cardHistory;
+        callback();
+    }).on('error', function(err) {
+        logger.log('error', err); 
+        callback(err);
+    });
+};
+
 var backfillStories = function(callback) {
     rest.get(getBoardUrl()).on('complete', function(results) {
         _.each(results, function(result) {
-            metrics_dao.StoryModel.findById(result.id, function(err, doc) {
+            storyModel.StoryModel.findById(result.id, function(err, doc) {
                 var story;
                 if(!doc) {
                     logger.log('info','No story found with id ' + result.id + '. Creating...');
 
-                    story = new metrics_dao.StoryModel({
+                    story = new storyModel.StoryModel({
                         _id: result.id,
                         name: result.name,
                         size: getStorySize(result.name),
@@ -129,13 +169,13 @@ var backfillStories = function(callback) {
                     // Look up and assign members
                     function(callback) {
                         async.forEach(result.idMembers, function(id, callback) {
-                            metrics_dao.MemberModel.findById(id, function(err, doc) {
+                            storyModel.MemberModel.findById(id, function(err, doc) {
                                 if(doc) {
                                     var member_found = _.any(story.members, function(value) {
                                         return value._id.toString() == id;
                                     }); 
                                     if(!member_found) {
-                                        story.members.push(new metrics_dao.MemberModel({ '_id': doc.id, 'name': doc.name }));
+                                        story.members.push(new storyModel.MemberModel({ '_id': doc.id, 'name': doc.name }));
                                     }
                                 }
                                 callback();
@@ -149,23 +189,7 @@ var backfillStories = function(callback) {
                     // Look up and assign the current list and add to list
                     // history
                     function(callback) {
-                        metrics_dao.ListModel.findById(result.idList, function(err, doc) {
-                            if(doc) {
-                                story.list = doc;
-                                story.listHistory.push({ date: new Date(), list: doc.name });
-
-                                var deployDate = getDeploymentDate(doc.name);
-                                if(deployDate && !story.deployed) {
-                                    if(deployDate > new Date()) {
-                                        logger.log('info','Deployment date for story ' + story.id + ' is in the future. Not marking it as deployed for now');
-                                    } else {
-                                        story.deployed = true;
-                                        story.deployedOn = deployDate;
-                                    }
-                                }
-                            }
-                            callback();
-                        });
+                        getCardListHistory(story, callback);
                     },
                     // Save the story
                     function(callback) {
