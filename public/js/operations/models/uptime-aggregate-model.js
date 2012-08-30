@@ -1,9 +1,9 @@
 ﻿if (!window.Opty) { window.Opty = {}; }
 
-Opty.UptimeModel = Backbone.Model.extend({});
+Opty.UptimeAggregateModel = Backbone.Model.extend({});
 
-Opty.UptimeCollection = Backbone.Collection.extend({
-    model: Opty.UptimeModel,
+Opty.UptimeAggregateCollection = Backbone.Collection.extend({
+    model: Opty.UptimeAggregateModel,
     url: function () {
         if (this.monitorName) {
             return '/ops/uptimeaggregate/' + this.monitorName + '?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
