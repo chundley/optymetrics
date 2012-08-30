@@ -18,7 +18,10 @@ Opty.UptimeCollection = Backbone.Collection.extend({
         _.bindAll(this, 'reportRangeChanged');
         Opty.pubsub.bind('reportrange:changed', this.reportRangeChanged, this);
     },
-
+    comparator: function (uptime) {
+        var date = new Date(uptime.get('monitorDate'));
+        return date.getTime();
+    },
     reportRangeChanged: function (data) {
         this.startDate = data.start;
         this.endDate = data.end;

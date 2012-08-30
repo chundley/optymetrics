@@ -95,3 +95,46 @@ Period compare widget styles
     padding-top: 18px;
     float: right;
 }
+
+div.daily-uptime-widget-container
+{
+    width: 280px;
+    height:30px;
+    overflow: hidden;
+}
+
+div.daily-uptime-widget:first-child 
+{
+    border-left: 1px solid #999;
+}
+
+div.daily-uptime-widget:last-child 
+{
+    border-right: 1px solid #999;
+}
+
+div.daily-uptime-widget
+{
+    height: 28px; 
+    border-right: 1px solid white;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    position:relative;
+    float:left;
+    cursor: pointer;  
+}
+
+div.good-bg
+{
+    background: #00ff00;
+}
+
+div.medium-bg
+{
+    background: #ffff00;
+}
+
+div.bad-bg
+{
+    background: #ff0000;
+}

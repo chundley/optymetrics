@@ -39,9 +39,15 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // ROW 2
                     var $row2 = $('<div>', { 'class': 'row-fluid' });
-                    var $divUptimeService = $('<div>', { 'class': 'span3' });
+                    var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
+                    var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
+                    var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
+                    var $divUptimeApi = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
                     me.$el.append($row2);
                     $row2.append($divUptimeService);
+                    $row2.append($divUptimeDashboard);
+                    $row2.append($divUptimePages);
+                    $row2.append($divUptimeApi);
 
                     // fetch and render uptime widget for service.optify.net
                     var uptimeCollectionService = new Opty.UptimeAggregateCollection({ 'monitorName': 'service' });
@@ -69,8 +75,22 @@ Opty.OperationsView = Backbone.View.extend({
                     var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2 });
                     $divUptimeService.append(uptimeWidgetService2.$el);
 
-                    datePickerView.render();
+                    // fetch and render uptime trend widget for dashboard.optify.net
+                    var uptimeCollectionDashboard2 = new Opty.UptimeCollection({ 'monitorName': 'dashboardormaint' });
+                    var uptimeWidgetDashboard2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard2 });
+                    $divUptimeDashboard.append(uptimeWidgetDashboard2.$el);
 
+                    // fetch and render uptime trend widget for pages.optify.net
+                    var uptimeCollectionPages2 = new Opty.UptimeCollection({ 'monitorName': 'landingpages' });
+                    var uptimeWidgetPages2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionPages2 });
+                    $divUptimePages.append(uptimeWidgetPages2.$el);
+
+                    // fetch and render uptime trend widget for api.optify.net
+                    var uptimeCollectionApi2 = new Opty.UptimeCollection({ 'monitorName': 'api' });
+                    var uptimeWidgetApi2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi2 });
+                    $divUptimeApi.append(uptimeWidgetApi2.$el);
+
+                    datePickerView.render();
                     break;
                 }
             case 'tco':

@@ -19,7 +19,7 @@ var async = require('async'),
 var getUptimeData = function (monitorName, startDate, endDate, callback) {
     if (monitorName) {
         uptime_model.UptimeModel
-        .find({ 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} })
+        .find({ 'monitorName': monitorName, monitorDate: { $gte: startDate, $lte: endDate} })
         .sort('monitorDate', -1)
         .exec(function (err, uptimes) {
             if (err) {
@@ -73,7 +73,7 @@ var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback
 
     var where = {};
     if (monitorName) {
-        where = { 'monitorName': monitorName, monitorDate: { $gt: startDate, $lte: endDate} };
+        where = { 'monitorName': monitorName, monitorDate: { $gte: startDate, $lte: endDate} };
     }
     else {
         where = { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} };
