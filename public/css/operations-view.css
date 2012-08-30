@@ -28,7 +28,7 @@ Period compare widget styles
 {
     font-size: 18px;
     font-weight: bold;
-    color: #666666;
+    color: #0c4e7f;
     padding-right: 4px;
     padding-top: 4px;
     float: right;
@@ -45,7 +45,7 @@ Period compare widget styles
 {
     font-size: 38px;
     color: #007236;
-    padding-left: 4px;
+    padding-left: 15px;
     float: left;
 }
 .period-compare-widget-up
@@ -60,7 +60,7 @@ Period compare widget styles
 {
     font-size: 38px;
     color: #ee1c24;
-    padding-left: 4px;
+    padding-left: 15px;
     float: left;
 }
 .period-compare-widget-down
@@ -75,7 +75,7 @@ Period compare widget styles
 {
     font-size: 38px;
     color: #666666;
-    padding-left: 4px;
+    padding-left: 15px;
     float: left;
 }
 .period-compare-widget-neutral
@@ -88,10 +88,10 @@ Period compare widget styles
 }
 .period-compare-widget-period
 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     color: #666666;
     padding-right: 4px;
-    padding-top: 12px;
+    padding-top: 18px;
     float: right;
 }

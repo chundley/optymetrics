@@ -13,7 +13,6 @@ Opty.UptimeWidgetView = Backbone.View.extend({
         me.collection = options.collection;
         me.title = options.title;
         me.goal = options.goal;
-        me.period = options.period;
         me.collection.on('reset', me.widgetDataChanged);
     },
     widgetDataChanged: function () {
@@ -37,11 +36,9 @@ Opty.UptimeWidgetView = Backbone.View.extend({
             goal: me.goal,
             actual: Opty.util.formatNumber(currentPerc, 3) + '%',
             type: updown,
-            delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%',
-            period: me.period
+            delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%'
         });
         this.$el.append(widget_table.$el);
         return this.$el;
     }
-
 });

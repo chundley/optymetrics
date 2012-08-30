@@ -16,6 +16,9 @@ Opty.DefaultView = Backbone.View.extend({
                 {
                     var me = this;
 
+                    // Needs to be wired up to a date picker control to work now
+
+                    /*
                     // pre-render divs or the widgets will render in random order
                     var $divUptime = $('<div>', { 'class': 'span3' });
 
@@ -32,6 +35,7 @@ Opty.DefaultView = Backbone.View.extend({
                     var uptimeWidget = new Opty.UptimeWidgetView({ collection: uptimeCollection, title: 'system uptime', goal: '99.99%', period: numDays + ' days' });
                     $divUptime.append(uptimeWidget.$el);
                     uptimeCollection.fetch();
+                    */
 
                     break;
                 }
