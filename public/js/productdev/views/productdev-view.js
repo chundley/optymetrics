@@ -35,7 +35,7 @@ Opty.ProductDevView = Backbone.View.extend({
     renderOverview: function() {
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-        var datePickerView = new Opty.DateRangeView({});
+        var datePickerView = new Opty.DateRangeView({defaultDays: 57});
         
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
