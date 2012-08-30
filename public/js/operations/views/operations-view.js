@@ -27,39 +27,47 @@ Opty.OperationsView = Backbone.View.extend({
                     // pre-render divs or the widgets will render in random order
                     // ROW 1
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
-                    var $divUptimeService = $('<div>', { 'class': 'span3' });
-                    var $divUptimeDashboard = $('<div>', { 'class': 'span3' });
-                    var $divUptimePages = $('<div>', { 'class': 'span3' });
-                    var $divUptimeApi = $('<div>', { 'class': 'span3' });
+                    var $divUptimeServiceAggregate = $('<div>', { 'class': 'span3' });
+                    var $divUptimeDashboardAggregate = $('<div>', { 'class': 'span3' });
+                    var $divUptimePagesAggregate = $('<div>', { 'class': 'span3' });
+                    var $divUptimeApiAggregate = $('<div>', { 'class': 'span3' });
                     me.$el.append($row1);
-                    $row1.append($divUptimeService);
-                    $row1.append($divUptimeDashboard);
-                    $row1.append($divUptimePages);
-                    $row1.append($divUptimeApi);
+                    $row1.append($divUptimeServiceAggregate);
+                    $row1.append($divUptimeDashboardAggregate);
+                    $row1.append($divUptimePagesAggregate);
+                    $row1.append($divUptimeApiAggregate);
 
                     // ROW 2
                     var $row2 = $('<div>', { 'class': 'row-fluid' });
+                    var $divUptimeService = $('<div>', { 'class': 'span3' });
+                    me.$el.append($row2);
+                    $row2.append($divUptimeService);
 
                     // fetch and render uptime widget for service.optify.net
                     var uptimeCollectionService = new Opty.UptimeAggregateCollection({ 'monitorName': 'service' });
-                    var uptimeWidgetService = new Opty.UptimeWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%'});
-                    $divUptimeService.append(uptimeWidgetService.$el);
+                    var uptimeWidgetService = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%' });
+                    $divUptimeServiceAggregate.append(uptimeWidgetService.$el);
 
                     // fetch and render uptime widget for dashboard.optify.net
                     var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboardormaint' });
-                    var uptimeWidgetDashboard = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%'});
-                    $divUptimeDashboard.append(uptimeWidgetDashboard.$el);
+                    var uptimeWidgetDashboard = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%' });
+                    $divUptimeDashboardAggregate.append(uptimeWidgetDashboard.$el);
 
 
                     // fetch and render uptime widget for pages.optify.net
                     var uptimeCollectionLandingPages = new Opty.UptimeAggregateCollection({ 'monitorName': 'landingpages' });
-                    var uptimeWidgetLandingPages = new Opty.UptimeWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%'});
-                    $divUptimePages.append(uptimeWidgetLandingPages.$el);
+                    var uptimeWidgetLandingPages = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%' });
+                    $divUptimePagesAggregate.append(uptimeWidgetLandingPages.$el);
 
                     // fetch and render uptime widget for api.optify.net
                     var uptimeCollectionApi = new Opty.UptimeAggregateCollection({ 'monitorName': 'api' });
-                    var uptimeWidgetApi = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%'});
-                    $divUptimeApi.append(uptimeWidgetApi.$el);
+                    var uptimeWidgetApi = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%' });
+                    $divUptimeApiAggregate.append(uptimeWidgetApi.$el);
+
+                    // fetch and render uptime trend widget for service.optify.net
+                    var uptimeCollectionService2 = new Opty.UptimeCollection({ 'monitorName': 'service' });
+                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2 });
+                    $divUptimeService.append(uptimeWidgetService2.$el);
 
                     datePickerView.render();
 

@@ -1,44 +1,27 @@
 ﻿if (!window.Opty) { window.Opty = {}; }
 
-/**
- * Operations uptime widget view
- */
 Opty.UptimeWidgetView = Backbone.View.extend({
-    id: 'operations-uptime-widget',
     initialize: function (options) {
-        var me = this;
+        _.bindAll(this, 'render');
 
-        _.bindAll(me, 'render', 'widgetDataChanged');
-
-        me.collection = options.collection;
-        me.title = options.title;
-        me.goal = options.goal;
-        me.collection.on('reset', me.widgetDataChanged);
-    },
-    widgetDataChanged: function () {
+        this.collection = options.collection;
         this.render();
     },
 
     render: function () {
-        var me = this;
         this.$el.empty();
+        var widget_template = _.template(
+            '<div style="width: 280px; min-width: 280px;"> \
+            <% console.log(data) %> \
+                <% data.forEach(function(row) { %> \
+                <% console.log(row.get("uptime")) %> \
+                    <div style="height: 30px; min-height: 30px; border-right: 1px solid white; background-color: #00ff00; float:left">X</div> \
+                <% }); %> \
+             </div>');
 
-        var model = me.collection.models[0];
-        var currentPerc = model.get('current').uptime / (model.get('current').uptime + model.get('current').downtime) * 100;
-        var oldPerc = model.get('previous').uptime / (model.get('previous').uptime + model.get('previous').downtime) * 100;
 
-        if (Math.abs(currentPerc - oldPerc) < .001) {
-            currentPerc = oldPerc;
-        }
-        var updown = (oldPerc == currentPerc || isNaN(currentPerc) || isNaN(oldPerc)) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-        var widget_table = new Opty.PeriodCompareWidgetView({
-            title: me.title,
-            goal: me.goal,
-            actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-            type: updown,
-            delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%'
-        });
-        this.$el.append(widget_table.$el);
+        this.$el.append(widget_template({ data: this.collection.models }));
+
         return this.$el;
     }
 });

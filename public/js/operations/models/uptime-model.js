@@ -1,15 +1,16 @@
 ﻿if (!window.Opty) { window.Opty = {}; }
 
-Opty.UptimeAggregateModel = Backbone.Model.extend({});
+Opty.UptimeModel = Backbone.Model.extend({});
 
-Opty.UptimeAggregateCollection = Backbone.Collection.extend({
-    model: Opty.UptimeAggregateModel,
+Opty.UptimeCollection = Backbone.Collection.extend({
+    model: Opty.UptimeModel,
     url: function () {
         if (this.monitorName) {
-            return '/ops/uptimeaggregate/' + this.monitorName + '?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
+            return '/ops/uptime/' + this.monitorName + '?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
         }
         else {
-            return '/ops/uptimeaggregate?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
+            // this is not supported in this version
+            return '/ops/uptime?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
         }
     },
     initialize: function (options) {
