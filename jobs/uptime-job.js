@@ -13,7 +13,7 @@ var async = require('async'),
 * In parallel, call to the pingdom API for each endpoint we're monitoring
 * and either save new data or overwrite existing data
 */
-var pingdomJob = function () {
+var uptimeJob = function () {
     async.parallel([
         function (callback) {
             pingdom.getServiceUptime(function (err, data) {
@@ -170,4 +170,4 @@ var pingdomJob = function () {
     });
 };
 
-exports.pingdomJob = pingdomJob;
+exports.uptimeJob = uptimeJob;

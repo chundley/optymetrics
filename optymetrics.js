@@ -16,9 +16,9 @@ var application_root = __dirname,
 var logger = require('./util/logger.js'),
     date_util = require('./util/date_util.js'),
     mongodb_connection = require('./util/mongodb_connection.js'),
-    tco_dao = require('./data_access/tco_dao.js'),
+    tco_dao = require('./data_access/tco-dao.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
-    pingdom = require('./jobs/pingdom-job.js'),
+    uptimejob = require('./jobs/uptime-job.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
@@ -29,7 +29,7 @@ mongodb_connection.connect();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
-    logger.log('info', 'Running TCO backfill');
+    logger.info('Running TCO backfill');
     tcojob.tcoJob();
 });
 tcoBackfillJob.start();
@@ -42,11 +42,11 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
 trelloBackfillJob.start();
 
 // Run the Pingdom backfill hourly (five minutes after the hour)
-var pingdomJobSchedule = new cronJob('0 5 * * *', function () {
-    logger.info('Running Pingdom job');
-    pingdom.pingdomJob();
+var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
+    logger.info('Running Uptime job');
+    uptimejob.uptimeJob();
 });
-pingdomJobSchedule.start();
+uptimeJobSchedule.start();
 
 // The web server instance
 var app = express.createServer();
