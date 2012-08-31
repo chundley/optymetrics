@@ -10,7 +10,7 @@ Opty.OperationsView = Backbone.View.extend({
     },
     render: function () {
         switch (this.options.selected) {
-            case 'uptime':
+            default: // 'uptime'
                 {
                     var me = this;
 
@@ -219,12 +219,6 @@ Opty.OperationsView = Backbone.View.extend({
                     this.$el.append(tcotable_view.$el);
                     tco_collection.fetch();
                     */
-                    break;
-                }
-            default:
-                {
-
-                    this.$el.append('Coming soon!');
                     break;
                 }
         }
