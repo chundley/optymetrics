@@ -7,7 +7,7 @@ Opty.ProductDevView = Backbone.View.extend({
         var me = this;
         me.options = options;
 
-        _.bindAll(me, 'render', 'renderOverview');
+        _.bindAll(me, 'render', 'renderOverview', 'renderFeatureGroupSubsection', 'renderVelocitySubsection');
     },
 
     render: function() {
@@ -15,12 +15,12 @@ Opty.ProductDevView = Backbone.View.extend({
         Opty.pubsub.unbind('reportrange:changed');
 
         switch(this.options.selected) {
-            case 'bug-metrics': {
-                this.$el.append('TODO');
+            case 'velocity': {
+                this.renderVelocitySubsection();
                 break;
             }
-            case 'story-detail': {
-                this.$el.append('TODO'); 
+            case 'feature-groups': {
+                this.renderFeatureGroupSubsection();
                 break;
             }
             default: {
@@ -35,16 +35,68 @@ Opty.ProductDevView = Backbone.View.extend({
     renderOverview: function() {
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-        var datePickerView = new Opty.DateRangeView({defaultDays: 57});
+        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
         
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
 
-        var velocityCollection = new Opty.VelocityCollection();
+        var velocityTrendCollection = new Opty.VelocityTrendCollection({});
+
+        // Define basic top-level view infrastructure
+        var $velocityTrendRow = $('<div>' , { 'class': 'row-fluid report-section' });
+        var $velocityTrendColumn = $('<div>', { 'class': 'span6' });
+        $velocityTrendRow.append($velocityTrendColumn);
+        this.$el.append($velocityTrendRow);
+
+        // Velocity trend
+        var velocityTrendWidgetView = new Opty.VelocityTrendWidgetView({
+            collection: velocityTrendCollection,
+            title: 'Velocity Trend',
+            goal: 35
+        });
+        $velocityTrendColumn.append(velocityTrendWidgetView.$el);
+        
+        // Render the date picker last as it is the main driver of events impacting
+        // data fetch
+        datePickerView.render();
+    },
+
+    renderFeatureGroupSubsection: function() {
+        // Configure report date range picker
+        var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
+        
+        $datePickerRow.append(datePickerView.$el);
+        this.$el.append($datePickerRow);
+
         var featureGroupCollection = new Opty.FeatureGroupCollection({});
         
+        // Feature group section
+        var $featureGroupRow = $('<div>', { 'class': 'row-fluid report-section' });
+        var $featureGroupChartColumn = $('<div>', { 'class': 'span6' });
+        this.$el.append($featureGroupRow);
+        $featureGroupRow.append($featureGroupChartColumn);
+
+        var featureGroupChart = new Opty.FeatureGroupChartView({ collection: featureGroupCollection });
+        $featureGroupChartColumn.append(featureGroupChart.$el);
+        
+        // Render the date picker last as it is the main driver of events impacting
+        // data fetch
+        datePickerView.render();
+    },
+
+    renderVelocitySubsection: function() {
+        // Configure report date range picker
+        var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
+        
+        $datePickerRow.append(datePickerView.$el);
+        this.$el.append($datePickerRow);
+
+        var velocityCollection = new Opty.VelocityCollection({});
+
         // Define basic top-level view infrastructure
-        var $velocityRow = $('<div>', { 'class': 'row-fluid' });
+        var $velocityRow = $('<div>', { 'class': 'row-fluid report-section' });
         var $velocityChartColumn = $('<div>', { 'class': 'span6' });
         var $velocityTableColumn = $('<div>', { 'class': 'span6' });
         this.$el.append($velocityRow);
@@ -98,18 +150,6 @@ Opty.ProductDevView = Backbone.View.extend({
        
         $velocityTableColumn.append(velocityTable.$el);
         
-        // Feature group section
-        var $featureGroupRow = $('<div>', { 'class': 'row-fluid' });
-        var $featureGroupTableColumn = $('<div>', { 'class': 'span6' });
-        var $featureGroupChartColumn = $('<div>', { 'class': 'span6' });
-        this.$el.append($featureGroupRow);
-        $featureGroupRow.append($featureGroupChartColumn);
-        $featureGroupRow.append($featureGroupTableColumn);
-       
-
-        var featureGroupChart = new Opty.FeatureGroupChartView({ collection: featureGroupCollection });
-        $featureGroupChartColumn.append(featureGroupChart.$el);
-
         // Render the date picker last as it is the main driver of events impacting
         // data fetch
         datePickerView.render();

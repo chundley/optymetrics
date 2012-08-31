@@ -241,8 +241,43 @@ var getPointsByFeatureGroup = function(startDate, endDate, callback) {
     );
 };
 
+/**
+ * Calculate rolling average period-over-period velocity. The periods are split 
+ * at the halfway point between start and end
+ * @param currentPeriodStartDate  date 
+ * @param currentPeriodEndDate    date 
+ */
+var getVelocityTrend = function(currentPeriodStartDate, currentPeriodEndDate, callback) {
+    var previousPeriodStartDate = new Date(currentPeriodStartDate.getTime() - (currentPeriodEndDate.getTime() - currentPeriodStartDate.getTime()));
+    getDeploymentVelocity(previousPeriodStartDate, currentPeriodEndDate, function(err, results) {
+        var currentPeriodPoints = 0, currentPeriodCount = 0,  previousPeriodPoints = 0, previousPeriodCount = 0;
+        _.each(results, function(result) {
+            if(result.week_of > previousPeriodStartDate && result.week_of <= currentPeriodStartDate) {
+                previousPeriodPoints += result.total;
+                previousPeriodCount++;
+            } else if (result.week_of > currentPeriodStartDate && result.week_of <= currentPeriodEndDate) {
+                currentPeriodPoints += result.total; 
+                currentPeriodCount++;
+            }
+        });
+
+        var data = { 
+            current: { 
+                points: (currentPeriodPoints / currentPeriodCount)
+            }, 
+            previous:  {
+                points: (previousPeriodPoints / previousPeriodCount)
+            }
+        };
+
+        callback(err, data);
+    });
+};
+
+
 // The module's public API
 exports.getDeploymentVelocity = getDeploymentVelocity;
+exports.getVelocityTrend = getVelocityTrend;
 exports.getPointsByFeatureGroup = getPointsByFeatureGroup;
 exports.insertMember = insertMember;
 exports.insertList = insertList;

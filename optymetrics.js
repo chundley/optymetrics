@@ -91,6 +91,23 @@ app.get('/rest/productdev/velocity', function(req, res, next) {
     });
 });
 
+// Fetches velocity trend data as JSON
+app.get('/rest/productdev/velocity/trend', function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    
+    storyDao.getVelocityTrend(startDate, endDate, function(err, results) {
+         if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+});
+
 // Fetches velocity data as CSV. 
 app.get('/rest/productdev/velocity/csv', function(req, res, next) {
     storyDao.getDeploymentVelocity(function(err, results) {
