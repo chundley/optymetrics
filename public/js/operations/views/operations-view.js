@@ -204,8 +204,9 @@ Opty.OperationsView = Backbone.View.extend({
                         sortInitialOrder: 'desc',
                         collection: tco_collection
                     });
-
-                    this.$el.append($('<div>', { 'class': 'span12' }).append(tco_table.$el));
+                    var $reportRow = $('<div>', { 'class': 'row-fluid' });
+                    $reportRow.append($('<div>', { 'class': 'span12' }).append(tco_table.$el));
+                    this.$el.append($reportRow);
 
                     tco_collection.fetch();
 

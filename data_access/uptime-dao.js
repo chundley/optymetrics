@@ -5,7 +5,8 @@
 var async = require('async'),
     mongoose = require('mongoose'),
     logger = require('../util/logger.js'),
-    uptime_model = require('./model/uptime-model.js');
+    uptime_model = require('./model/uptime-model.js'),
+    _ = require('underscore');
 
 /**
 * Get uptime data for a specified monitor, sorted by date descending
@@ -31,28 +32,20 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
         });
     }
     else {
-    /*
-        uptime_model.UptimeModel
-        .find({ $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gte: startDate, $lte: endDate} })
-        .sort('monitorDate', -1)
-        .exec(function (err, uptimes) {
-            if (err) {
-                callback(err, null);
-            }
-            else {
-                callback(null, uptimes);
-            }
-        });*/
-
+        // When no monitor name is not provided, use a map/reduce query to get data for all monitors.  This also
+        // requires some fudging of the data so it matches the schema of the standard query above
         var map = function () {
-            emit(this.monitorDate, { 'uptime': this.uptime, 'downtime': this.downtime });
+            var d = new Date(this.monitorDate);
+            d.setHours(0, 0, 0, 0);
+            emit(d, { 'monitorDate': d, 'uptime': this.uptime, 'downtime': this.downtime });
         };
 
         var reduce = function (key, values) {
-            var totals = { uptime: 0, downtime: 0 };
+            var totals = { uptime: 0, downtime: 0, monitorName: 'system uptime', monitorDate: 'x' };
             for (var i in values) {
                 totals.uptime += values[i].uptime;
                 totals.downtime += values[i].downtime;
+                totals.monitorDate = values[i].monitorDate;
             }
             return totals;
         };
@@ -71,8 +64,18 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
                 callback(err, null)
             }
             if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
-                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
-                callback(err, results.documents[0].results[0].value);
+                var ret = [];
+                _.each(results.documents[0].results, function (row) {
+                    var temp = {
+                        monitorName: row.value.monitorName,
+                        monitorDate: row.value.monitorDate,
+                        uptime: row.value.uptime,
+                        downtime: row.value.downtime
+                    };
+                    ret.push(temp);
+
+                });
+                callback(err, ret);
             } else {
                 callback(err, []);
             }

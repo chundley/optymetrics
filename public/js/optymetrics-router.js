@@ -82,17 +82,13 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         this.updateNavState('operations');
         var nav_options = [
         {
-            url_fragment: 'overview',
-            title: 'Overview',
+            url_fragment: 'uptime',
+            title: 'Uptime',
             selected: true // default
         },
         {
-            url_fragment: 'uptime',
-            title: 'Uptime'
-        },
-        {
             url_fragment: 'tco',
-            title: 'TCO'
+            title: 'Customer Cost'
         }
         ];
 
