@@ -164,7 +164,7 @@ var backfillStories = function(callback) {
                 story.size = getStorySize(result.name);
                 story.featureGroups = getFeatureGroups(result.name);
                 story.labels = getLabelModel(result.labels);
-
+ 
                 async.series([
                     // Look up and assign members
                     function(callback) {
@@ -186,8 +186,25 @@ var backfillStories = function(callback) {
                             callback();
                         });
                     },
-                    // Look up and assign the current list and add to list
-                    // history
+                    function(callback) {
+                         storyModel.ListModel.findById(result.idList, function(err, doc) {
+                             if(doc) {
+                                 story.list = doc;
+
+                                 var deployDate = getDeploymentDate(doc.name);
+                                 if(deployDate && !story.deployed) {
+                                     if(deployDate > new Date()) {
+                                         logger.log('info','Deployment date for story ' + story.id + ' is in the future');
+                                     } else {
+                                         story.deployed = true;
+                                         story.deployedOn = deployDate;
+                                     }
+                                 }
+                             }
+                             callback();
+                         });
+                    },
+                    // Update the list change history
                     function(callback) {
                         getCardListHistory(story, callback);
                     },
