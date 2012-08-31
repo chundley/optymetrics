@@ -163,6 +163,27 @@ app.get('/ops/monitors', function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
+app.get('/ops/uptime', function (req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    uptime.getUptimeData(null, startDate, endDate, function (err, uptimes) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(uptimes);
+    });
+});
+
+
+/**
+* fetch uptime data (detailed)
+* @param monitorName            which monitor to pull data for
+* @param start (query string)   start date (epoch)
+* @param end (query string)     end date (epoch)
+*/
 app.get('/ops/uptime/:monitorName', function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));

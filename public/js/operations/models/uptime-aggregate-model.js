@@ -14,6 +14,8 @@ Opty.UptimeAggregateCollection = Backbone.Collection.extend({
     },
     initialize: function (options) {
         this.monitorName = options.monitorName;
+        this.startDate = options.startDate;
+        this.endDate = options.endDate;
         _.bindAll(this, 'reportRangeChanged');
         Opty.pubsub.bind('reportrange:changed', this.reportRangeChanged, this);
     },
