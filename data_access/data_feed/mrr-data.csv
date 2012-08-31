@@ -3,6 +3,7 @@
 2124,Applied Discovery,2307.69
 7072,Generator Hostels,400
 279,Serena Software,500
+8096,New York Speed,149
 7234,Sunexos,90.75
 1496,Marketing CoPilot,196.88
 1496,Marketing CoPilot,62.13
@@ -14,7 +15,6 @@
 3214,Simba Technologies Inc.,143
 8848,iq4bis.eu,99
 7496,Physician Staffing,64
-8096,New York Speed,149
 7352,Ikalia,80
 7836,Maersk Line,149
 6811,Businessleads,99
@@ -26,18 +26,15 @@
 715,Kate-Lo Tile & Stone,79.2
 7583,Spear Marketing Group,99
 7012,Smiley Cookie,108
-1496,Marketing CoPilot,75
 7661,Licor,99
 5578,Kemtron,99
 6929,The Green Internet Group,99
 7007,Chemical Safety Software,99
 5886,BCR Advertising,83.33
 5886,BCR Advertising,83.33
-1496,Marketing CoPilot,75
 6920,Cooperative Processing Resources,99
 6605,Acadia Insurance,99
 8117,Kabbage,119.2
-3156,"COLLIERS INTERNATIONAL PROPERTY CONSULTANTS, INC.",1500
 355,Egencia,1000
 7592,Ascendant Compliance,399.18
 8477,Egencia Global,1500
@@ -54,7 +51,6 @@
 6695,Red Bricks Media,250
 6695,Red Bricks Media,250
 6915,Verne Global,450
-1218,Daptiv,500
 7012,Smiley Cookie,27
 8117,Kabbage,162.4
 6863,Microsoft - Dynamics ERP,2500
@@ -62,11 +58,13 @@
 73,Isilon,5000
 6983,Microsoft - Enteprise,1000
 725,Microsoft - Windows,1500
+3156,"COLLIERS INTERNATIONAL PROPERTY CONSULTANTS, INC.",2355.2
 4043,Optiem,99
 4043,Optiem,99
 8682,quenzel.com,200
 9076,The Cooling Tower Company,250
 8683,Castanea Partners,160
+3156,"COLLIERS INTERNATIONAL PROPERTY CONSULTANTS, INC.",920
 2177,R2i,80
 6929,The Green Internet Group,80
 7474,infraNET-ChurchBuzz,40
@@ -79,6 +77,7 @@
 7474,infraNET-ChurchBuzz,40
 7474,infraNET-ChurchBuzz,40
 7474,infraNET-ChurchBuzz,40
+1496,Marketing CoPilot,67.67
 8896,Content Launch,250
 9735,Wilder2,320
 8666,ACRF / Get Sticky,80
@@ -88,6 +87,9 @@
 8282,Social Wildfire,200
 8666,ACRF / Get Sticky,250
 8311,aspirerehab.com,87.69
+9813,Lexis Nexis - BLISS,200
+3156,"COLLIERS INTERNATIONAL PROPERTY CONSULTANTS, INC.",92
+7229,Flagship Cruises and Events,540
 8160,Getting Smart,250
 394,LexisNexis/Lawyers.com,200
 9813,Lexis Nexis - BLISS,200
@@ -112,7 +114,7 @@
 2513,Delivered Innovation,225
 382,Intalio,400
 1039,Vance Publishing,400
-9976,The American Classics,229.17
+9976,The American Classics,250
 9180,"Books Tell You Why, Inc.",250
 755,VYRE,99
 9499,Auxillium West,250
@@ -134,9 +136,10 @@
 8897,ambertech.com.au,40
 8117,Kabbage,50
 1229,Gourmet Ads Pty Limited,50
-1797,VidAdNet,50
 10116,Rentping Media,250
 10018,Speedrack Midwest,250
+,MAK Media,100
+10056,Omesa Creative Studio,100
 9996,Leadstar Consulting,100
 9901,Red Engine,200
 9978,Every Merchant,200
@@ -150,7 +153,6 @@
 7305,Deppe Communications,99
 4052,MIG & Co.,500
 2397,Airspan Networks,450
-8616,APG Tradeshow Displays - Agency Promo Group,350
 8012,"Extrahop Networks, Inc.",500
 10152,3C Marketing Group LLC,500
 10157,Tatami Media Labs Oy,500
@@ -162,6 +164,7 @@
 8954,Diamond Packaging,212.5
 9038,Web Echoes,240
 7451,Young Company,79
+10215,Montonara & Associates LLC,100
 10062,eBiz Web Solutions,100
 9974,"Fuel, Inc.",300
 9822,"Artista Services, LLC",300
@@ -170,7 +173,6 @@
 9510,Witmer Group,100
 9120,"Marcus Thomas, Llc.",250
 8193,MaMA,250
-8455,Crest Media Inc.,250
 8022,Aztek,225
 7377,Perficio Software,66.67
 7377,Perficio Software,66.67
@@ -195,6 +197,7 @@
 9487,cloudsafe365.com,250
 34,All Senior Homes,200
 8891,Coherentsolutions.com,450
+9974,"Fuel, Inc.",40
 9974,"Fuel, Inc.",250
 9974,"Fuel, Inc.",150
 9974,"Fuel, Inc.",50
@@ -208,22 +211,26 @@
 916,iq4bis,26
 782,ShopKeep.com,99
 374,Foothold Technology,99
+1079,Ntractive,99
 3845,Smile,89.1
 5866,LYYN AB,99
 6051,110 Consulting,99
-1079,Ntractive,99
+5575,UVA Health System,625
 9811,A & A OPTICAL COMPANY,300
-,Aries Global Cargo,250
+10246,Aries Global Cargo,250
 9819,BlueWater Technologies,250
 9352,Render Tribe,200
 9352,Render Tribe,300
-9677,"Phoenix Rising Marketing Group, LLC",300
-9873,Freedom from Pain Insitute,500
+9881,Water Street Solutions,500
+10044,"Global Foundries, Inc.",550
+9873,Freedom from Pain Institute,500
 9082,SitterCity,500
-9873,Freedom from Pain Insitute,600
+10044,"Global Foundries, Inc.",100
+9873,Freedom from Pain Institute,600
 9082,SitterCity,50
+10178,hauser-ross eye institute,250
 10142,Feldman Creative,250
-9684,David Krebs,200
+,ZASocial Media,100
 10160,Margu.nl,300
 9346,Webpresence,91.67
 10017,wsiwebsmart.com,500
@@ -233,11 +240,12 @@
 9610,"Patina Marketing, Inc",275
 9290,The Space InBetween,200
 9071,costrategix.com,250
+1450,N2O Marketing,100
 9346,Webpresence,177.78
 9716,One Touch Global,80
 1450,N2O Marketing,80
-9032,Imaginario Mexicano,80
 9716,One Touch Global,400
+9735,Wilder2,100
 9346,Webpresence,45.83
 9716,One Touch Global,80
 5412,MyFootPath,450
@@ -304,7 +312,6 @@
 4640,Fresh Consulting,99
 2799,Stealth Creative,200
 8426,retrievex.com,200
-8279,Kansas Sampler,149
 7959,Pixelsilk,80
 8213,Moveo Integrated Branding,240
 7889,GCDirect,72
