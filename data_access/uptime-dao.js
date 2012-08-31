@@ -31,10 +31,10 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
         });
     }
     else {
+    /*
         uptime_model.UptimeModel
-        .find({ $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }/*, { 'monitorName': 'api' },*/ ] })
+        .find({ $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gte: startDate, $lte: endDate} })
         .sort('monitorDate', -1)
-        .limit(count)
         .exec(function (err, uptimes) {
             if (err) {
                 callback(err, null);
@@ -42,7 +42,42 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
             else {
                 callback(null, uptimes);
             }
-        });
+        });*/
+
+        var map = function () {
+            emit(this.monitorDate, { 'uptime': this.uptime, 'downtime': this.downtime });
+        };
+
+        var reduce = function (key, values) {
+            var totals = { uptime: 0, downtime: 0 };
+            for (var i in values) {
+                totals.uptime += values[i].uptime;
+                totals.downtime += values[i].downtime;
+            }
+            return totals;
+        };
+
+        var command = {
+            mapreduce: 'uptimes',
+            map: map.toString(),
+            reduce: reduce.toString(), // map and reduce functions need to be strings
+            query: { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} },
+            out: { inline: 1 }
+        };
+
+        mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
+                callback(err, results.documents[0].results[0].value);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
     }
 };
 

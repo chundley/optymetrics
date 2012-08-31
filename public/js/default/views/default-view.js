@@ -18,7 +18,7 @@ Opty.DefaultView = Backbone.View.extend({
 
                     // Needs to be wired up to a date picker control to work now
 
-                    /*
+                    
                     // pre-render divs or the widgets will render in random order
                     var $divUptime = $('<div>', { 'class': 'span3' });
 
@@ -31,11 +31,11 @@ Opty.DefaultView = Backbone.View.extend({
 
 
                     // uptime widget for Optify's main services
-                    var uptimeCollection = new Opty.UptimeCollection({}, {'startDate': startDate, 'endDate': endDate });
-                    var uptimeWidget = new Opty.UptimeWidgetView({ collection: uptimeCollection, title: 'system uptime', goal: '99.99%', period: numDays + ' days' });
+                    var uptimeAggregateCollection = new Opty.UptimeAggregateCollection({'startDate': startDate, 'endDate': endDate });
+                    var uptimeWidget = new Opty.UptimeAggregateWidgetView({ collection: uptimeAggregateCollection, title: 'system uptime', goal: '99.99%' });
                     $divUptime.append(uptimeWidget.$el);
-                    uptimeCollection.fetch();
-                    */
+                    uptimeAggregateCollection.fetch();
+                    
 
                     break;
                 }
