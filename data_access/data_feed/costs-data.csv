@@ -54,10 +54,11 @@ Softlayer,Server,prod-tr-102.optify.net,199,0,1,0,0,
 Softlayer,Server,prod-vhost-101.optify.net,432,0,0,0,1,"IT, code review, DRE build server"
 Softlayer,Server,prod-www-102.optify.net,289,0,0,0,1,Corp www server
 Softlayer,Network,Bandwidth,792,0.2,0.8,0,0,
-AWS,Server,Development environment,1595,0,0,0,1,
-Anonymizer,Service,Keyword rank proxy,1679,1,0,0,0,
-WonderProxy,Service,Int''l Keyword rank proxy,300,1,0,0,0,
-JangoMail,Service,App Email,684,0.1,0.9,0,0,
-SEMRush,Service,Keyword suggestions,140,1,0,0,0,
+AWS,Server,Development environment,1555,0,0,0,1,
+Anonymizer,Service,Keyword rank proxy,1646,1,0,0,0,
+WonderProxy,Service,Int''l Keyword rank proxy,240,1,0,0,0,
+JangoMail,Service,App Email,845,0.1,0.9,0,0,
+SEMRush,Service,Keyword suggestions,450,1,0,0,0,
 Exact Target,Service,Email Nurturing,6250,0,0,1,0,
 Bing API,Service,Keyword ranking,2500,1,0,0,0,
+SEOMoz,Service,Links,500,1,0,0,0,"Link suggestions and inbound links"

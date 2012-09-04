@@ -22,10 +22,18 @@ var logger = require('./util/logger.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
-    tcojob = require('./jobs/tco-job.js');
+    tcojob = require('./jobs/tco-job.js'),
+    vendorCostJob = require('./jobs/vendor-cost-job.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
+
+// Run the VendorCost backfill every day at 6:00 AM
+var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
+    logger.info('Running Vendor cost backfill');
+    vendorCostJob.vendorCostJob();
+});
+vendorCostBackfillJob.start();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
