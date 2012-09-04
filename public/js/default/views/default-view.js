@@ -30,7 +30,6 @@ Opty.DefaultView = Backbone.View.extend({
                     var endDate = Date.today();
                     var startDate = Date.today().add({ days: -numDays });
 
-
                     // uptime widget for Optify's main services
                     var uptimeAggregateCollection = new Opty.UptimeAggregateCollection({ 'startDate': startDate, 'endDate': endDate });
                     var uptimeWidget = new Opty.UptimeAggregateWidgetView({ collection: uptimeAggregateCollection, title: 'system uptime', goal: '99.99%' });
@@ -39,7 +38,7 @@ Opty.DefaultView = Backbone.View.extend({
 
                     // fetch and render uptime trend widget for for services
                     var uptimeCollection = new Opty.UptimeCollection({ 'startDate': startDate, 'endDate': endDate });
-                    var uptimeWidget2 = new Opty.UptimeWidgetView({ collection: uptimeCollection });
+                    var uptimeWidget2 = new Opty.UptimeWidgetView({ collection: uptimeCollection, title: 'system - daily status' });
                     $divUptime.append($('<br />'));
                     $divUptime.append(uptimeWidget2.$el);
                     uptimeCollection.fetch();

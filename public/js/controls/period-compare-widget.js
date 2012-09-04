@@ -16,46 +16,43 @@ Opty.PeriodCompareWidgetView = Backbone.View.extend({
         this.$el.empty();
 
         var table_template_up = _.template(
-            '<div class="period-compare-widget"> \
+            '<div class="widget" style="width: 220px; height: 110px;"> \
                 <div> \
-                    <div class="period-compare-widget-title"><%= title %></div> \
-                    <div class="period-compare-widget-goal"><%= goal %></div> \
+                    <div class="widget-title-metric"><%= title %></div> \
+                    <div class="widget-subtitle-metric"><%= goal %></div> \
                 </div> \
-                <div class="period-compare-widget-actual"><%= actual %></div> \
+                <div class="widget-body-metric"><%= actual %></div> \
                 <div> \
-                    <div class="period-compare-widget-arrow-up">&#x25B2;</div> \
-                    <div class="period-compare-widget-up"><%= delta %></div> \
-                    <div class="period-compare-widget-period">from previous</div> \
+                    <div class="widget-footnote-metric" style="color: #018c43;">&#x25B2;<%= delta %></div> \
+                    <div class="widget-footnote-subtitle-metric">from previous</div> \
                 </div> \
                 <div style="clear: both" /> \
             </div>');
 
         var table_template_down = _.template(
-            '<div class="period-compare-widget"> \
+            '<div class="widget" style="width: 220px; height: 110px;"> \
                 <div> \
-                    <div class="period-compare-widget-title"><%= title %></div> \
-                    <div class="period-compare-widget-goal"><%= goal %></div> \
+                    <div class="widget-title-metric"><%= title %></div> \
+                    <div class="widget-subtitle-metric"><%= goal %></div> \
                 </div> \
-                <div class="period-compare-widget-actual"><%= actual %></div> \
+                <div class="widget-body-metric"><%= actual %></div> \
                 <div> \
-                    <div class="period-compare-widget-arrow-down">&#x25BC;</div> \
-                    <div class="period-compare-widget-down"><%= delta %></div> \
-                    <div class="period-compare-widget-period">from previous</div> \
+                    <div class="widget-footnote-metric" style="color: #ee1c24;">&#x25BC;<%= delta %></div> \
+                    <div class="widget-footnote-subtitle-metric">from previous</div> \
                 </div> \
                 <div style="clear: both" /> \
             </div>');
 
         var table_template_neutral = _.template(
-            '<div class="period-compare-widget"> \
+            '<div class="widget" style="width: 220px; height: 110px;"> \
                 <div> \
-                    <div class="period-compare-widget-title"><%= title %></div> \
-                    <div class="period-compare-widget-goal"><%= goal %></div> \
+                    <div class="widget-title-metric"><%= title %></div> \
+                    <div class="widget-subtitle-metric"><%= goal %></div> \
                 </div> \
-                <div class="period-compare-widget-actual"><%= actual %></div> \
+                <div class="widget-body-metric"><%= actual %></div> \
                 <div> \
-                    <div class="period-compare-widget-arrow-neutral">&#x25B6;</div> \
-                    <div class="period-compare-widget-neutral"><%= delta %></div> \
-                    <div class="period-compare-widget-period">from previous</div> \
+                    <div class="widget-footnote-metric" style="color: #4e4e4e;">&#x25B6;<%= delta %></div> \
+                    <div class="widget-footnote-subtitle-metric">from previous</div> \
                 </div> \
                 <div style="clear: both" /> \
             </div>');

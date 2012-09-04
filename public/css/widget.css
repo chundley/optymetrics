@@ -46,19 +46,17 @@
     padding-bottom: 2px;
     padding-right: 3px;
 }
-    
-
 
 .widget-body-metric
 {
-    font-size: 48px;
+    font-size: 46px;
     font-weight: bold;
-  	text-shadow:#ffffff 0px 2px 0, #111111 0 -1px 0;
+  	text-shadow:#ffffff 0px 2px 0, #6e2d09 0 -1px 0;
   	text-align: center;
-    color: #111111;
+    color: #f36818;
     padding-top: 6px;
 }
-           
+
 .widget-footnote-metric
 {
     font-size: 22px;
@@ -67,13 +65,52 @@
     padding-left: 3px;
     float: left;
 }
-    
+
 .widget-footnote-subtitle-metric
 {
     font-size: 12px;
-    font-weight: bold;
     text-align: right;
     color: #2e2e2e;
     padding-top: 8px;
     padding-right: 3px;    	
+}
+
+
+/*
+	Styles for custom daily uptime widget
+*/
+.daily-uptime-widget:first-child 
+{
+    border-left: 1px solid #999;
+}
+
+.daily-uptime-widget:last-child 
+{
+    border-right: 1px solid #999;
+}
+
+.daily-uptime-widget
+{
+    height: 28px; 
+    border-right: 1px solid white;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    position:relative;
+    float:left;
+    cursor: pointer;  
+}
+
+.good-bg
+{
+    background: #03e603;
+}
+
+.medium-bg
+{
+    background: #f7eb03;
+}
+
+.bad-bg
+{
+    background: #ed1c24;
 }

@@ -39,10 +39,10 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // ROW 2
                     var $row2 = $('<div>', { 'class': 'row-fluid' });
-                    var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
-                    var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
-                    var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
-                    var $divUptimeApi = $('<div>', { 'class': 'span3', 'style': 'padding-left: 6px; padding-top: 10px;' });
+                    var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
+                    var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
+                    var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
+                    var $divUptimeApi = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
                     me.$el.append($row2);
                     $row2.append($divUptimeService);
                     $row2.append($divUptimeDashboard);
@@ -62,7 +62,7 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // fetch and render uptime widget for pages.optify.net
                     var uptimeCollectionLandingPages = new Opty.UptimeAggregateCollection({ 'monitorName': 'landingpages' });
-                    var uptimeWidgetLandingPages = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pg uptime', goal: '99.99%' });
+                    var uptimeWidgetLandingPages = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pages uptime', goal: '99.99%' });
                     $divUptimePagesAggregate.append(uptimeWidgetLandingPages.$el);
 
                     // fetch and render uptime widget for api.optify.net
@@ -72,22 +72,22 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // fetch and render uptime trend widget for service.optify.net
                     var uptimeCollectionService2 = new Opty.UptimeCollection({ 'monitorName': 'service' });
-                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2 });
+                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2, title: 'service - daily status'});
                     $divUptimeService.append(uptimeWidgetService2.$el);
 
                     // fetch and render uptime trend widget for dashboard.optify.net
                     var uptimeCollectionDashboard2 = new Opty.UptimeCollection({ 'monitorName': 'dashboardormaint' });
-                    var uptimeWidgetDashboard2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard2 });
+                    var uptimeWidgetDashboard2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard2, title: 'dashboard - daily status' });
                     $divUptimeDashboard.append(uptimeWidgetDashboard2.$el);
 
                     // fetch and render uptime trend widget for pages.optify.net
                     var uptimeCollectionPages2 = new Opty.UptimeCollection({ 'monitorName': 'landingpages' });
-                    var uptimeWidgetPages2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionPages2 });
+                    var uptimeWidgetPages2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionPages2, title: 'landing pages - daily status' });
                     $divUptimePages.append(uptimeWidgetPages2.$el);
 
                     // fetch and render uptime trend widget for api.optify.net
                     var uptimeCollectionApi2 = new Opty.UptimeCollection({ 'monitorName': 'api' });
-                    var uptimeWidgetApi2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi2 });
+                    var uptimeWidgetApi2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi2, title: 'api - daily status' });
                     $divUptimeApi.append(uptimeWidgetApi2.$el);
 
                     datePickerView.render();
