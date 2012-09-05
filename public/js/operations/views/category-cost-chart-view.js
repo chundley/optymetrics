@@ -1,7 +1,7 @@
 ﻿if (!window.Opty) { window.Opty = {}; }
 
 /**
-* Vendor cost chart view
+* Category cost chart view
 */
 Opty.CategoryCostChart = Backbone.View.extend({
     id: 'category-cost-chart',

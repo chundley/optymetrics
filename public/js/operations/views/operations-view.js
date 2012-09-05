@@ -238,18 +238,28 @@ Opty.OperationsView = Backbone.View.extend({
                     var vendorCostCollection = new Opty.VendorCostCollection({});
 
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
-                    var $divVendorCostChart = $('<div>', { 'class': 'span6' });
+                    var $row2 = $('<div>', { 'class': 'row-fluid', 'style': 'padding-top: 8px;' });
+                    var $divOperationsCostChart = $('<div>', { 'class': 'span6' });
                     var $divCategoryCostChart = $('<div>', { 'class': 'span6' });
+                    var $divVendorCostChart = $('<div>', { 'class': 'span6' });
 
                     me.$el.append($row1);
-                    $row1.append($divVendorCostChart);
+                    me.$el.append($row2);
+
+                    $row1.append($divOperationsCostChart);
                     $row1.append($divCategoryCostChart);
 
-                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }) });
-                    $divVendorCostChart.append(chartWidgetView.$el);
+                    $row2.append($divVendorCostChart);
+
+                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.OperationsCostChart({ collection: vendorCostCollection }) });
+                    $divOperationsCostChart.append(chartWidgetView.$el);
 
                     var chartWidgetView2 = new Opty.ChartWidgetView({ chart: new Opty.CategoryCostChart({ collection: vendorCostCollection }) });
                     $divCategoryCostChart.append(chartWidgetView2.$el);
+
+                    var chartWidgetView3 = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }) });
+                    $divVendorCostChart.append(chartWidgetView3.$el);
+
                     datePickerView.render();
                     break;
                 }
