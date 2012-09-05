@@ -239,12 +239,17 @@ Opty.OperationsView = Backbone.View.extend({
 
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
                     var $divVendorCostChart = $('<div>', { 'class': 'span6' });
+                    var $divCategoryCostChart = $('<div>', { 'class': 'span6' });
 
                     me.$el.append($row1);
                     $row1.append($divVendorCostChart);
+                    $row1.append($divCategoryCostChart);
 
-                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }), title: 'Total cost of goods sold' }); ;
+                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }) });
                     $divVendorCostChart.append(chartWidgetView.$el);
+
+                    var chartWidgetView2 = new Opty.ChartWidgetView({ chart: new Opty.CategoryCostChart({ collection: vendorCostCollection }) });
+                    $divCategoryCostChart.append(chartWidgetView2.$el);
                     datePickerView.render();
                     break;
                 }
