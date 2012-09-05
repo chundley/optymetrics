@@ -66,6 +66,21 @@ var insertList = function(id, name, callback) {
     });
 };
 
+var getStories = function(startDate, endDate, featureGroup, callback) {
+    var query = { deployed: true };
+    if(startDate && endDate) {
+        query.deployedOn = { $gte: startDate, $lt: endDate }; 
+    }
+   
+    if(featureGroup) {
+        query.featureGroups = featureGroup;
+    }
+    
+    storyModel.StoryModel.find(query, function(err, docs) {
+        callback(err, docs);
+    });
+};
+
 /**
  * MongoDB map/reduce that returns story velocity aggregated by week
  */
@@ -277,6 +292,7 @@ var getVelocityTrend = function(currentPeriodStartDate, currentPeriodEndDate, ca
 
 // The module's public API
 exports.getDeploymentVelocity = getDeploymentVelocity;
+exports.getStories = getStories;
 exports.getVelocityTrend = getVelocityTrend;
 exports.getPointsByFeatureGroup = getPointsByFeatureGroup;
 exports.insertMember = insertMember;

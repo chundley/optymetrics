@@ -79,7 +79,82 @@ Opty.ProductDevView = Backbone.View.extend({
 
         var featureGroupChart = new Opty.FeatureGroupChartView({ collection: featureGroupCollection });
         $featureGroupChartColumn.append(featureGroupChart.$el);
+
         
+        var $featureGroupDrillDownRow = $('<div>', { 'class': 'row-fluid report-section' });
+        this.$el.append($featureGroupDrillDownRow);
+        
+        var storyCollection = new Opty.StoryCollection({});
+
+        var featureGroupDrillDownTable = new Opty.TableView({
+            table_fields: [
+              {
+                  field: 'deployedOn',
+                  display_name: 'Deployed',
+                  formatter: function(data) {
+                      if(data) {
+                          var date = new Date(data);
+                          return date.getFullYear() + '-' + Opty.util.padNumber(date.getMonth() + 1, 2) + 
+                              '-' + Opty.util.padNumber(date.getDate(), 2); 
+                      } else {
+                          return "";
+                      }
+                  }
+              },
+              {
+                  field: 'name',
+                  display_name: 'Name'
+              },
+              {
+                  field: 'size',
+                  display_name: 'Size',
+                  text_align: 'right'
+              },
+              {
+                  field: 'labels',
+                  display_name: 'Category',
+                  formatter: function(data) {
+                      var labels = '';
+                      _.each(data, function(label) {
+                          labels += label.name + ', ';
+                      });
+
+                      return labels.replace(/,\s$/, '');
+                  }
+              },
+              {
+                  field: 'members',
+                  display_name: 'Owners',
+                  formatter: function(data) {
+                      var owners = '';
+                      _.each(data, function(owner) {
+                          owners += owner.name + ', ';
+                      });
+
+                      return owners.replace(/,\s$/, '');
+                  }
+              },
+              {
+                  field: 'featureGroups',
+                  display_name: 'Feature Group',
+                  formatter: function(data) {
+                      if(data && data.length > 0) {
+                          return data[0];
+                      } else {
+                          return '';
+                      }
+                  },
+               }
+            ],
+            collection: storyCollection,
+            sortable: true,
+            defaultSort: [[0,0]]
+        });
+      
+        var $featureGroupDrillDownColumn = $('<div>', { 'class': 'span12' });
+        $featureGroupDrillDownColumn.append(featureGroupDrillDownTable.$el);
+        $featureGroupDrillDownRow.append($featureGroupDrillDownColumn);
+
         // Render the date picker last as it is the main driver of events impacting
         // data fetch
         datePickerView.render();

@@ -11,6 +11,8 @@ Opty.TableView = Backbone.View.extend({
         this.table_fields = options.table_fields;
         
         this.collection.on('reset', this.collectionChanged);
+
+        this.$el.css('display', 'none');
     },
 
     collectionChanged: function() {
@@ -19,7 +21,8 @@ Opty.TableView = Backbone.View.extend({
 
     render: function() {
         this.$el.empty();
-       
+        this.$el.css('display', 'table');
+        
         var header_template = _.template(
            '<thead><tr> \
            <% _.each(table_fields, function(header) { %> \

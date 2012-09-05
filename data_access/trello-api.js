@@ -50,24 +50,20 @@ var getLabelModel = function(resultLabels) {
 
     return labels;
 };
-var getStorySize = function(name) {
-    var storySizeRegex = /.?\((\d{1,2})\).?/;
-    var matches = storySizeRegex.exec(name);
-    if(matches && matches.length == 2) {
-        return matches[1];
-    } else {
-        logger.log('info','Could not parse a size for story ' + name + '"');
-    }
-    return null;
-};
 
-var getFeatureGroups = function(name) {
-    var featureGroupRegex = /\[(.+)\]$/;
-    var matches = featureGroupRegex.exec(name.trim());
-    if(matches && matches.length == 2) {
-        return matches[1];
+var parseStoryNameAndUpdateModel = function(story, rawName) {
+    var nameRegex = /^\((\d+)\)\s?(.+)\s+-?\s?\[(.+)\]$/;
+    var matches = nameRegex.exec(rawName);
+    if(!matches || matches.length == 0) {
+        story.name = rawName;
+        return;
     }
-    return null;
+    var cleanName = matches[2].replace(/\s-$/, "");
+    if(matches.length == 4) {
+        story.size = matches[1];
+        story.name = cleanName;
+        story.featureGroups = matches[3];
+    }
 };
 
 var getDeploymentDate = function(listName) {
@@ -148,9 +144,6 @@ var backfillStories = function(callback) {
 
                     story = new storyModel.StoryModel({
                         _id: result.id,
-                        name: result.name,
-                        size: getStorySize(result.name),
-                        featureGroups: getFeatureGroups(result.name),
                         labels: getLabelModel(result.labels),
                         members: [],
                         listHistory: []
@@ -160,9 +153,7 @@ var backfillStories = function(callback) {
                     story = doc;
                 }
 
-                story.name = result.name;
-                story.size = getStorySize(result.name);
-                story.featureGroups = getFeatureGroups(result.name);
+                parseStoryNameAndUpdateModel(story, result.name);
                 story.labels = getLabelModel(result.labels);
  
                 async.series([

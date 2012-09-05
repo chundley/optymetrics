@@ -83,6 +83,29 @@ app.get('/rest/productdev/velocity/feature', function(req, res, next) {
     });
 });
 
+app.get('/rest/productdev/stories', function(req, res, next) {
+    var startDate, endDate, featureGroup;
+    if(req.query['start']) {
+        startDate = new Date(parseInt(req.query['start']));
+    }
+    if(req.query['end']) {
+        endDate = new Date(parseInt(req.query['end']));
+    }
+    if(req.query['fg']) {
+        featureGroup = req.query['fg'];
+    }
+
+    storyDao.getStories(startDate, endDate, featureGroup, function(err, results) {
+        if(err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('InternalServerError');
+            return;
+        }
+        res.send(results);
+    });
+});
+
 // Fetches velocity data as JSON
 app.get('/rest/productdev/velocity', function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
