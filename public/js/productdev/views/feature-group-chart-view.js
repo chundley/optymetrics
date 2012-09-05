@@ -22,7 +22,7 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
         },
         plotOptions: {
             pie: {
-                allowPointSelct: true,
+                allowPointSelect: true,
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
@@ -31,7 +31,14 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
                     formatter: function() {
                         return '<b>' + this.point.name + '</b>:' + Math.round(this.percentage) + '%';
                     }
-                }       
+                },
+                point: {
+                    events: {
+                        click: function() {
+                            Opty.pubsub.trigger('featuregroup:changed', this.name);
+                        }
+                    }
+                }      
             }
         },
         series: [{
