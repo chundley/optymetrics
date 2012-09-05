@@ -72,7 +72,7 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // fetch and render uptime trend widget for service.optify.net
                     var uptimeCollectionService2 = new Opty.UptimeCollection({ 'monitorName': 'service' });
-                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2, title: 'service - daily status'});
+                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2, title: 'service - daily status' });
                     $divUptimeService.append(uptimeWidgetService2.$el);
 
                     // fetch and render uptime trend widget for dashboard.optify.net
@@ -219,6 +219,33 @@ Opty.OperationsView = Backbone.View.extend({
                     this.$el.append(tcotable_view.$el);
                     tco_collection.fetch();
                     */
+                    break;
+                }
+            case 'vendor':
+                {
+                    var me = this;
+
+                    // Unbind all reportrange:changed listeners. TODO: More robust view cleanup
+                    Opty.pubsub.unbind('reportrange:changed');
+
+                    // Configure report date range picker
+                    var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+                    var datePickerView = new Opty.DateRangeView({ defaultDays: 365+30 });
+
+                    $datePickerRow.append(datePickerView.$el);
+                    me.$el.append($datePickerRow);
+
+                    var vendorCostCollection = new Opty.VendorCostCollection({});
+
+                    var $row1 = $('<div>', { 'class': 'row-fluid' });
+                    var $divVendorCostChart = $('<div>', { 'class': 'span6' });
+                    me.$el.append($row1);
+                    $row1.append($divVendorCostChart);
+
+                    var vendorCostChart = new Opty.VendorCostChart({ collection: vendorCostCollection });
+                    $divVendorCostChart.append(vendorCostChart.$el);
+
+                    datePickerView.render();
                     break;
                 }
         }

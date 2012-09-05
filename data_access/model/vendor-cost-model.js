@@ -9,7 +9,7 @@ var Schema = mongoose.Schema,
     Model = mongoose.Model;
 
 var VendorCostSchema = new Schema({
-    billngMonth: Date,
+    billingMonth: Date,
     vendorName: String,
     amount: Number,
     percSEO: Number,

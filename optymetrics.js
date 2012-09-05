@@ -23,7 +23,8 @@ var logger = require('./util/logger.js'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
     tcojob = require('./jobs/tco-job.js'),
-    vendorCostJob = require('./jobs/vendor-cost-job.js');
+    vendorCostJob = require('./jobs/vendor-cost-job.js'),
+    vendorCostDao = require('./data_access/vendor-cost-dao.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
@@ -304,6 +305,25 @@ app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
     });
 });
 
+/**
+* fetch vendor cost data (all detail)
+* @param start (query string)   start date (epoch)
+* @param end (query string)     end date (epoch)
+*/
+app.get('/ops/vendorcost', function (req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    vendorCostDao.getVendorCost(startDate, endDate, function (err, vendorcosts) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(vendorcosts);
+    });
+});
+
 // Start the web server
 var server = app.listen(3000);
 logger.log('info', 'Server started. Listening on port 3000');
@@ -312,7 +332,7 @@ var shutdownHook = function() {
     logger.log('info','Shutting down');
     logger.log('info', 'Closing MongoDB connection');
     mongodb_connection.disconnect();
-    trelloBackfillJob.stop(); 
+    trelloBackfillJob.stop();
     server.close();
 };
 

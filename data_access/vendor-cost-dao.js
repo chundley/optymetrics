@@ -10,6 +10,23 @@ var async = require('async'),
     vendorCostModel = require('./model/vendor-cost-model.js');
 
 /**
+* Gets all vendor costs for the specified date range
+*/
+var getVendorCost = function (startDate, endDate, callback) {
+    vendorCostModel.VendorCostModel
+        .find({'billingMonth': { $gte: startDate, $lte: endDate}})
+        .sort('billingMonth', 1)
+        .exec(function (err, vendorcosts) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, vendorcosts);
+            }
+        });
+};
+
+/**
 * Backfills vendor cost from an array of objects passed in (see vendor-cost-api.js
 * for details)
 */
@@ -21,7 +38,7 @@ var vendorCostBackfill = function (data, callback) {
         }
         async.forEach(data, function(row, callback_inner) {
             var vcm = new vendorCostModel.VendorCostModel({
-                billngMonth: row.billingMonth,
+                billingMonth: row.billingMonth,
                 vendorName: row.vendorName,
                 amount: row.amount,
                 percSEO: row.percSEO,
@@ -56,3 +73,4 @@ var vendorCostBackfill = function (data, callback) {
 };
 
 exports.vendorCostBackfill = vendorCostBackfill;
+exports.getVendorCost = getVendorCost;
