@@ -230,7 +230,7 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // Configure report date range picker
                     var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-                    var datePickerView = new Opty.DateRangeView({ defaultDays: 365+30 });
+                    var datePickerView = new Opty.DateRangeView({ defaultDays: 365 + 30 });
 
                     $datePickerRow.append(datePickerView.$el);
                     me.$el.append($datePickerRow);
@@ -239,12 +239,14 @@ Opty.OperationsView = Backbone.View.extend({
 
                     var $row1 = $('<div>', { 'class': 'row-fluid' });
                     var $divVendorCostChart = $('<div>', { 'class': 'span6' });
+
                     me.$el.append($row1);
                     $row1.append($divVendorCostChart);
 
-                    var vendorCostChart = new Opty.VendorCostChart({ collection: vendorCostCollection });
-                    $divVendorCostChart.append(vendorCostChart.$el);
-
+                    //var vendorCostChart = new Opty.VendorCostChart({ collection: vendorCostCollection });
+                    //$divWidget.append(vendorCostChart.$el);
+                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }), title: 'Total cost of goods sold' }); ;
+                    $divVendorCostChart.append(chartWidgetView.$el);
                     datePickerView.render();
                     break;
                 }
