@@ -11,10 +11,7 @@ Opty.ChartWidgetView = Backbone.View.extend({
 
     render: function () {
         var me = this;
-
-        $divChartWidget = $('<div>', { 'class': 'widget-body' });
-        $divChartWidget.append(me.options.chart.$el);
-        this.$el.append($divChartWidget);
+        this.$el.append(me.options.chart.$el);
         return this.$el;
     },
 });

@@ -243,8 +243,6 @@ Opty.OperationsView = Backbone.View.extend({
                     me.$el.append($row1);
                     $row1.append($divVendorCostChart);
 
-                    //var vendorCostChart = new Opty.VendorCostChart({ collection: vendorCostCollection });
-                    //$divWidget.append(vendorCostChart.$el);
                     var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }), title: 'Total cost of goods sold' }); ;
                     $divVendorCostChart.append(chartWidgetView.$el);
                     datePickerView.render();
