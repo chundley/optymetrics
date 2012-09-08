@@ -9,7 +9,7 @@ body
 
 /* extra header styles */
 
-div.green-stripe
+div.green-stripe 
 {
 	background-color: #a2ab58;
     height: 3px;
