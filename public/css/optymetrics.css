@@ -2,6 +2,22 @@
  * General site-wide styles
  */
 
+body 
+{
+	background-color: #bebca9;
+}
+
+/* extra header styles */
+
+div.green-stripe
+{
+	background-color: #a2ab58;
+    height: 3px;
+    width: 100%;
+    border-bottom: 5px solid #2e2e2e;
+    float:left;	
+}
+
 /* Support for jQuery tablesorter w/ bootstrap */
 table .tablesorter-header {
     cursor: pointer;
@@ -30,3 +46,4 @@ table.tablesorter th.tablesorter-headerSortDown {
 .report-section {
     padding: 20px 0 20px 0;
 }
+
