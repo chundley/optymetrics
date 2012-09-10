@@ -5,6 +5,7 @@ if(!window.Opty) { window.Opty = {}; }
  */
 Opty.FeatureGroupChartView = Backbone.View.extend({
     id: 'feature-group-chart',
+    className: 'widget-white',
     chartOptions: {
         chart: {
             renderTo: 'feature-group-chart',
@@ -16,9 +17,7 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
             text: 'Points allocated by Feature Group (Deployed)'
         },
         tooltip: {
-            formatter: function() {
-                return '<b>' + this.point.name + '</b>:' + Math.round(this.percentage) + '%';
-            }
+            enabled: false 
         },
         plotOptions: {
             pie: {
