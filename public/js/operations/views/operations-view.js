@@ -115,6 +115,48 @@ Opty.OperationsView = Backbone.View.extend({
                 
                 $chartColumn.append(incidentsChartView.$el);
 
+
+                var $tableRow = $('<div>', { 'class': 'row-fluid report-section' });
+                var $tableColumn = $('<div>', { 'class': 'span12' });
+                $tableRow.append($tableColumn);
+                me.$el.append($tableRow);
+                
+                var incidentsCollection = new Opty.IncidentsCollection({});
+
+                var incidentsTable  = new Opty.TableView({
+                    table_fields: [
+                        {
+                            field: 'createdOn',
+                            display_name: 'Date',
+                            formatter: 'date'
+                        },
+                        {
+                            field: 'status',
+                            display_name: 'Status'
+                        },
+                        {
+                            field: 'subject',
+                            display_name: 'Detail'
+                        },
+                        {
+                            field: 'lastUpdatedOn',
+                            display_name: 'Last Updated',
+                            formatter: 'date' 
+                        },
+                        {
+                            field: 'lastUpdatedBy',
+                            display_name: 'Updated By'
+                        }
+                    ],
+
+                    sortable: true,
+                    defaultSort: [[0, 1]],
+                    sortInitialOrder: 'desc',
+                    collection: incidentsCollection 
+                });
+                
+                $tableColumn.append(incidentsTable.$el); 
+                
                 datePickerView.render();
 
                 break;

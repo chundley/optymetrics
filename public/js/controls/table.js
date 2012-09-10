@@ -3,7 +3,18 @@ if (!window.Opty) { window.Opty = {}; }
 Opty.TableView = Backbone.View.extend({
     className: 'table table-striped table-bordered table-condensed',
     tagName: 'table',
-
+    // Default column formatters.
+    columnFormatters: {
+        date: function(data) {
+            if(data) {
+                var date = new Date(data);
+                return date.getFullYear() + '-' + Opty.util.padNumber(date.getMonth() + 1, 2) + 
+                    '-' + Opty.util.padNumber(date.getDate(), 2); 
+            } else {
+                return "";
+            }
+        }
+    },
     initialize: function(options) {
         _.bindAll(this, 'render', 'collectionChanged');
 
@@ -37,13 +48,22 @@ Opty.TableView = Backbone.View.extend({
                 <% data.forEach(function(row) { %> \
                         <tr> \
                         <% _.each(table_fields, function(field) { %> \
-                            <td style="text-align: <%= field.text_align %>;"><%= (field.formatter) ? field.formatter(row.get(field.field)) : row.get(field.field) %></td> \
+                            <td style="text-align: <%= field.text_align %>;"> \
+                                <% if(field.formatter) { \
+                                      if(typeof(field.formatter) === "function") { \
+                                          %><%= field.formatter(row.get(field.field)) %>  \
+                                   <% } else if(typeof(field.formatter) === "string") { \
+                                          %><%= view.columnFormatters[field.formatter](row.get(field.field)) %> \
+                                   <% } \
+                                   } else { %> \
+                                      <%= row.get(field.field) %> \
+                                <% } %> \
                         <% }); %> \
                         </tr> \
                 <% }); %> \
             </tbody>');
        
-        this.$el.append(body_template( { table_fields: this.table_fields, data: this.collection }));
+        this.$el.append(body_template( { table_fields: this.table_fields, data: this.collection, view: this }));
 
         if (this.options.sortable) {
             this.$el.addClass('tablesorter');

@@ -13,13 +13,13 @@ var logger = require('../util/logger.js'),
 /**
  * Inserts an incident into MongoDB
  * 
- * @param incidentNumber    PagerDuty internal incident ID
- * @param createdOn         The date/time the incident was created
- * @param lastUpdatedOn     The last update datestamp
- * @param lastUpdatedBy     The last update
- * @param subject           A description of the alarm
- * @param status            The incident status
- * @param callback          Executed when the save operation is complete or an error is encountered
+ * @param {number}      incidentNumber    PagerDuty internal incident ID
+ * @param {date}        createdOn         The date/time the incident was created
+ * @param {date}        lastUpdatedOn     The last update datestamp
+ * @param {string}      lastUpdatedBy     The last update
+ * @param {string}      subject           A description of the alarm
+ * @param {string}      status            The incident status
+ * @param {function}    callback          Executed when the save operation is complete or an error is encountered
  */
 var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpdatedBy, subject, status, callback) {
     incidentModel.IncidentModel.findOne({ incidentNumber: incidentNumber }, function(err, doc) {
@@ -47,6 +47,32 @@ var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpda
     });
 };
 
+/**
+ * Gets incidents between start and end
+ *
+ * @param {date}      start     The start of the date range
+ * @param {date}      end       The end of the date range
+ * @param {function}  callback  Callback that will be executed with any results or errors
+ */
+var getIncidents = function(start, end, callback) {
+    incidentModel.IncidentModel.find({ createdOn: { $gte: start, $lte: end } })
+        .sort('createdOn', 'descending')
+        .execFind(function(err, docs) {
+            if(err) { 
+                callback(err); 
+                return;
+            }
+            callback(null, docs);
+        });
+};
+
+/**
+ * Gets aggregate count of incidents by day between start and end
+ *
+ * @param {date}      start     The start date range
+ * @param {date}      end       The end date range
+ * @param {function}  callback  Callback that will be executed with any results or errors
+ */
 var getIncidentAggregate = function(start, end, callback) {
     var map = function() {
         var key = new Date(this.createdOn.getFullYear(), this.createdOn.getMonth(), this.createdOn.getDate());
@@ -89,4 +115,5 @@ var getIncidentAggregate = function(start, end, callback) {
 };
 
 exports.insertIncident = insertIncident;
+exports.getIncidents = getIncidents;
 exports.getIncidentAggregate = getIncidentAggregate;

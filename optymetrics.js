@@ -216,7 +216,26 @@ app.get('/ops/monitors', function (req, res, next) {
 });
 
 /**
- * Gets incidents aggregated by day
+ * Gets incidents between start and end 
+ */
+app.get('/ops/incidents', function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+
+    incidentsDao.getIncidents(startDate, endDate, function(err, results) {
+         if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+});
+
+/**
+ * Gets incident counts aggregated by day between start and end
  */
 app.get('/ops/incidents/aggregate', function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
