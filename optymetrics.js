@@ -19,6 +19,8 @@ var logger = require('./util/logger.js'),
     tco_dao = require('./data_access/tco-dao.js'),
     trello_backfill = require('./jobs/trello_backfill.js'),
     uptimejob = require('./jobs/uptime-job.js'),
+    incidentsDao = require('./data_access/incidents-dao.js'),
+    pagerDutyJob = require('./jobs/pagerduty-job.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
@@ -49,6 +51,13 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
     trello_backfill.trelloBackfill();
 });
 trelloBackfillJob.start();
+
+// Run the PagerDuty backfill daily at midnight PST
+var pagerDutyBackfillJob = new cronJob("0 0 7 * *", function() {
+    logger.log('info', 'Running PagerDuty backfill');
+    pagerDutyJob.pagerDutyBackfill();
+});
+pagerDutyBackfillJob.start();
 
 // Run the Pingdom backfill hourly (five minutes after the hour)
 var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
@@ -203,6 +212,25 @@ app.get('/ops/monitors', function (req, res, next) {
             return;
         }
         res.send(monitors);
+    });
+});
+
+/**
+ * Gets incidents aggregated by day
+ */
+app.get('/ops/incidents/aggregate', function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+
+    incidentsDao.getIncidentAggregate(startDate, endDate, function(err, results) {
+         if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
     });
 });
 

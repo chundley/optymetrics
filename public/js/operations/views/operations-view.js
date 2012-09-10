@@ -93,6 +93,32 @@ Opty.OperationsView = Backbone.View.extend({
                     datePickerView.render();
                     break;
                 }
+            case 'incidents': {
+                var me = this;
+                // Unbind all reportrange:changed listeners. TODO: More robust view cleanup
+                Opty.pubsub.unbind('reportrange:changed');
+
+                // Configure report date range picker
+                var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+                var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
+
+                $datePickerRow.append(datePickerView.$el);
+                me.$el.append($datePickerRow);
+
+                var $chartRow = $('<div>', { 'class': 'row-fluid' });
+                var $chartColumn = $('<div>', { 'class': 'span6' });
+                me.$el.append($chartRow);
+                $chartRow.append($chartColumn);
+
+                var incidentAggregates= new Opty.IncidentsAggregateCollection({});
+                var incidentsChartView = new Opty.IncidentsChartView({ collection: incidentAggregates });
+                
+                $chartColumn.append(incidentsChartView.$el);
+
+                datePickerView.render();
+
+                break;
+            }
             case 'tco':
                 {
 

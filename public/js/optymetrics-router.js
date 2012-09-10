@@ -93,6 +93,10 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         {
             url_fragment: 'tco',
             title: 'Customer Cost'
+        },
+        {
+            url_fragment: 'incidents',
+            title: 'Incidents'
         }
         ];
 
