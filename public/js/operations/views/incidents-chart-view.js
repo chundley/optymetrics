@@ -59,17 +59,10 @@ Opty.IncidentsChartView = Backbone.View.extend({
             enabled: false
         },
         plotOptions: {
-            spline: {
-                marker: {
-                    radius: 5,
-                    lineWidth: 2,
-                    lineColor: '#0D6759',
-                    fillColor: '#ffffff'
-                }
-            }
+        
         },
         series: [{
-            type: 'spline',
+            type: 'column',
             name: 'Cost'
         }
         ],
@@ -77,6 +70,8 @@ Opty.IncidentsChartView = Backbone.View.extend({
             enabled: false
         }
     },
+
+    incidentsThreshold: 2,
 
     initialize: function (options) {
         var me = this;
@@ -112,7 +107,8 @@ Opty.IncidentsChartView = Backbone.View.extend({
                 return Date.compare(me.getUTCDay(new Date(agg.get('date'))), start) == 0; 
             });
             if(aggregate) {
-                series.push([ me.getUTCDay(new Date(aggregate.get('date'))).getTime(), aggregate.get('count') ]);
+                var color = (aggregate.get('count') >= me.incidentsThreshold) ? '#FF1608' : '#FFC600';
+                series.push({ x: me.getUTCDay(new Date(aggregate.get('date'))).getTime(), y: aggregate.get('count'), color: color });
             } else {
                 series.push([ start.getTime(), 0 ]);  
             }
