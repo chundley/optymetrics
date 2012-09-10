@@ -8,8 +8,8 @@ Opty.TableView = Backbone.View.extend({
         date: function(data) {
             if(data) {
                 var date = new Date(data);
-                return date.getFullYear() + '-' + Opty.util.padNumber(date.getMonth() + 1, 2) + 
-                    '-' + Opty.util.padNumber(date.getDate(), 2); 
+                return date.getUTCFullYear() + '-' + Opty.util.padNumber(date.getUTCMonth() + 1, 2) + 
+                    '-' + Opty.util.padNumber(date.getUTCDate(), 2); 
             } else {
                 return "";
             }
