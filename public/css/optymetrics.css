@@ -2,6 +2,21 @@
  * General site-wide styles
  */
 
+body 
+{
+	background-color: #bebca9;
+}
+
+/* extra header styles */
+div.green-stripe 
+{
+	background-color: #a2ab58;
+    height: 3px;
+    width: 100%;
+    border-bottom: 5px solid #292717;
+    float:left;	
+}
+
 /* Support for jQuery tablesorter w/ bootstrap */
 table .tablesorter-header {
     cursor: pointer;
@@ -12,21 +27,27 @@ table.tablesorter .tablesorter-header {
     background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
     background-repeat: no-repeat;
     background-position: center right;
+    background-color: #aba995;
+    color: #292717;
     padding: 4px 20px 4px 4px;
     cursor: pointer;
 }
 table.tablesorter th.headerSortUp,
 table.tablesorter th.tablesorter-headerSortUp {
-    background-color: #9fbfdf;
+    background-color: #a2ab58;
     background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 table.tablesorter th.headerSortDown,
 table.tablesorter th.tablesorter-headerSortDown {
-    background-color: #8cb3d9; /* black desc arrow */
+    background-color: #a2ab58; /* black desc arrow */
     background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 }
 
 /* General layout styling */
 .report-section {
     padding: 20px 0 20px 0;
+}
+
+.input .#daterange {
+	border-color: #ff0000;
 }

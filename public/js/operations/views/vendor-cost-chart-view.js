@@ -6,7 +6,7 @@
 Opty.VendorCostChart = Backbone.View.extend({
     id: 'vendor-cost-chart',
     vendorCostChartOptions: {
-        colors: ["#002066", "#E97F02", "#5B4086", "#0D6759"],
+        colors: ["#0D6759", "#E97F02", "#5B4086", "#002066", "#7AB317", "#F9D423", "#E98977", "#EF3F00", "#00A0B0", "#3D1C00"],
         chart: {
             renderTo: 'vendor-cost-chart',
             backgroundColor: {
@@ -25,14 +25,19 @@ Opty.VendorCostChart = Backbone.View.extend({
         },
         legend: {
             floating: true,
-            align: 'left',
+            align: 'bottom',
             verticalAlign: 'top',
-            layout: 'vertical',
+            layout: 'horizontal',
             backgroundColor: '#ffffff',
             borderColor: '#ECE5CE',
             borderWidth: 2,
-            x: 80,
-            y: 35
+            x: 60,
+            y: 5,
+            width: 200, // width and itemWidth create the two-column look
+            itemWidth: 100,
+            itemStyle: {
+                fontSize: '9px'
+            }
         },
         xAxis: {},
         yAxis: [{
@@ -68,7 +73,7 @@ Opty.VendorCostChart = Backbone.View.extend({
             }
 
         },
-        //series: null,
+        //series: null,  (created dynamically for this chart)
         credits: {
             enabled: false
         }
@@ -152,7 +157,7 @@ Opty.VendorCostChart = Backbone.View.extend({
             }
         });
 
-        // now walk through unique vendor names and get all the associated cost data
+        // now walk through unique vendor names and get all the associated cost data for each month
         _.each(data, function (d) {
             me.collection.each(function (model) {
                 if (d.vendorName == model.get('vendorName')) {
