@@ -11,13 +11,18 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
             renderTo: 'feature-group-chart',
             plotBackgroundColor: null,
             plotBorderWidth: null,
-            plotShadow: true
+            plotShadow: true,
+            marginBottom: 70
         },
         title: {
             text: 'Points allocated by Feature Group (Deployed)'
         },
         tooltip: {
-            enabled: false 
+            pointFormat: '<b>{point.percentage}%</b>',
+            percentageDecimals: 1,
+            positioner: function () {
+                return { x: 300, y: 300 };
+            }
         },
         plotOptions: {
             pie: {
@@ -37,12 +42,18 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
                             Opty.pubsub.trigger('featuregroup:changed', this.name);
                         }
                     }
-                }      
+                },
+                stickyTracking: true
             }
         },
         series: [{
             type: 'pie',
-            name: 'Feature groups'
+            name: 'Feature groups',
+            dataLabels: {
+                formatter: function() {
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b>' + this.y + '%' : null;
+                }
+            }
         }],
         credits: {
             enabled: false
