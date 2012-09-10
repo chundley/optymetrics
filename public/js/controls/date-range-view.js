@@ -1,7 +1,7 @@
 if(!window.Opty) { window.Opty = {}; }
 
 Opty.DateRangeView = Backbone.View.extend({
-    className: 'span2',
+    className: 'span3',
     initialize: function (options) {
         var me = this;
         me.options = options;
@@ -11,7 +11,7 @@ Opty.DateRangeView = Backbone.View.extend({
     render: function () {
         var me = this;
 
-        this.$input = $('<input>', { 'name': 'daterange', 'id': 'daterange', 'type': 'text' });
+        this.$input = $('<input>', { 'name': 'daterange', 'id': 'daterange', 'type': 'text', 'class': 'input-xlarge' });
 
         this.$el.append(this.$input);
 

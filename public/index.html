@@ -59,7 +59,6 @@ body {
   </div>
 </div> <!-- /container -->
 
-
 <!-- Javascript ================================================== -->
 
 <!-- Placed at the end of the document so the pages load faster -->
@@ -111,6 +110,21 @@ body {
 <script src="js/productdev/views/velocity-chart-view.js"></script>
 <script src="js/productdev/views/feature-group-chart-view.js"></script>
 <script src="js/productdev/views/velocity-trend-widget-view.js"></script>
+
+<script language="javascript" type="text/javascript">
+    // quick hack to turn the background white for easier copy/paste into
+    // presentations (CTRL + UP)
+    var isCtrl = false;
+    $(document).keyup(function (e) {
+        if (e.which == 17) isCtrl = false;
+    }).keydown(function (e) {
+        if (e.which == 17) isCtrl = true;
+        if (e.which == 38 && isCtrl == true) {
+            $('body').css('background-color', '#ffffff');
+            return false;
+        }
+    });
+</script>
 
 </body>
 </html>
