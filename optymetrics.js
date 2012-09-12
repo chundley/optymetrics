@@ -13,7 +13,8 @@ var application_root = __dirname,
     express = require('express');
 
 // Application includes
-var logger = require('./util/logger.js'),
+var authDao = require('./data_access/auth-dao.js'), 
+    logger = require('./util/logger.js'),
     date_util = require('./util/date_util.js'),
     mongodb_connection = require('./util/mongodb_connection.js'),
     tco_dao = require('./data_access/tco-dao.js'),
@@ -69,15 +70,135 @@ uptimeJobSchedule.start();
 // The web server instance
 var app = express.createServer();
 
+var MongoStore = require('connect-mongo')(express);
+
 app.configure(function() {
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    app.use(express.cookieParser());
+    app.use(express.session({
+        secret: 'asdfasklfjaljsdlfihlkjasdf', // TODO: CONFIG
+        store: new MongoStore({
+           db: 'optymetrics'                  // TODO: CONFIG 
+        })
+    }));
     app.use(app.router);
     app.use(express.static(path.join(application_root, "public")));
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-app.get('/rest/productdev/velocity/feature', function(req, res, next) {
+app.dynamicHelpers({
+    session: function (req, res) {
+        return req.session;
+    }
+});
+
+// TODO: Move routes into a separate file
+
+// Security route middleware
+function requiresLogin(req, res, next) {
+    debugger;
+    if(req.session.user) {
+        next();
+    } else {
+        res.redirect('/sessions/new?redir=' + req.url);
+    }
+};
+
+// App login route
+app.get('/sessions/new', function(req, res, next) {
+    res.render('login', { 
+        title: 'Login', 
+        scripts: [],
+        message: null
+    });
+});
+
+// Login post
+app.post('/sessions/new', function(req, res, next) {
+    authDao.getUser(
+        req.body.email,
+        req.body.password,
+        function(err, user) {
+            // Auth failed 
+            if(!user) {
+                res.render('login', {
+                    title: 'Login',
+                    scripts: [],
+                    message: {
+                        content: 'Invalid email or password',
+                        level: 'error'
+                    }
+                });
+                
+                return;
+            }
+
+            // Auth successful
+            req.session.userAuthenticated=true
+            req.session.user = { email: user.email, role: user.role };
+
+            if(req.query.redir) {
+                res.redirect(req.query.redir);
+            } else {
+                res.redirect('/');
+            }
+        }
+    );
+});
+
+// Logout route
+app.get('/sessions/logout', requiresLogin, function(req, res, next) {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+// Default app route
+app.get('/', requiresLogin, function(req, res, next) {
+    res.render('index', {
+        title: 'Optify Company Dashboard',
+        scripts: [
+            '/js/ext/date.js',
+            '/js/ext/daterangepicker.js',
+            '/js/d3.v2.min.js',
+            '/js/highcharts.src.js',
+            '/js/client-utils.js',
+            '/js/controls/table.js',
+            '/js/controls/period-compare-widget.js',
+            '/js/controls/date-range-view.js',
+            '/js/controls/chart-widget-view.js',
+            '/js/optymetrics-router.js',
+            '/js/optymetrics-subnav.js',
+            '/js/default/views/default-view.js',
+            '/js/operations/models/incidents-aggregate-model.js',
+            '/js/operations/models/incidents-model.js',
+            '/js/operations/models/tco-model.js',
+            '/js/operations/models/uptime-aggregate-model.js',
+            '/js/operations/models/uptime-model.js',
+            '/js/operations/models/vendor-cost-model.js',
+            '/js/operations/views/incidents-chart-view.js',
+            '/js/operations/views/operations-view.js',
+            '/js/operations/views/tcotable-view.js',
+            '/js/operations/views/uptime-aggregate-widget-view.js',
+            '/js/operations/views/uptime-widget-view.js',
+            '/js/operations/views/operations-cost-chart-view.js',
+            '/js/operations/views/category-cost-chart-view.js',
+            '/js/operations/views/vendor-cost-chart-view.js',
+            '/js/productdev/models/feature-group-model.js',
+            '/js/productdev/models/velocity-model.js',
+            '/js/productdev/models/velocity-trend-model.js',
+            '/js/productdev/models/story-model.js',
+            '/js/productdev/views/productdev-view.js',
+            '/js/productdev/views/velocity-chart-view.js',
+            '/js/productdev/views/feature-group-chart-view.js',
+            '/js/productdev/views/velocity-trend-widget-view.js'
+        ],
+    });
+});
+  
+app.get('/rest/productdev/velocity/feature', requiresLogin, function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     
@@ -92,7 +213,7 @@ app.get('/rest/productdev/velocity/feature', function(req, res, next) {
     });
 });
 
-app.get('/rest/productdev/stories', function(req, res, next) {
+app.get('/rest/productdev/stories', requiresLogin, function(req, res, next) {
     var startDate, endDate, featureGroup;
     if(req.query['start']) {
         startDate = new Date(parseInt(req.query['start']));
@@ -116,7 +237,7 @@ app.get('/rest/productdev/stories', function(req, res, next) {
 });
 
 // Fetches velocity data as JSON
-app.get('/rest/productdev/velocity', function(req, res, next) {
+app.get('/rest/productdev/velocity', requiresLogin, function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     
@@ -133,7 +254,7 @@ app.get('/rest/productdev/velocity', function(req, res, next) {
 });
 
 // Fetches velocity trend data as JSON
-app.get('/rest/productdev/velocity/trend', function(req, res, next) {
+app.get('/rest/productdev/velocity/trend', requiresLogin, function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     
@@ -150,7 +271,7 @@ app.get('/rest/productdev/velocity/trend', function(req, res, next) {
 });
 
 // Fetches velocity data as CSV. 
-app.get('/rest/productdev/velocity/csv', function(req, res, next) {
+app.get('/rest/productdev/velocity/csv', requiresLogin, function(req, res, next) {
     storyDao.getDeploymentVelocity(function(err, results) {
         if(err) {
             logger.log('info',err);
@@ -185,7 +306,7 @@ app.get('/rest/productdev/velocity/csv', function(req, res, next) {
 });
 
 // fetch TCO data
-app.get('/ops/tco', function (req, res, next) {
+app.get('/ops/tco', requiresLogin, function (req, res, next) {
     var params = url.parse(req.url, true).query;
     var count = 50;
     if (params.count) {
@@ -203,7 +324,7 @@ app.get('/ops/tco', function (req, res, next) {
     });
 });
 
-app.get('/ops/monitors', function (req, res, next) {
+app.get('/ops/monitors', requiresLogin, function (req, res, next) {
     pingdom_api.getAllMonitors(function (err, monitors) {
         if (err) {
             logger.error(err);
@@ -218,7 +339,7 @@ app.get('/ops/monitors', function (req, res, next) {
 /**
  * Gets incidents between start and end 
  */
-app.get('/ops/incidents', function(req, res, next) {
+app.get('/ops/incidents', requiresLogin, function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
 
@@ -237,7 +358,7 @@ app.get('/ops/incidents', function(req, res, next) {
 /**
  * Gets incident counts aggregated by day between start and end
  */
-app.get('/ops/incidents/aggregate', function(req, res, next) {
+app.get('/ops/incidents/aggregate', requiresLogin, function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
 
@@ -259,7 +380,7 @@ app.get('/ops/incidents/aggregate', function(req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptime', function (req, res, next) {
+app.get('/ops/uptime', requiresLogin, function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     uptime.getUptimeData(null, startDate, endDate, function (err, uptimes) {
@@ -280,7 +401,7 @@ app.get('/ops/uptime', function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptime/:monitorName', function (req, res, next) {
+app.get('/ops/uptime/:monitorName', requiresLogin, function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     uptime.getUptimeData(req.params.monitorName, startDate, endDate, function (err, uptimes) {
@@ -301,7 +422,7 @@ app.get('/ops/uptime/:monitorName', function (req, res, next) {
 * @param end (query string)     end date (epoch)
 *
 */
-app.get('/ops/uptimeaggregate', function (req, res, next) {
+app.get('/ops/uptimeaggregate', requiresLogin, function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     var days = date_util.dateDiff(startDate, endDate, 'day');
@@ -342,7 +463,7 @@ app.get('/ops/uptimeaggregate', function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
+app.get('/ops/uptimeaggregate/:monitorName', requiresLogin, function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     var days = date_util.dateDiff(startDate, endDate, 'day');
@@ -380,7 +501,7 @@ app.get('/ops/uptimeaggregate/:monitorName', function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/vendorcost', function (req, res, next) {
+app.get('/ops/vendorcost', requiresLogin, function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
     vendorCostDao.getVendorCost(startDate, endDate, function (err, vendorcosts) {

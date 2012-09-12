@@ -7,6 +7,12 @@ body
 	background-color: #bebca9;
 }
 
+/* login session div */
+.session {
+    float: right;
+    margin-top: 12px;
+}
+
 /* extra header styles */
 div.green-stripe 
 {
