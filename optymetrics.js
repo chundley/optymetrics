@@ -86,8 +86,12 @@ app.configure(function() {
         secret: config.Auth.sessionSecret, 
         store: new MongoStore({
            db: config.Mongo.database,
-           host: config.Mongo.dbHost
-        })
+           host: config.Mongo.dbHost,
+           clear_interval: 3600
+        }),
+        cookie: {
+            maxAge: 2592000000 // 30 days
+        }
     }));
     app.use(app.router);
     app.use(express.static(path.join(application_root, "public")));
