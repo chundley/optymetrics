@@ -8,6 +8,7 @@
         "cron"          : "0.3.4",
         "csv"           : "0.0.18",
         "express"       : "2.5.8",
+        "jade"          : "0.27.2",
         "jshashes"      : "0.1.4b",
         "moment"        : "1.7.0",
         "mongoose"      : "2.7.2",
