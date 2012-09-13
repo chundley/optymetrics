@@ -85,7 +85,8 @@ app.configure(function() {
     app.use(express.session({
         secret: config.Auth.sessionSecret, 
         store: new MongoStore({
-           db: config.Mongo.database
+           db: config.Mongo.database,
+           host: config.Mongo.dbHost
         })
     }));
     app.use(app.router);
