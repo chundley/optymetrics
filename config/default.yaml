@@ -5,3 +5,7 @@ Mongo:
 
 CoreDb:
   connectionString: postgres://postgres:optify@localhost:5432/lt_optifydb1
+
+Auth:
+  sessionSecret: 'This is my SUPER secret session key'
+  passwordSalt: 'It need more spice! I could just cry.'

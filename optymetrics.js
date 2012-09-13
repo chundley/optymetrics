@@ -13,7 +13,8 @@ var application_root = __dirname,
     express = require('express');
 
 // Application includes
-var authDao = require('./data_access/auth-dao.js'), 
+var authDao = require('./data_access/auth-dao.js'),
+    config = require('config'),
     logger = require('./util/logger.js'),
     date_util = require('./util/date_util.js'),
     mongodb_connection = require('./util/mongodb_connection.js'),
@@ -23,9 +24,11 @@ var authDao = require('./data_access/auth-dao.js'),
     incidentsDao = require('./data_access/incidents-dao.js'),
     pagerDutyJob = require('./jobs/pagerduty-job.js'),
     pingdom_api = require('./data_access/pingdom-api.js'),
+    routes = require('./routes'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
     tcojob = require('./jobs/tco-job.js'),
+    UserRoles = require('./data_access/model/auth-model.js').UserRoles,
     vendorCostJob = require('./jobs/vendor-cost-job.js'),
     vendorCostDao = require('./data_access/vendor-cost-dao.js');
 
@@ -80,299 +83,92 @@ app.configure(function() {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     app.use(express.cookieParser());
     app.use(express.session({
-        secret: 'asdfasklfjaljsdlfihlkjasdf', // TODO: CONFIG
+        secret: config.Auth.sessionSecret, 
         store: new MongoStore({
-           db: 'optymetrics'                  // TODO: CONFIG 
+           db: config.Mongo.database
         })
     }));
     app.use(app.router);
     app.use(express.static(path.join(application_root, "public")));
 });
 
+// Exposes the session variable to server-side UI templates
 app.dynamicHelpers({
     session: function (req, res) {
         return req.session;
     }
 });
 
-// TODO: Move routes into a separate file
-
-// Security route middleware
+// Authentication middleware
 function requiresLogin(req, res, next) {
-    debugger;
     if(req.session.user) {
         next();
     } else {
-        res.redirect('/sessions/new?redir=' + req.url);
+        res.redirect('/session/login?redir=' + req.url);
     }
 };
 
+// Authorization middleware
+function requiresAdmin(req, res, next) {
+    if(req.session.user && req.session.user.role === UserRoles.ADMIN) {
+        debugger; 
+        next();
+    } else {
+       var msg = '403 - Unauthorized: ' + req.url;
+       if(req.session.user) msg = msg + " User: " + req.session.user.email;
+       logger.log('warn', msg);
+       res.statusCode = 403;
+       res.send('403 - Unauthorized');
+    }
+};
+
+// Index page
+app.get('/', requiresLogin, routes.index);
+
 // App login route
-app.get('/sessions/new', function(req, res, next) {
-    res.render('login', { 
-        title: 'Login', 
-        scripts: [],
-        message: null
-    });
-});
+app.get('/session/login', routes.session.login);
 
 // Login post
-app.post('/sessions/new', function(req, res, next) {
-    authDao.getUser(
-        req.body.email,
-        req.body.password,
-        function(err, user) {
-            // Auth failed 
-            if(!user) {
-                res.render('login', {
-                    title: 'Login',
-                    scripts: [],
-                    message: {
-                        content: 'Invalid email or password',
-                        level: 'error'
-                    }
-                });
-                
-                return;
-            }
-
-            // Auth successful
-            req.session.userAuthenticated=true
-            req.session.user = { email: user.email, role: user.role };
-
-            if(req.query.redir) {
-                res.redirect(req.query.redir);
-            } else {
-                res.redirect('/');
-            }
-        }
-    );
-});
+app.post('/session/login', routes.session.loginSubmit);
 
 // Logout route
-app.get('/sessions/logout', requiresLogin, function(req, res, next) {
-    req.session.destroy();
-    res.redirect('/');
-});
+app.get('/session/logout', requiresLogin, routes.session.logout);
 
-// Default app route
-app.get('/', requiresLogin, function(req, res, next) {
-    res.render('index', {
-        title: 'Optify Company Dashboard',
-        scripts: [
-            '/js/ext/date.js',
-            '/js/ext/daterangepicker.js',
-            '/js/d3.v2.min.js',
-            '/js/highcharts.src.js',
-            '/js/client-utils.js',
-            '/js/controls/table.js',
-            '/js/controls/period-compare-widget.js',
-            '/js/controls/date-range-view.js',
-            '/js/controls/chart-widget-view.js',
-            '/js/optymetrics-router.js',
-            '/js/optymetrics-subnav.js',
-            '/js/default/views/default-view.js',
-            '/js/operations/models/incidents-aggregate-model.js',
-            '/js/operations/models/incidents-model.js',
-            '/js/operations/models/tco-model.js',
-            '/js/operations/models/uptime-aggregate-model.js',
-            '/js/operations/models/uptime-model.js',
-            '/js/operations/models/vendor-cost-model.js',
-            '/js/operations/views/incidents-chart-view.js',
-            '/js/operations/views/operations-view.js',
-            '/js/operations/views/tcotable-view.js',
-            '/js/operations/views/uptime-aggregate-widget-view.js',
-            '/js/operations/views/uptime-widget-view.js',
-            '/js/operations/views/operations-cost-chart-view.js',
-            '/js/operations/views/category-cost-chart-view.js',
-            '/js/operations/views/vendor-cost-chart-view.js',
-            '/js/productdev/models/feature-group-model.js',
-            '/js/productdev/models/velocity-model.js',
-            '/js/productdev/models/velocity-trend-model.js',
-            '/js/productdev/models/story-model.js',
-            '/js/productdev/views/productdev-view.js',
-            '/js/productdev/views/velocity-chart-view.js',
-            '/js/productdev/views/feature-group-chart-view.js',
-            '/js/productdev/views/velocity-trend-widget-view.js'
-        ],
-    });
-});
-  
-app.get('/rest/productdev/velocity/feature', requiresLogin, function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    
-    storyDao.getPointsByFeatureGroup(startDate, endDate, function(err, results) {
-        if(err) {
-            logger.log('error', err);
-            res.statusCode = 500;
-            res.send('InternalServerError');
-            return;
-        }
-        res.send(results);
-    });
-});
+// Admin route
+app.get('/admin', requiresLogin, requiresAdmin, routes.admin.index);
 
-app.get('/rest/productdev/stories', requiresLogin, function(req, res, next) {
-    var startDate, endDate, featureGroup;
-    if(req.query['start']) {
-        startDate = new Date(parseInt(req.query['start']));
-    }
-    if(req.query['end']) {
-        endDate = new Date(parseInt(req.query['end']));
-    }
-    if(req.query['fg']) {
-        featureGroup = req.query['fg'];
-    }
+// POST - Adds a new user
+app.post('/admin/user/add', requiresLogin, requiresAdmin, routes.admin.addUser);
 
-    storyDao.getStories(startDate, endDate, featureGroup, function(err, results) {
-        if(err) {
-            logger.log('error', err);
-            res.statusCode = 500;
-            res.send('InternalServerError');
-            return;
-        }
-        res.send(results);
-    });
-});
+// GET - User profile
+app.get('/profile', requiresLogin, routes.profile.index);
 
-// Fetches velocity data as JSON
-app.get('/rest/productdev/velocity', requiresLogin, function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    
-    storyDao.getDeploymentVelocity(startDate, endDate, function(err, results) {
-         if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
+// POST - Change password
+app.post('/profile/password/change', requiresLogin, routes.profile.changePassword);
 
-        res.send(results);
-    });
-});
+// Gets velocity aggregated by feature group as JSON
+app.get('/rest/productdev/velocity/feature', requiresLogin, routes.productdev.velocityByFeatureGroup);
 
-// Fetches velocity trend data as JSON
-app.get('/rest/productdev/velocity/trend', requiresLogin, function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    
-    storyDao.getVelocityTrend(startDate, endDate, function(err, results) {
-         if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
+// Gets story details as JSON 
+app.get('/rest/productdev/stories', requiresLogin, routes.productdev.stories);
 
-        res.send(results);
-    });
-});
+// Gets velocity data as JSON
+app.get('/rest/productdev/velocity', requiresLogin, routes.productdev.velocityByWeek);
 
-// Fetches velocity data as CSV. 
-app.get('/rest/productdev/velocity/csv', requiresLogin, function(req, res, next) {
-    storyDao.getDeploymentVelocity(function(err, results) {
-        if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
+// Gets velocity trend data as JSON
+app.get('/rest/productdev/velocity/trend', requiresLogin, routes.productdev.velocityTrend);
 
-        var source = [ [ "WeekOf", "Velocity" ] ];
-        debugger;
-        _.each(results, function(result) {
-            var row = [];
-            row.push(result.week_of);
-            row.push(result.velocity);
-            source.push(row);
-        });
+// Gets TCO data as JSON
+app.get('/ops/tco', requiresLogin, routes.operations.tco);
 
-        var result = [];
-        res.contentType('csv');
-        
-        csv().from(source)
-            .on('data', function(data) {
-                debugger;
-                result.push(data.join(','));
-            })
-            .on('end', function() {
-                res.setHeader('Content-disposition', 'attachment; filename=velocity.csv');
-                res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
-                res.send(result.join('\n'));
-            });
-    });
-});
+// Gets uptime data as JSON
+app.get('/ops/monitors', requiresLogin, routes.operations.monitors);
 
-// fetch TCO data
-app.get('/ops/tco', requiresLogin, function (req, res, next) {
-    var params = url.parse(req.url, true).query;
-    var count = 50;
-    if (params.count) {
-        count = params.count;
-    }
-    tco_dao.getCustomerTCOData(count, function (err, customers) {
-        if (err) {
-            logger.log('error', err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
+// Gets incident data as JSON
+app.get('/ops/incidents', requiresLogin, routes.operations.incidents);
 
-        res.send(customers);
-    });
-});
-
-app.get('/ops/monitors', requiresLogin, function (req, res, next) {
-    pingdom_api.getAllMonitors(function (err, monitors) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        res.send(monitors);
-    });
-});
-
-/**
- * Gets incidents between start and end 
- */
-app.get('/ops/incidents', requiresLogin, function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-
-    incidentsDao.getIncidents(startDate, endDate, function(err, results) {
-         if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-
-        res.send(results);
-    });
-});
-
-/**
- * Gets incident counts aggregated by day between start and end
- */
-app.get('/ops/incidents/aggregate', requiresLogin, function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-
-    incidentsDao.getIncidentAggregate(startDate, endDate, function(err, results) {
-         if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-
-        res.send(results);
-    });
-});
+// Gets incidents aggregated by day as JSON
+app.get('/ops/incidents/aggregate', requiresLogin, routes.operations.incidentsByDay);
 
 /**
 * fetch uptime data (detailed)
@@ -380,19 +176,7 @@ app.get('/ops/incidents/aggregate', requiresLogin, function(req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptime', requiresLogin, function (req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    uptime.getUptimeData(null, startDate, endDate, function (err, uptimes) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        res.send(uptimes);
-    });
-});
+app.get('/ops/uptime', requiresLogin, routes.operations.uptime);
 
 
 /**
@@ -401,19 +185,7 @@ app.get('/ops/uptime', requiresLogin, function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptime/:monitorName', requiresLogin, function (req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    uptime.getUptimeData(req.params.monitorName, startDate, endDate, function (err, uptimes) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        res.send(uptimes);
-    });
-});
+app.get('/ops/uptime/:monitorName', requiresLogin, routes.operations.uptimeDetailed);
 
 /**
 * fetch uptime data aggregated for all app monitors combined
@@ -422,40 +194,7 @@ app.get('/ops/uptime/:monitorName', requiresLogin, function (req, res, next) {
 * @param end (query string)     end date (epoch)
 *
 */
-app.get('/ops/uptimeaggregate', requiresLogin, function (req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    var days = date_util.dateDiff(startDate, endDate, 'day');
-    var prevPeriodStartDate = new Date();
-    var prevPeriodEndDate = new Date();
-    prevPeriodEndDate.setTime(startDate.getTime() - 1);
-    prevPeriodStartDate.setTime(prevPeriodEndDate.getTime() - days * 24 * 60 * 60 * 1000);
-
-
-    uptime.getUptimeDataAggregate(null, startDate, endDate, function (err, uptimes) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        else {
-
-            uptime.getUptimeDataAggregate(null, prevPeriodStartDate, prevPeriodEndDate, function (err, uptimesprevious) {
-                if (err) {
-                    logger.error(err);
-                    res.statusCode = 500;
-                    res.send('Internal Server Error');
-                    return;
-                }
-                else {
-                    var ret = { 'current': uptimes, 'previous': uptimesprevious};
-                    res.send(ret);
-                }
-            });
-        }
-    });
-});
+app.get('/ops/uptimeaggregate', requiresLogin, routes.operations.uptimeAggregate);
 
 /**
 * fetch Uptime data aggregated for the specified monitor
@@ -463,57 +202,14 @@ app.get('/ops/uptimeaggregate', requiresLogin, function (req, res, next) {
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/uptimeaggregate/:monitorName', requiresLogin, function (req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    var days = date_util.dateDiff(startDate, endDate, 'day');
-    var prevPeriodStartDate = new Date();
-    var prevPeriodEndDate = new Date();
-    prevPeriodEndDate.setTime(startDate.getTime() - 1);
-    prevPeriodStartDate.setTime(prevPeriodEndDate.getTime() - days * 24 * 60 * 60 * 1000);
-    uptime.getUptimeDataAggregate(req.params.monitorName, startDate, endDate, function (err, uptimes) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        else {
-
-            uptime.getUptimeDataAggregate(req.params.monitorName, prevPeriodStartDate, prevPeriodEndDate, function (err, uptimesprevious) {
-                if (err) {
-                    logger.error(err);
-                    res.statusCode = 500;
-                    res.send('Internal Server Error');
-                    return;
-                }
-                else {
-                    var ret = { 'current': uptimes, 'previous': uptimesprevious };
-                    res.send(ret);
-                }
-            });
-        }
-    });
-});
+app.get('/ops/uptimeaggregate/:monitorName', requiresLogin, routes.operations.uptimeAggregateByMonitor);
 
 /**
 * fetch vendor cost data (all detail)
 * @param start (query string)   start date (epoch)
 * @param end (query string)     end date (epoch)
 */
-app.get('/ops/vendorcost', requiresLogin, function (req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
-    vendorCostDao.getVendorCost(startDate, endDate, function (err, vendorcosts) {
-        if (err) {
-            logger.error(err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-        res.send(vendorcosts);
-    });
-});
+app.get('/ops/vendorcost', requiresLogin, routes.operations.vendorCost);
 
 // Start the web server
 var server = app.listen(3000);
@@ -543,3 +239,11 @@ if (process.platform != 'win32') {
         process.exit(0);
     });
 }
+
+function backfillAdmins() { 
+    authDao.addUser('nathan@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
+    authDao.addUser('chris@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
+    authDao.addUser('tommy@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
+};
+
+backfillAdmins();

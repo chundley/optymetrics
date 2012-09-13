@@ -1,0 +1,28 @@
+h2 Admin
+div.user-admin
+  h3 Users
+  table.table.table-bordered.table-condensed.table-striped
+    thead
+      tr
+        th Email
+        th Role
+    tbody  
+      - each user in users
+        tr
+          td #{user.email}
+          td #{user.role}
+  h3 Add User
+  form(method='POST', action='/admin/user/add')
+    label(for='email') Email Address
+    input(type='text', name='email', placeholder='user@optify.net')
+    label(for='role') Role
+    select(name='role')
+      - each role in roles
+        option(value='#{role}') #{role}
+    label(for='password') Password
+    input(type='password', name='password')
+    label(for='confirm') Confirm Password
+    input(type='password', name='confirm')
+    button(type='submit', class='btn btn-primary', style='display: block; margin-bottom: 10px') Add User
+    - if(message)
+      div(class='alert alert-#{message.level}') #{message.content}
