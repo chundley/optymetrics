@@ -1,5 +1,4 @@
-var asyc = require('async'),
-    authDao = require('../data_access/auth-dao.js'),
+var authDao = require('../data_access/auth-dao.js'),
     UserRoles = require('../data_access/model/auth-model.js').UserRoles;
 
 exports.index = function(req, res, next) {

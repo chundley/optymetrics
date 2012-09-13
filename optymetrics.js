@@ -111,7 +111,6 @@ function requiresLogin(req, res, next) {
 // Authorization middleware
 function requiresAdmin(req, res, next) {
     if(req.session.user && req.session.user.role === UserRoles.ADMIN) {
-        debugger; 
         next();
     } else {
        var msg = '403 - Unauthorized: ' + req.url;
