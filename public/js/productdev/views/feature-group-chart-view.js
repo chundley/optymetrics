@@ -22,7 +22,6 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
                 return '<b>' + this.point.name + '</b>: ' + this.y + '%'; 
             },
             positioner: function () {
-               console.log(this);
                return { x: ((this.chart.plotSizeX / 2) - (this.label.width / 2) + 20), y: 550 };
             },
             style: {
