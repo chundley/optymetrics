@@ -87,6 +87,7 @@ Opty.ProductDevView = Backbone.View.extend({
         var storyCollection = new Opty.StoryCollection({});
 
         var featureGroupDrillDownTable = new Opty.TableView({
+            id: 'feature-group-table',
             table_fields: [
               {
                   field: 'deployedOn',

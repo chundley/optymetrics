@@ -3,6 +3,10 @@
 }
 
 #feature-group-chart {
-    width: 700px;
-    height: 350px;
+    width: 1300px;
+    height: 600px;
 }
+
+#feature-group-table th {
+    min-width: 100px;
+};

@@ -20,6 +20,7 @@ Opty.TableView = Backbone.View.extend({
 
         this.collection = options.collection; 
         this.table_fields = options.table_fields;
+        if(options.id) this.id = options.id;
         
         this.collection.on('reset', this.collectionChanged);
 
