@@ -73,7 +73,7 @@ Opty.ProductDevView = Backbone.View.extend({
         
         // Feature group section
         var $featureGroupRow = $('<div>', { 'class': 'row-fluid report-section' });
-        var $featureGroupChartColumn = $('<div>', { 'class': 'span6' });
+        var $featureGroupChartColumn = $('<div>', { 'class': 'span12' });
         this.$el.append($featureGroupRow);
         $featureGroupRow.append($featureGroupChartColumn);
 
