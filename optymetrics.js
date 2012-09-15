@@ -30,7 +30,9 @@ var authDao = require('./data_access/auth-dao.js'),
     tcojob = require('./jobs/tco-job.js'),
     UserRoles = require('./data_access/model/auth-model.js').UserRoles,
     vendorCostJob = require('./jobs/vendor-cost-job.js'),
-    vendorCostDao = require('./data_access/vendor-cost-dao.js');
+    vendorCostDao = require('./data_access/vendor-cost-dao.js'),
+    mixpanel_backfill = require('./jobs/mixpanel_backfill.js'),
+    aspen_backfill = require('./jobs/aspen_backfill.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
@@ -69,6 +71,20 @@ var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
     uptimejob.uptimeJob();
 });
 uptimeJobSchedule.start();
+
+//Run the mixpanel backfill at 7AM PST
+var mixpanelJob = new cronJob("0 0 14 * *", function () {
+    logger.info('Running Mixpanel backfill');
+    mixpanel_backfill.mixpanelBackfill();
+});
+mixpanelJob.start();
+
+//Run the aspen backfill job at 7AM PST
+var aspenJob = new cronJob("0 0 14 * *", function () {
+    logger.info('Running Aspen backfill');
+    aspen_backfill.aspenBackfill();
+});
+aspenJob.start();
 
 // The web server instance
 var app = express.createServer();

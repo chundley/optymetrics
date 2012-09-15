@@ -1,0 +1,12 @@
+MonthlyCustomerStats : |
+    select the_month
+        , case when c.sku = 'Agency' THEN 'Agency' ELSE display_name END sku
+        , count(*) customer_count
+     FROM __tommy_month_dates d
+    JOIN __tommy_customer_sku_history sh on d.the_month BETWEEN sh.start_date and sh.end_date 
+    LEFT JOIN v_customer c on c.id = sh.customer_id 
+    WHERE display_name ~* '^(agency|free trial|enterprise|professional|premium|express|basic)' 
+    AND the_month BETWEEN now() - INTERVAL '18 MONTHS' AND now() 
+    GROUP BY 1, 2
+
+
