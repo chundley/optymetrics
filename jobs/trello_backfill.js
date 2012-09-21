@@ -1,5 +1,6 @@
 var async = require('async'),
     logger = require('../util/logger.js'),
+    storyDao = require('../data_access/story-dao.js'),
     trello = require('../data_access/trello-api.js');
 
 var trelloBackfill = function() {
@@ -16,6 +17,13 @@ var trelloBackfill = function() {
         },
         function(callback) {
             trello.backfillStories(function(err) {
+                (err) ? callback(err) : callback();
+            });
+        },
+        function(callback) {
+            logger.log('info', 'Calculating story cycle time');
+            storyDao.calculateCycleTime(function(err) {
+                logger.log('info', 'Calculating done calculating cycle time');
                 (err) ? callback(err) : callback();
             });
         }

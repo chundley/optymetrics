@@ -6,7 +6,9 @@
 /**
  * Node libraries
  */
-var mongoConfig = require('config'), 
+var async = require('async'), 
+    mongoConfig = require('config'),
+    moment = require('moment'),
     mongoose = require('mongoose'),
     _ = require('underscore')
 
@@ -289,8 +291,63 @@ var getVelocityTrend = function(currentPeriodStartDate, currentPeriodEndDate, ca
     });
 };
 
+/**
+ * Calculate the cycle time (Number of days between a story initially hitting "In Progress" and eventually 
+ * ending up in the "Deployed" lane
+ *
+ * @param callback  Executed when the function is complete
+ */
+var calculateCycleTime = function(callback) {
+    var isDeployed = /Deployed\s+\d+\/\d+/;
+    // Iterate over all stories 
+    storyModel.StoryModel.find({ deployed: true }, function(err, docs) {
+        async.forEachSeries(docs, function(story, forEachCallback) {
+           // Calculate cycle time if we don't already have a data point for this story.
+           storyModel.CycleTimeModel.findOne({ storyId: story.id }, function(err, ctm) {
+                if(!ctm) {
+                    var start, end;
+                    _.each(story.listHistory, function(item) {
+                        // Start date is the point when the story moves from Ready Backlog to In Progress
+                        if(item.listBefore == 'Ready Backlog' && item.listAfter === 'In Progress') {
+                            if(!start || (item.date < start.toDate())) {
+                                start = moment(item.date); 
+                            } 
+                        } 
+                    });
+                    // End date is the deployment date
+                    end = moment(story.deployedOn); 
+                    if(start && end) {
+                        var ctm = new storyModel.CycleTimeModel({
+                            storyId: story.id,
+                            deployedOn: end.toDate(),
+                            size: story.size
+                        });
+                        
+                        var cycleTime = end.diff(start, 'days');
+                        // 1 day is the minimum grain
+                        if(cycleTime <= 0) cycleTime++;    
+                        ctm.cycleTimeDays = cycleTime;
+
+                        ctm.save(function(err) {
+                            if(err) console.log(err);
+                            forEachCallback();
+                        });
+                    } else {
+                        forEachCallback();
+                    }
+                } else {
+                    forEachCallback();
+                }
+            });
+        },
+        function(err) {
+            (err) ? callback(err) : callback();
+        });
+    });
+};
 
 // The module's public API
+exports.calculateCycleTime = calculateCycleTime;
 exports.getDeploymentVelocity = getDeploymentVelocity;
 exports.getStories = getStories;
 exports.getVelocityTrend = getVelocityTrend;

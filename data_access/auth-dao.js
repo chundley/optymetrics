@@ -10,7 +10,6 @@ exports.addUser = function(email, password, role, callback) {
         password: password,
         role: role 
     });
-   debugger; 
     user.save(function(err) {
         (err) ? callback(err) : callback();
     });

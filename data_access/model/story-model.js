@@ -35,13 +35,15 @@ var StorySchema = new Schema({
     featureGroups: [String]
 });
 
-var MemberModel = mongoose.model('Member', MemberSchema);
-var StoryModel = mongoose.model('Story', StorySchema);
-var ListModel = mongoose.model('List', ListSchema);
-var LabelModel = mongoose.model('Label', LabelSchema);
+var CycleTimeSchema = new Schema({
+    storyId         : ObjectId,
+    deployedOn      : Date,
+    size            : Number,
+    cycleTimeDays   : Number
+});
 
-// The module's public API
-exports.LabelModel = LabelModel;
-exports.ListModel = ListModel;
-exports.MemberModel = MemberModel;
-exports.StoryModel = StoryModel;
+exports.MemberModel = mongoose.model('Member', MemberSchema);
+exports.StoryModel = mongoose.model('Story', StorySchema);
+exports.ListModel = mongoose.model('List', ListSchema);
+exports.LabelModel = mongoose.model('Label', LabelSchema);
+exports.CycleTimeModel = mongoose.model('CycleTime', CycleTimeSchema);
