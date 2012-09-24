@@ -178,6 +178,9 @@ app.get('/rest/productdev/velocity', requiresLogin, routes.productdev.velocityBy
 // Gets velocity trend data as JSON
 app.get('/rest/productdev/velocity/trend', requiresLogin, routes.productdev.velocityTrend);
 
+// Gets average cycle time data as JSON
+app.get('/rest/productdev/cycletime', requiresLogin, routes.productdev.averageCycleTime);
+
 // Gets TCO data as JSON
 app.get('/ops/tco', requiresLogin, routes.operations.tco);
 

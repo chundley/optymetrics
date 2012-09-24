@@ -31,6 +31,7 @@ exports.index = function(req, res, next) {
             '/js/operations/views/operations-cost-chart-view.js',
             '/js/operations/views/category-cost-chart-view.js',
             '/js/operations/views/vendor-cost-chart-view.js',
+            '/js/productdev/models/cycle-time-model.js',
             '/js/productdev/models/feature-group-model.js',
             '/js/productdev/models/velocity-model.js',
             '/js/productdev/models/velocity-trend-model.js',
