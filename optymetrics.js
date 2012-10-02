@@ -39,50 +39,78 @@ mongodb_connection.connect();
 
 // Run the VendorCost backfill every day at 6:00 AM
 var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
-    logger.info('Running Vendor cost backfill');
-    vendorCostJob.vendorCostJob();
+    try {
+        logger.info('Running Vendor cost backfill');
+        vendorCostJob.vendorCostJob();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 vendorCostBackfillJob.start();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
-    logger.info('Running TCO backfill');
-    tcojob.tcoJob();
+    try {
+        logger.info('Running TCO backfill');
+        tcojob.tcoJob();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 tcoBackfillJob.start();
 
 // Run the Trello backfill hourly
 var trelloBackfillJob = new cronJob("0 0 * * *", function() {
-    logger.log('info','Running Trello backfill');
-    trello_backfill.trelloBackfill();
+    try {
+        logger.log('info','Running Trello backfill');
+        trello_backfill.trelloBackfill();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 trelloBackfillJob.start();
 
 // Run the PagerDuty backfill daily at midnight PST
 var pagerDutyBackfillJob = new cronJob("0 0 7 * *", function() {
-    logger.log('info', 'Running PagerDuty backfill');
-    pagerDutyJob.pagerDutyBackfill();
+    try {
+        logger.log('info', 'Running PagerDuty backfill');
+        pagerDutyJob.pagerDutyBackfill();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 pagerDutyBackfillJob.start();
 
 // Run the Pingdom backfill hourly (five minutes after the hour)
 var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
-    logger.info('Running Uptime job');
-    uptimejob.uptimeJob();
+    try {
+        logger.info('Running Uptime job');
+        uptimejob.uptimeJob();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 uptimeJobSchedule.start();
 
 //Run the mixpanel backfill at 7AM PST
 var mixpanelJob = new cronJob("0 0 14 * *", function () {
-    logger.info('Running Mixpanel backfill');
-    mixpanel_backfill.mixpanelBackfill();
+    try {
+        logger.info('Running Mixpanel backfill');
+        mixpanel_backfill.mixpanelBackfill();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 mixpanelJob.start();
 
 //Run the aspen backfill job at 7AM PST
 var aspenJob = new cronJob("0 0 14 * *", function () {
-    logger.info('Running Aspen backfill');
-    aspen_backfill.aspenBackfill();
+    try {
+        logger.info('Running Aspen backfill');
+        aspen_backfill.aspenBackfill();
+    } catch(err) {
+        logger.error(err);
+    }
 });
 aspenJob.start();
 
@@ -177,6 +205,9 @@ app.get('/rest/productdev/velocity', requiresLogin, routes.productdev.velocityBy
 
 // Gets velocity trend data as JSON
 app.get('/rest/productdev/velocity/trend', requiresLogin, routes.productdev.velocityTrend);
+
+// Gets average cycle time data as JSON
+app.get('/rest/productdev/cycletime', requiresLogin, routes.productdev.averageCycleTime);
 
 // Gets TCO data as JSON
 app.get('/ops/tco', requiresLogin, routes.operations.tco);

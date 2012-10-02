@@ -71,15 +71,30 @@ exports.velocityTrend = function(req, res, next) {
     });
 };
 
-exports.weeklyCustomerUserStats = function (req, res, next) {
-    appUsageDao.getWeeklyCustomerUserStats(function (err, monthlyData) {
-        if (err) {
-            logger.error(err);
+exports.averageCycleTime = function(req, res, next) {
+    var startDate = new Date(parseInt(req.query['start']));
+    var endDate = new Date(parseInt(req.query['end']));
+    
+    storyDao.getCycleTimeOverPeriod(startDate, endDate, function(err, results) {
+         if(err) {
+            logger.log('info',err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
         }
-        res.send(monthlyData);
+        res.send(results);
     });
 };
 
+
+exports.weeklyCustomerUserStats = function (req, res, next) {
+    appUsageDao.getWeeklyCustomerUserStats(function (err, weeklyData) {
+         if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(weeklyData);
+    });
+};

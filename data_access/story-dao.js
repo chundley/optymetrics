@@ -68,6 +68,10 @@ var insertList = function(id, name, callback) {
     });
 };
 
+/**
+ * Fetches stories deployed between startDate and endDate. If feature group is specified,
+ * only stories from that feature group are returned.
+ */
 var getStories = function(startDate, endDate, featureGroup, callback) {
     var query = { deployed: true };
     if(startDate && endDate) {
@@ -344,6 +348,53 @@ var calculateCycleTime = function(callback) {
             (err) ? callback(err) : callback();
         });
     });
+};
+
+/**
+ * Gets the average cycle time by point value over a period 
+ */
+exports.getCycleTimeOverPeriod = function(startDate, endDate, callback) {
+    var map = function() {
+        emit(this.size, this.cycleTimeDays);
+    };
+
+    var reduce = function(key, values) {
+        var total = 0, count = 0;
+        values.forEach(function(value) {
+            total += value;
+            count++;
+        });
+
+        return Math.round(total / count);
+    };
+
+    var command = {
+        mapreduce: 'cycletimes',
+        map:  map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: { deployedOn: {$gte: startDate, $lt: endDate} },
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function(err, results) {
+            if(err) {
+                logger.log('error', err);
+            }
+
+            debugger;
+
+            if(results.numberReturned > 0) {
+                callback(err, 
+                    _.map(results.documents[0].results, function(result, key) {
+                            return { size: result._id, cycleTimeDays: result.value };
+                    })
+                );
+            } else {
+                callback(err, []);
+            }
+        }
+    );
 };
 
 // The module's public API

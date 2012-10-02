@@ -177,8 +177,10 @@ Opty.ProductDevView = Backbone.View.extend({
 
         // Define basic top-level view infrastructure
         var $velocityRow = $('<div>', { 'class': 'row-fluid report-section' });
+        var $velocityHeaderRow = $('<div>', { 'class': 'row-fluid' }).append($('<p>', { 'class': 'lead' }).append('Velocity'));
         var $velocityChartColumn = $('<div>', { 'class': 'span6' });
         var $velocityTableColumn = $('<div>', { 'class': 'span6' });
+        this.$el.append($velocityHeaderRow);
         this.$el.append($velocityRow);
         $velocityRow.append($velocityChartColumn);
         $velocityRow.append($velocityTableColumn);
@@ -229,7 +231,38 @@ Opty.ProductDevView = Backbone.View.extend({
         });
        
         $velocityTableColumn.append(velocityTable.$el);
+    
+        // Cycle time table
+        var $cycleTimeRow = $('<div>', { 'class': 'row-fluid report-section' });
+        var $cycleTimeTableColumn = $('<div>', { 'class': 'span6' });
+        var $cycleTimeHeaderRow = $('<div>', { 'class': 'row-fluid' }).append($('<p>', { 'class': 'lead' }).append('Cycle Time'));
+        var $cycleTimeRow = $('<div>', { 'class': 'row-fluid report-section' });
+        $cycleTimeRow.append($cycleTimeTableColumn);
+        this.$el.append($cycleTimeHeaderRow);
+        this.$el.append($cycleTimeRow);
+
+        var cycleTimeCollection = new Opty.CycleTimeCollection({});
         
+        var cycleTimeTable = new Opty.TableView({
+            table_fields: [
+              {
+                  field: 'size',
+                  display_name: 'Size (Pts)',
+                  text_align: 'right'
+              },
+              {
+                  field: 'cycleTimeDays',
+                  display_name: 'Cycle Time (Days)',
+                  text_align: 'right'
+              }
+            ],
+            collection: cycleTimeCollection,
+            sortable: true,
+            defaultSort: [[0,0]]
+        });
+        
+        $cycleTimeTableColumn.append(cycleTimeTable.$el);
+
         // Render the date picker last as it is the main driver of events impacting
         // data fetch
         datePickerView.render();
