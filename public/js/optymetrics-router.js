@@ -53,6 +53,10 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
             {
                 url_fragment: 'velocity',
                 title: 'Velocity'
+            },
+            {
+                url_fragment: 'usage',
+                title: 'Usage'
             }
         ];
 
@@ -124,9 +128,31 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty();
     },
 
-    salesRoute: function () {
+    salesRoute: function (subpage) {
         this.updateNavState('sales');
-        $('div.tab-content').empty();
+        var nav_options = [
+            {
+                url_fragment: 'customers',
+                title: 'Customers',
+                selected: true // default
+            }
+        ];
+
+        if (subpage) {
+            _.each(nav_options, function (option) {
+                option.selected = (option.url_fragment == subpage);
+            });
+        }
+
+        var sales_view = new Opty.SalesView({ selected: subpage });
+        var Optymetrics_subnav = new Opty.OptyMetricSubNav({
+            root_hash: '#sales',
+            nav_options: nav_options
+        });
+
+        $('div.tab-content').empty()
+            .append(Optymetrics_subnav.render())
+            .append(sales_view.render());
     },
 
     updateNavState: function (tab_name) {

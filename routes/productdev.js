@@ -1,4 +1,5 @@
 var storyDao = require('../data_access/story-dao.js');
+var appUsageDao = require('../data_access/appusage-dao.js');
 
 exports.velocityByFeatureGroup = function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
@@ -69,3 +70,16 @@ exports.velocityTrend = function(req, res, next) {
         res.send(results);
     });
 };
+
+exports.weeklyCustomerUserStats = function (req, res, next) {
+    appUsageDao.getWeeklyCustomerUserStats(function (err, monthlyData) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(monthlyData);
+    });
+};
+

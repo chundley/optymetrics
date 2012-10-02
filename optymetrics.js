@@ -190,6 +190,12 @@ app.get('/ops/incidents', requiresLogin, routes.operations.incidents);
 // Gets incidents aggregated by day as JSON
 app.get('/ops/incidents/aggregate', requiresLogin, routes.operations.incidentsByDay);
 
+//Gets customer counts by sku aggregated monthly as JSON
+app.get('/rest/sales/customer-history', requiresLogin, routes.sales.monthlyCustomersBySku);
+
+//Gets customer counts by sku aggregated monthly as JSON
+app.get('/rest/productdev/weekly-customer-user-stats', requiresLogin, routes.productdev.weeklyCustomerUserStats);
+
 /**
 * fetch uptime data (detailed)
 * @param monitorName            which monitor to pull data for

@@ -7,7 +7,7 @@ Opty.ProductDevView = Backbone.View.extend({
         var me = this;
         me.options = options;
 
-        _.bindAll(me, 'render', 'renderOverview', 'renderFeatureGroupSubsection', 'renderVelocitySubsection');
+        _.bindAll(me, 'render', 'renderOverview', 'renderFeatureGroupSubsection', 'renderVelocitySubsection', 'renderUsageSubsection');
     },
 
     render: function() {
@@ -21,6 +21,10 @@ Opty.ProductDevView = Backbone.View.extend({
             }
             case 'feature-groups': {
                 this.renderFeatureGroupSubsection();
+                break;
+            }
+            case 'usage': {
+                this.renderUsageSubsection();
                 break;
             }
             default: {
@@ -229,5 +233,59 @@ Opty.ProductDevView = Backbone.View.extend({
         // Render the date picker last as it is the main driver of events impacting
         // data fetch
         datePickerView.render();
+    },
+    
+    renderUsageSubsection: function() {
+        this.$el.append("Usage");
+        
+        
+        el = this.$el;
+        var weeklyCustomerUsageBySku = new Opty.WeeklyCustomerUsageBySku({});
+        weeklyCustomerUsageBySku.fetch();
+/*        
+        var series = {};
+        var series_array = [];
+        start_date = Date.today().add(-17).months().moveToFirstDayOfMonth();
+        var dates = {};
+        date_num = 0;
+        var xAxisLabels = [];
+        while(start_date < Date.today())
+        {
+            dates[start_date.toString("yyyy-MM-dd")] = date_num++;
+            xAxisLabels.push(start_date.toString("MMM") + " " + (start_date.getMonth()==0 || date_num==1?start_date.toString("yyyy"):"") );
+            start_date = start_date.add(1).months();
+        }
+        series["Free Trial"] = null;
+        series["Premium"] = null;
+        series["Express"] = null;
+        series["Basic"] = null;
+        series["Agency"] = null;
+        series["Professional"] = null;
+        series["Enterprise"] = null;
+        customerHistoryCollection.fetch({success: function(data) {
+                _.each(data.models, function (model) {
+                    if(series[model.get('sku')] == null){
+                        series[model.get('sku')] = {name:model.get('sku'), data:[]};
+                        for(var i=0;i<date_num; i++)
+                            series[model.get('sku')].data[i] = 0;
+                    }
+                    series[model.get('sku')].data[dates[model.get("monthOf").substring(0,10)]] = model.get('customerCount');
+                });
+                series['Free Trial'].visible = false;
+                series_array = [];
+                for(var k in series)
+                    series_array.push(series[k]);
+                var customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array, xAxisLabels:xAxisLabels, title:'Customers by SKU', yLabel:'Customer Count' });
+
+                var $row1 = $('<div>', { 'class': 'row-fluid'});
+                var $divCustomers = $('<div>', { 'class': 'span6', 'id':'customers-by-sku', 'height':'450px' });
+                el.append($row1);
+                $row1.append($divCustomers);
+                $divCustomers.append(customerHistoryChart.$el);
+                customerHistoryChart.render();
+            }
+        });
+    }        
+        */
     }
 });

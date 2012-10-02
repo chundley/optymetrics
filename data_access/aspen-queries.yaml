@@ -1,4 +1,4 @@
-MonthlyCustomerStats : |
+MonthlyCustomerStats : >
     select the_month
         , case when c.sku = 'Agency' THEN 'Agency' ELSE display_name END sku
         , count(*) customer_count
@@ -8,5 +8,19 @@ MonthlyCustomerStats : |
     WHERE display_name ~* '^(agency|free trial|enterprise|professional|premium|express|basic)' 
     AND the_month BETWEEN now() - INTERVAL '18 MONTHS' AND now() 
     GROUP BY 1, 2
-
-
+WeeklyCustomerUserStats : >
+    SELECT to_char(pageview_date, 'yyyy-ww') week_num
+    , case when sku = 'Premium' then 'Enterprise' ELSE sku END sku
+    , min(to_char(pageview_date, 'yyyy-mm-dd')) week_of
+    , count(distinct to_char(pageview_date, 'yyyy-mm-dd')) days
+    , count(distinct customer_id) customer_count
+    , count(distinct user_id) user_count
+    , count(distinct user_id::varchar || to_char(pageview_date, 'yyyy-mm-dd')) total_daily_visits
+    FROM v_traffic t
+    JOIN optify_user ou on ou.id = t.user_id
+    JOIN v_customer c on c.id = ou.customer_id
+    WHERE url_host = 'dashboard'
+    AND sku ~* '^(agency|basic|express|premium|enterprise|professional|free trial)'
+    AND pageview_date >= now() - INTERVAL '6 MONTHS'
+    GROUP BY 1, 2
+    HAVING count(distinct to_char(pageview_date, 'yyyy-mm-dd')) >= 6

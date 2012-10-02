@@ -20,11 +20,24 @@ var MonthlyCustomerStatsSchema = new Schema({
     sku             : String,
     customerCount   : Number
 });
+MonthlyCustomerStatsSchema.index({ monthOf: 1, sku: 1 }, { unique: true });
+
+var WeeklyCustomerUserStatsSchema = new Schema({
+    weekOf         : Date,
+    sku             : String,
+    days            : Number,
+    customerCount   : Number,
+    userCount       : Number,
+    totalDailyVisits : Number
+});
+WeeklyCustomerUserStatsSchema.index({ weekOf: 1, sku: 1 }, { unique: true });
 
 
 var DailyAppUsageRawModel = mongoose.model('DailyAppUsageRaw', DailyAppUsageRawSchema);
 var MonthlyCustomerStatsModel = mongoose.model('MonthlyCustomerStats', MonthlyCustomerStatsSchema);
+var WeeklyCustomerUserStatsModel = mongoose.model('WeeklyCustomerUserStats', WeeklyCustomerUserStatsSchema);
 
 // The module's public API
 exports.DailyAppUsageRawModel = DailyAppUsageRawModel;
 exports.MonthlyCustomerStatsModel = MonthlyCustomerStatsModel;
+exports.WeeklyCustomerUserStatsModel = WeeklyCustomerUserStatsModel;
