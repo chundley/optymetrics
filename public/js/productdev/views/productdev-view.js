@@ -269,56 +269,77 @@ Opty.ProductDevView = Backbone.View.extend({
     },
     
     renderUsageSubsection: function() {
-        this.$el.append("Usage");
-        
-        
         el = this.$el;
         var weeklyCustomerUsageBySku = new Opty.WeeklyCustomerUsageBySku({});
-        weeklyCustomerUsageBySku.fetch();
-/*        
-        var series = {};
-        var series_array = [];
-        start_date = Date.today().add(-17).months().moveToFirstDayOfMonth();
-        var dates = {};
-        date_num = 0;
+        var week_count = 0;
+        window.series_array = [];
+        var week_dates = {}; 
         var xAxisLabels = [];
-        while(start_date < Date.today())
-        {
-            dates[start_date.toString("yyyy-MM-dd")] = date_num++;
-            xAxisLabels.push(start_date.toString("MMM") + " " + (start_date.getMonth()==0 || date_num==1?start_date.toString("yyyy"):"") );
-            start_date = start_date.add(1).months();
-        }
-        series["Free Trial"] = null;
-        series["Premium"] = null;
-        series["Express"] = null;
-        series["Basic"] = null;
-        series["Agency"] = null;
-        series["Professional"] = null;
-        series["Enterprise"] = null;
-        customerHistoryCollection.fetch({success: function(data) {
+        window.customerHistoryChart = null;
+        
+        weeklyCustomerUsageBySku.fetch({success:function(data){
+            _.each(data.models, function (model) {
+                week_dates[Opty.util.getSundayDate(new Date(model.get("weekOf"))).toString("yyyy-MM-dd")]=0;
+            });
+            week_dates = Opty.util.objectKeySort(week_dates);
+            for(k in week_dates){
+                week_dates[k] = week_count;
+                xAxisLabels.push( k );
+                week_count++;
+            }
+            
+            series_array = {};
+            window.the_datas = {"totalDailyVisits":"Visits", "userCount":"Unique Users", "customerCount":"Unique Customers"};
+            for(valueName in the_datas){
+                var series = {};
+                series["Free Trial"] = null;
+                series["Premium"] = null;
+                series["Express"] = null;
+                series["Basic"] = null;
+                series["Agency"] = null;
+                series["Professional"] = null;
+                series["Enterprise"] = null;
+                series_array[valueName] = [];
                 _.each(data.models, function (model) {
                     if(series[model.get('sku')] == null){
                         series[model.get('sku')] = {name:model.get('sku'), data:[]};
-                        for(var i=0;i<date_num; i++)
+                        for(var i=0;i<week_count; i++)
                             series[model.get('sku')].data[i] = 0;
                     }
-                    series[model.get('sku')].data[dates[model.get("monthOf").substring(0,10)]] = model.get('customerCount');
+                    series[model.get('sku')].data[week_dates[Opty.util.getSundayDate(new Date(model.get("weekOf"))).toString("yyyy-MM-dd")]] = model.get(valueName);
                 });
+    
                 series['Free Trial'].visible = false;
-                series_array = [];
                 for(var k in series)
-                    series_array.push(series[k]);
-                var customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array, xAxisLabels:xAxisLabels, title:'Customers by SKU', yLabel:'Customer Count' });
-
-                var $row1 = $('<div>', { 'class': 'row-fluid'});
-                var $divCustomers = $('<div>', { 'class': 'span6', 'id':'customers-by-sku', 'height':'450px' });
-                el.append($row1);
-                $row1.append($divCustomers);
-                $divCustomers.append(customerHistoryChart.$el);
-                customerHistoryChart.render();
+                    if(series[k] != null)
+                        series_array[valueName].push(series[k]);
             }
-        });
-    }        
-        */
+            customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array["totalDailyVisits"], xAxisLabels:xAxisLabels, title:'<b>Visits</b> per week by SKU', yLabel:'Weekly Visits' });
+            customerHistoryChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
+            customerHistoryChart.salesChartOptions.chart["marginBottom"] = 130;
+            var $row1 = $('<div>', { 'class': 'row-fluid'});
+            var $divCustomers = $('<div>', { 'class': 'span6' });
+            var $divCustomersChart = $('<div>', { 'id':'customers-by-sku', 'height':'450px' });
+            $divCustomers.append($divCustomersChart);
+            $row1.append($divCustomers);
+            for(valueName in the_datas){
+                $divCustomers.append(
+                    $('<a>', {'class': 'change-metric-item', 'title':valueName}).append(the_datas[valueName]).click(function(){
+                        window.customerHistoryChart.series = window.series_array[this.getAttribute("title")];
+                        window.customerHistoryChart.title = "<b>" + window.the_datas[this.getAttribute("title")] + "</b> per week by SKU";
+                        window.customerHistoryChart.yLabel = "Weekly " + window.the_datas[this.getAttribute("title")];
+                        window.customerHistoryChart.render();
+                    }).css({border:'2px solid #888', padding:'6px', margin:'5px', display:'block', float:'left', cursor:'pointer', 'border-radius':'8px', 'background-color':'#eee'})
+                    
+                );
+            }
+            
+            el.append($row1);
+            $divCustomersChart.append(customerHistoryChart.$el);
+            customerHistoryChart.render();
+            
+            
+        }});
+
     }
 });
