@@ -297,6 +297,11 @@ if (process.platform != 'win32') {
     });
 }
 
+process.on('uncaughtException', function(err) {
+    console.error(err.stack);
+    throw err;
+});
+
 function backfillAdmins() { 
     authDao.addUser('nathan@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
     authDao.addUser('chris@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
