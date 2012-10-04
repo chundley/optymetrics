@@ -32,12 +32,31 @@ var WeeklyCustomerUserStatsSchema = new Schema({
 });
 WeeklyCustomerUserStatsSchema.index({ weekOf: 1, sku: 1 }, { unique: true });
 
+var WeeklyFeatureUsageStatsSchema = new Schema({
+    feature  : String, 
+    weekNum  : String, 
+    uniqueUsers  : Number, 
+    uniqueCustomers  : Number, 
+    visits  : Number, 
+    timeOnFeature  : Number, 
+    pageviews  : Number, 
+    percentCustomersUsing  : Number, 
+    percentUsersUsing  : Number, 
+    percentCustomersUsingExcludeEmail  : Number, 
+    percentUsersUsingExcludeEmail  : Number, 
+    timeOnfeatureRowNum  : Number, 
+    pageviewsRowNum  : Number, 
+    visitsRowNum  : Number 
+});
+WeeklyFeatureUsageStatsSchema.index({ weekNum: 1, feature: 1 }, { unique: true });
 
 var DailyAppUsageRawModel = mongoose.model('DailyAppUsageRaw', DailyAppUsageRawSchema);
 var MonthlyCustomerStatsModel = mongoose.model('MonthlyCustomerStats', MonthlyCustomerStatsSchema);
 var WeeklyCustomerUserStatsModel = mongoose.model('WeeklyCustomerUserStats', WeeklyCustomerUserStatsSchema);
+var WeeklyFeatureUsageStatsModel = mongoose.model('WeeklyFeatureUsageStats', WeeklyFeatureUsageStatsSchema);
 
 // The module's public API
 exports.DailyAppUsageRawModel = DailyAppUsageRawModel;
 exports.MonthlyCustomerStatsModel = MonthlyCustomerStatsModel;
 exports.WeeklyCustomerUserStatsModel = WeeklyCustomerUserStatsModel;
+exports.WeeklyFeatureUsageStatsModel = WeeklyFeatureUsageStatsModel;

@@ -98,3 +98,16 @@ exports.weeklyCustomerUserStats = function (req, res, next) {
         res.send(weeklyData);
     });
 };
+
+
+exports.weeklyFeatureUsageStats = function (req, res, next) {
+    appUsageDao.getWeeklyFeatureUsageStats(function (err, weeklyData) {
+         if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(weeklyData);
+    });
+};

@@ -339,7 +339,20 @@ Opty.ProductDevView = Backbone.View.extend({
             customerHistoryChart.render();
             
             
+        }}); // end customer usage data fetch
+
+        var weeklyFeatureUsageStatsCollection = new Opty.WeeklyFeatureUsageStatsCollection({});
+        weeklyFeatureUsageStatsCollection.fetch({success:function(data){
         }});
+        
+/*        
+        var week_count = 0;
+        window.series_array = [];
+        var week_dates = {}; 
+        var xAxisLabels = [];
+        window.customerHistoryChart = null;
+
+ */       
 
     }
 });

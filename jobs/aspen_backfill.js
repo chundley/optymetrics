@@ -9,9 +9,14 @@ var aspenBackfill = function() {
             aspendb.backfillMonthlyCustomerStats(function(err) {
                 (err) ? callback(err) : callback();
             });
-        },
-        function(callback) {
+        }
+        , function(callback) {
             aspendb.backfillWeeklyCustomerUserStats(function(err) {
+                (err) ? callback(err) : callback();
+            });
+        }
+        , function(callback) {
+            aspendb.backfillWeeklyFeatureUsageStats(function(err) {
                 (err) ? callback(err) : callback();
             });
         }

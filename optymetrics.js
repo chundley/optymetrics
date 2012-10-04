@@ -224,8 +224,11 @@ app.get('/ops/incidents/aggregate', requiresLogin, routes.operations.incidentsBy
 //Gets customer counts by sku aggregated monthly as JSON
 app.get('/rest/sales/customer-history', requiresLogin, routes.sales.monthlyCustomersBySku);
 
-//Gets customer counts by sku aggregated monthly as JSON
+//Gets customer counts by sku aggregated weekly as JSON
 app.get('/rest/productdev/weekly-customer-user-stats', requiresLogin, routes.productdev.weeklyCustomerUserStats);
+
+//Gets feature usage stats aggregated weekly as JSON
+app.get('/rest/productdev/weekly-feature-usage', requiresLogin, routes.productdev.weeklyFeatureUsageStats);
 
 /**
 * fetch uptime data (detailed)

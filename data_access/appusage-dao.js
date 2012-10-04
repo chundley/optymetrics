@@ -44,6 +44,12 @@ var upsertMonthlyCustomerStats = function(data, callback) {
     callback();
 };
 
+var upsertWeeklyFeatureUsageStats = function(data, callback) {
+    var WeeklyFeatureUsageStatsRecord = new appUsageModel.WeeklyFeatureUsageStatsModel(data);
+    WeeklyFeatureUsageStatsRecord.save();
+    callback();
+};
+
 var getDailyAppUsageRecordCount = function(callback){
   appUsageModel.DailyAppUsageRawModel.find().count().exec(function (err, rec_count) {
       if (err) {
@@ -86,6 +92,23 @@ var getWeeklyCustomerUserStats = function(callback){
     });
     
 };
+
+var getWeeklyFeatureUsageStats = function(callback){
+    appUsageModel.WeeklyFeatureUsageStatsModel
+        .find()
+        .sort("feature",1)
+        .sort("weekNum",1)
+        .exec(function (err, docs) {
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, docs);
+        }
+    });
+    
+};
+
 // The module's public API
 exports.insertDailyAppUsageRawRecord = insertDailyAppUsageRawRecord;
 exports.removeDailyAppUsageRawForDates = removeDailyAppUsageRawForDates;
@@ -94,3 +117,5 @@ exports.upsertMonthlyCustomerStats = upsertMonthlyCustomerStats;
 exports.getMonthlyCustomersBySku = getMonthlyCustomersBySku;
 exports.upsertWeeklyCustomerUserStats = upsertWeeklyCustomerUserStats;
 exports.getWeeklyCustomerUserStats = getWeeklyCustomerUserStats;
+exports.upsertWeeklyFeatureUsageStats = upsertWeeklyFeatureUsageStats;
+exports.getWeeklyFeatureUsageStats = getWeeklyFeatureUsageStats;

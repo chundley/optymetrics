@@ -8,6 +8,7 @@ MonthlyCustomerStats : >
     WHERE display_name ~* '^(agency|free trial|enterprise|professional|premium|express|basic)' 
     AND the_month BETWEEN now() - INTERVAL '18 MONTHS' AND now() 
     GROUP BY 1, 2
+    
 WeeklyCustomerUserStats : >
     SELECT to_char(pageview_date, 'yyyy-ww') week_num
     , case when sku = 'Premium' then 'Enterprise' ELSE sku END sku
@@ -24,3 +25,79 @@ WeeklyCustomerUserStats : >
     AND pageview_date >= now() - INTERVAL '6 MONTHS'
     GROUP BY 1, 2
     HAVING count(distinct to_char(pageview_date, 'yyyy-mm-dd')) >= 6
+
+WeeklyFeatureUsageStats : >
+    CREATE TEMP view v_traffic_with_feature
+    as
+    SELECT *, case when url_host = 'help' then 'help' ELSE regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(url_path, '/([^/#?%]*).*', '\\1', 'g')
+    , '^link$', 'links')
+    , '^landingpage$', 'landingpages')
+    , '^lead$', 'leadintel')
+    , '^keyword$', 'keywords')
+    , '^page$', 'pages')
+    , '^dailyemail$', 'dailyemail') END feature
+    FROM v_traffic_event;
+    
+    CREATE TEMP table __temp_t1
+    AS
+    select feature, user_id
+    , to_char(pageview_date, 'yyyy-ww') week_num
+    , (traffic_visitor_id*1000)::varchar || traffic_visit_num::varchar visit_num
+    , extract(epoch from max(pageview_date) - min(pageview_date))/ 60 time_on_feature
+    , count(*) pageviews
+    FROM v_traffic_with_feature
+    WHERE pageview_date >= now() - INTERVAL '6 MONTH'
+    AND (url_host in('dashboard', 'help') OR feature in ('dailyemail'))
+    AND feature ~* '(help|landing|lead|keyword|twitter|contact|email|link|report|page)'
+    AND url_path !~* '(page-event|pagenot)'
+    GROUP BY 1, 2, 3, 4;
+    
+    
+    CREATE TEMP TABLE __temp_t2
+    AS
+    SELECT t2.*
+    , t2.unique_customers / t3.unique_customers percent_customers_using
+    , t2.unique_users / t3.unique_users percent_users_using
+    
+    , t2.unique_customers / t3.unique_customers_exclude_email percent_customers_using_exclude_email
+    , t2.unique_users / t3.unique_users_exclude_email percent_users_using_exclude_email
+    
+    , row_number()over(partition by feature ORDER BY t2.time_on_feature desc) time_on_feature_row_num
+    , row_number()over(partition by feature ORDER BY t2.pageviews desc) pageviews_row_num
+    , row_number()over(partition by feature ORDER BY t2.visits desc) visits_row_num
+    FROM
+    (
+    SELECT feature, week_num
+    , count(distinct user_id) unique_users
+    , count(distinct customer_id) unique_customers
+    , count(*) visits, sum(time_on_feature) time_on_feature, sum(pageviews) pageviews
+    FROM __temp_t1 d
+    JOIN optify_user ou on ou.id = d.user_id
+    JOIN v_customer c on c.id = ou.customer_id
+    WHERE sku !~* '(Complimentary)'
+    AND email_address !~* '(optify.net)'
+    GROUP BY 1, 2
+    ) t2
+    JOIN (
+    SELECT week_num
+    , count(distinct user_id)::float unique_users
+    , count(distinct customer_id)::float unique_customers
+    
+    , count(distinct case when feature <> 'dailyemail' then user_id end)::float unique_users_exclude_email
+    , count(distinct case when feature <> 'dailyemail' then customer_id end)::float unique_customers_exclude_email
+    
+    , count(*)::float visits, sum(time_on_feature)::float time_on_feature, sum(pageviews)::float pageviews
+    FROM __temp_t1 d
+    JOIN optify_user ou on ou.id = d.user_id
+    JOIN v_customer c on c.id = ou.customer_id
+    WHERE sku !~* '(Complimentary)'
+    AND email_address !~* '(optify.net)'
+    GROUP BY 1
+    ) t3 on t3.week_num = t2.week_num
+    
+    ;
+    
+    
+    SELECT *
+    FROM __temp_t2
+    ORDER BY feature, time_on_feature_row_num
