@@ -93,7 +93,7 @@ var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
 uptimeJobSchedule.start();
 
 //Run the mixpanel backfill at 7AM PST
-var mixpanelJob = new cronJob("0 0 14 * *", function () {
+var mixpanelJob = new cronJob("0 0 */6 * *", function () {
     try {
         logger.info('Running Mixpanel backfill');
         mixpanel_backfill.mixpanelBackfill();
@@ -104,7 +104,7 @@ var mixpanelJob = new cronJob("0 0 14 * *", function () {
 mixpanelJob.start();
 
 //Run the aspen backfill job at 7AM PST
-var aspenJob = new cronJob("0 0 14 * *", function () {
+var aspenJob = new cronJob("0 0 */6 * *", function () {
     try {
         logger.info('Running Aspen backfill');
         aspen_backfill.aspenBackfill();

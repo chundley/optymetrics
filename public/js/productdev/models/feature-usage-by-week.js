@@ -10,12 +10,8 @@ Opty.WeeklyFeatureUsageStatsCollection = Backbone.Collection.extend({
     },
 
     initialize: function(options) {
-//        _.bindAll(this, 'reportRangeChanged');
-//        Opty.pubsub.bind('reportrange:changed', this.reportRangeChanged, this);
     },
 
     reportRangeChanged: function(data) {
-//        this.startDate = data.start;
-//        this.endDate = data.end;
     }
 });

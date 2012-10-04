@@ -314,6 +314,7 @@ Opty.ProductDevView = Backbone.View.extend({
                     if(series[k] != null)
                         series_array[valueName].push(series[k]);
             }
+
             customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array["totalDailyVisits"], xAxisLabels:xAxisLabels, title:'<b>Visits</b> per week by SKU', yLabel:'Weekly Visits' });
             customerHistoryChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
             customerHistoryChart.salesChartOptions.chart["marginBottom"] = 130;
@@ -337,22 +338,94 @@ Opty.ProductDevView = Backbone.View.extend({
             el.append($row1);
             $divCustomersChart.append(customerHistoryChart.$el);
             customerHistoryChart.render();
+            el.append("<div style='clear:both;margin-bottom:30px;'>&nbsp;</div>");
             
             
         }}); // end customer usage data fetch
 
+
         var weeklyFeatureUsageStatsCollection = new Opty.WeeklyFeatureUsageStatsCollection({});
+        window.featureusage_weeks = {};
+        window.featureusage_series = {};
         weeklyFeatureUsageStatsCollection.fetch({success:function(data){
+            var featureusage_week_count = 0;
+            var xAxisLabels = [];
+            _.each(data.models, function (model) {
+                featureusage_weeks[model.get("weekNum")]=0;
+                featureusage_series[model.get("feature")] = null;
+            });
+            featureusage_weeks = Opty.util.objectKeySort(featureusage_weeks);
+            for(k in window.featureusage_weeks){
+                featureusage_weeks[k] = featureusage_week_count++;
+                xAxisLabels.push( k );
+            }
+
+            window.featureusage_series_array = {};
+            window.featureusage_the_datas = {"uniqueUsers":"Unique Users", "uniqueCustomers":"Unique Customers", "visits":"Total Visits"
+                                              , "timeOnFeature":"Time On Feature", "percentUsersUsing":"% Users Using", "percentCustomersUsing":"% Customers Using"
+                                                  , "percentUsersUsingExcludeEmail":"% Users Using W/O Email", "percentCustomersUsingExcludeEmail":"% Customers Using W/O Email"};
+            for(valueName in featureusage_the_datas){
+                var series = {};
+                for(k in featureusage_series)
+                    series[k] = null;
+                featureusage_series_array[valueName] = [];
+                _.each(data.models, function (model) {
+                    if(series[model.get('feature')] == null){
+                        series[model.get('feature')] = {name:model.get('feature'), data:[]};
+                        for(var i=0;i<featureusage_week_count; i++)
+                            series[model.get('feature')].data[i] = 0;
+                    }
+                    var num_val = model.get(valueName);
+                    if(/percent/.test(valueName))
+                        num_val = parseFloat((num_val * 100).toFixed(1));
+                    else
+                        num_val = Math.round(num_val);
+                    series[model.get('feature')].data[featureusage_weeks[model.get("weekNum")]] = num_val;
+                });
+                if(/(ExcludeEmail|timeon)/i.test(valueName))
+                    delete series["dailyemail"];
+                series['help'].visible = false;
+                series['twitter'].visible = false;
+                series['links'].visible = false;
+                
+                for(var k in series)
+                    if(series[k] != null)
+                        featureusage_series_array[valueName].push(series[k]);
+            }
+
+            
+            window.featureUsageChart = new Opty.SalesChart({ id:'features-usage-weekly'
+                                , series: featureusage_series_array["percentUsersUsingExcludeEmail"]
+                                , xAxisLabels:xAxisLabels, title:'<b>% Users Using W/O Email</b> per week'
+                                , yLabel:'% Users Using W/O Email' });
+            window.featureUsageChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
+            window.featureUsageChart.salesChartOptions.chart["marginBottom"] = 130;
+            window.featureUsageChart.salesChartOptions.chart.type = 'line';
+            var $row2 = $('<div>', { 'class': 'row-fluid'});
+            var $divCustomers = $('<div>', { 'class': 'span6' });
+            var $divCustomersChart = $('<div>', { 'id':'features-usage-weekly', 'height':'450px' });
+            $divCustomers.append($divCustomersChart);
+            $row2.append($divCustomers);
+            for(valueName in featureusage_the_datas){
+                $divCustomers.append(
+                    $('<a>', {'class': 'change-metric-item', 'title':valueName}).append(featureusage_the_datas[valueName]).click(function(){
+                        window.featureUsageChart.series = featureusage_series_array[this.getAttribute("title")];
+                        window.featureUsageChart.title = "<b>" + featureusage_the_datas[this.getAttribute("title")] + "</b> per week";
+                        window.featureUsageChart.yLabel = "Weekly " + featureusage_the_datas[this.getAttribute("title")];
+                        window.featureUsageChart.render();
+                    }).css({border:'2px solid #888', padding:'6px', margin:'5px', display:'block'
+                            , float:'left', cursor:'pointer', 'border-radius':'8px', 'background-color':'#eee'})
+                    
+                );
+            }
+            el.append($row2);
+            $divCustomersChart.append(featureUsageChart.$el);
+            featureUsageChart.render();
+            el.append("<div style='clear:both;margin-bottom:30px;'>&nbsp;</div>");
+            
+            
+        
         }});
         
-/*        
-        var week_count = 0;
-        window.series_array = [];
-        var week_dates = {}; 
-        var xAxisLabels = [];
-        window.customerHistoryChart = null;
-
- */       
-
     }
 });
