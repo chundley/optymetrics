@@ -62,6 +62,8 @@ Opty.SalesChart = Backbone.View.extend({
         me.title = options.title;
         me.yLabel = options.yLabel;
         me.id = options.id;
+        if(options.type != null)
+            me.type = options.type;
     },
 
     velocityDataChanged: function() {
@@ -76,6 +78,8 @@ Opty.SalesChart = Backbone.View.extend({
         this.salesChartOptions.title.text = me.title;
         this.salesChartOptions.yAxis.title.text = me.yLabel;
         this.salesChartOptions.chart.renderTo = me.id;
+        if(me.type != null)
+            this.salesChartOptions.chart.type = me.type;
         this.chart = new Highcharts.Chart(this.salesChartOptions); 
            
         return this.$el;

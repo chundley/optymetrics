@@ -269,14 +269,16 @@ Opty.ProductDevView = Backbone.View.extend({
     },
     
     renderUsageSubsection: function() {
+        window.customerHistoryChart = null;
+        window.featureUsageChart = null;        
+
+        
         el = this.$el;
         var weeklyCustomerUsageBySku = new Opty.WeeklyCustomerUsageBySku({});
         var week_count = 0;
         window.series_array = [];
         var week_dates = {}; 
         var xAxisLabels = [];
-        window.customerHistoryChart = null;
-        
         weeklyCustomerUsageBySku.fetch({success:function(data){
             _.each(data.models, function (model) {
                 week_dates[Opty.util.getSundayDate(new Date(model.get("weekOf"))).toString("yyyy-MM-dd")]=0;
@@ -315,7 +317,8 @@ Opty.ProductDevView = Backbone.View.extend({
                         series_array[valueName].push(series[k]);
             }
 
-            customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array["totalDailyVisits"], xAxisLabels:xAxisLabels, title:'<b>Visits</b> per week by SKU', yLabel:'Weekly Visits' });
+            customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array["totalDailyVisits"], xAxisLabels:xAxisLabels
+                , title:'<b>Visits</b> per week by SKU', yLabel:'Weekly Visits', type: 'area'});
             customerHistoryChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
             customerHistoryChart.salesChartOptions.chart["marginBottom"] = 130;
             var $row1 = $('<div>', { 'class': 'row-fluid'});
@@ -397,10 +400,9 @@ Opty.ProductDevView = Backbone.View.extend({
             window.featureUsageChart = new Opty.SalesChart({ id:'features-usage-weekly'
                                 , series: featureusage_series_array["percentUsersUsingExcludeEmail"]
                                 , xAxisLabels:xAxisLabels, title:'<b>% Users Using W/O Email</b> per week'
-                                , yLabel:'% Users Using W/O Email' });
+                                , yLabel:'% Users Using W/O Email', type:'line' });
             window.featureUsageChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
             window.featureUsageChart.salesChartOptions.chart["marginBottom"] = 130;
-            window.featureUsageChart.salesChartOptions.chart.type = 'line';
             var $row2 = $('<div>', { 'class': 'row-fluid'});
             var $divCustomers = $('<div>', { 'class': 'span6' });
             var $divCustomersChart = $('<div>', { 'id':'features-usage-weekly', 'height':'450px' });
