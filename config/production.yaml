@@ -5,3 +5,6 @@ Mongo:
 
 CoreDb:
   connectionString: postgres://ouser:MadronaMadness@db1:5432/p_optifydb1
+  
+AspenDb:
+  connectionString: postgres://optify:MadronaMadness@prod-bi-101:5432/t_optifydb1

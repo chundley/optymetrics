@@ -34,3 +34,19 @@ Opty.util.formatNumber = function(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
+
+Opty.util.objectKeySort = function (o) {
+    var a = {};
+    var sortedKeys = _.keys(o).sort();
+    for(var i in sortedKeys){ 
+        a[sortedKeys[i]] = o[sortedKeys[i]];
+    }
+    return a;
+};
+
+Opty.util.getSundayDate = function(d) {
+    var d2 = new Date ( d );
+    d2.setHours( d.getHours() + 9 );
+    d.setDate(d2.getDate() + (6-d2.getDay()));
+    return d;
+};

@@ -52,9 +52,9 @@ var processSingleEvent = function(eventName, startDate, endDate, callback)
     rest.get(url).on('complete', function(results) {
         if(results.data == null)
         {
-            logger.log('warn', "No data recieved from mixpanel");
-            console.log(results);
+            logger.log('error', "No data recieved from mixpanel");
             callback();
+            return;
         }
         
         for(var k in results.data.values)
@@ -94,7 +94,7 @@ var backfillDailyAppUsageRaw = function(callback){
       function(callback){
           appUsageDao.getDailyAppUsageRecordCount(function (err, recCount) {
               if(recCount > 0)
-                  startDate = (new Date()).add({days:-10});
+                  startDate = (new Date()).add({days:-16});
               callback();
           });
       }

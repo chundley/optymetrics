@@ -31,6 +31,7 @@ exports.index = function(req, res, next) {
             '/js/operations/views/operations-cost-chart-view.js',
             '/js/operations/views/category-cost-chart-view.js',
             '/js/operations/views/vendor-cost-chart-view.js',
+            '/js/productdev/models/cycle-time-model.js',
             '/js/productdev/models/feature-group-model.js',
             '/js/productdev/models/velocity-model.js',
             '/js/productdev/models/velocity-trend-model.js',
@@ -38,7 +39,13 @@ exports.index = function(req, res, next) {
             '/js/productdev/views/productdev-view.js',
             '/js/productdev/views/velocity-chart-view.js',
             '/js/productdev/views/feature-group-chart-view.js',
-            '/js/productdev/views/velocity-trend-widget-view.js'
+            '/js/productdev/views/velocity-trend-widget-view.js',
+            '/js/sales/models/customer-history-model.js',
+            '/js/sales/views/sales-chart.js',
+            '/js/sales/views/sales-view.js',
+            '/js/productdev/models/usage-by-sku.js',
+            '/js/productdev/models/feature-usage-by-week.js'
+
         ],
     });
 };
@@ -48,3 +55,4 @@ exports.operations = require('./operations.js');
 exports.productdev = require('./productdev.js');
 exports.profile = require('./profile.js');
 exports.session = require('./session.js');
+exports.sales = require('./sales.js');

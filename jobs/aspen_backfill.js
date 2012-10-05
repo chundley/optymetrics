@@ -1,16 +1,29 @@
 var async = require('async'),
     logger = require('../util/logger.js'),
-    mixpanel = require('../data_access/aspendb-api.js');
+    aspendb = require('../data_access/aspendb-api.js');
 
 var aspenBackfill = function() {
+    logger.log('info','Begin Aspen backfill');
     async.series([
         function(callback) {
-            mixpanel.backfillMonthlyCustomerStats(function(err) {
+            aspendb.backfillMonthlyCustomerStats(function(err) {
                 (err) ? callback(err) : callback();
             });
-        },
+        }
+        , function(callback) {
+            aspendb.backfillWeeklyCustomerUserStats(function(err) {
+                (err) ? callback(err) : callback();
+            });
+        }
+        , function(callback) {
+            aspendb.backfillWeeklyFeatureUsageStats(function(err) {
+                (err) ? callback(err) : callback();
+            });
+        }
     ],
     function(err) {
+        logger.log('info','Aspen backfill complete');
+
         if(err) logger.log('info','Aspen backfill failed: ' + err);            
     });
 };

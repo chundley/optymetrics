@@ -64,6 +64,11 @@ var getShards = function (callback) {
 */
 var formatShardConnectionString = function (jdbcUrl, user, password, callback) {
     callback('postgres://' + user + ':' + password + '@' + jdbcUrl.match(/(\/\/)(.*)(?=\?)/)[2]);
+/* Tommy's specific shard code
+    var shard_num = jdbcUrl.match(/shard([0-9]+)/)[1];
+    var cn_str = 'postgres://' + user + ':' + password + '@localhost:253' + shard_num + "/p_shard" + shard_num;
+    callback(cn_str);
+*/
 };
 
 /**

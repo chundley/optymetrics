@@ -16,14 +16,15 @@ logger.log = function(level, message) {
 
         console.log(logLine);
 
-        stream = fs.createWriteStream(logger.logFile, {
-            'flags': 'a+',
-            'encoding': 'utf8',
-            'mode': 0644
-        });
+        if(!logger.log.stream) {
+            logger.log.stream = fs.createWriteStream(logger.logFile, {
+                'flags': 'a+',
+                'encoding': 'utf8',
+                'mode': 0644
+            });
+        }
 
-        stream.write(logLine + '\n', 'utf8');
-        stream.end();
+        logger.log.stream.write(logLine + '\n', 'utf8');
     }
 }
 
