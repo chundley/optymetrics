@@ -14,6 +14,7 @@ exports.index = function(req, res, next) {
             '/js/controls/period-compare-widget.js',
             '/js/controls/date-range-view.js',
             '/js/controls/chart-widget-view.js',
+            'js/controls/tri-pane-metric-widget.js',
             '/js/optymetrics-router.js',
             '/js/optymetrics-subnav.js',
             '/js/default/views/default-view.js',

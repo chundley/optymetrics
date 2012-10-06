@@ -2,7 +2,7 @@
 
 Opty.DefaultView = Backbone.View.extend({
     id: 'default-view',
-    className: 'row-fluid',
+    className: 'row',
 
     initialize: function (options) {
         var me = this;
@@ -16,6 +16,18 @@ Opty.DefaultView = Backbone.View.extend({
                 {
                     var me = this;
 
+                    //var $divContainer = $('<div>', { 'class': 'row' });
+                    //me.$el.append($divContainer);
+
+                    var $divLeftPanel = $('<div>', { 'class': 'span9' });
+                    //$divContainer.append($divLeftPanel);
+                    me.$el.append($divLeftPanel);
+
+                    var triPanelMetricSales = new Opty.TriPanelMetricWidgetView({ collection: null, group: 'SALES', header: 'Header', footer: 'Footer' });
+
+                    $divLeftPanel.append(triPanelMetricSales.$el);
+
+                    /*
                     // Needs to be wired up to a date picker control to work now
 
 
@@ -42,7 +54,7 @@ Opty.DefaultView = Backbone.View.extend({
                     $divUptime.append($('<br />'));
                     $divUptime.append(uptimeWidget2.$el);
                     uptimeCollection.fetch();
-
+                    */
                     break;
                 }
 
