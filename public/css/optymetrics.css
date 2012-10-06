@@ -4,7 +4,7 @@
 
 body 
 {
-	background-color: #bebca9;
+	background-color: #464646;
 }
 
 /* login session div */
@@ -13,14 +13,23 @@ body
     margin-top: 12px;
 }
 
+.session a {
+    color: #999999;  
+}
+
 /* extra header styles */
-div.green-stripe 
+div.top-stripe 
 {
-	background-color: #a2ab58;
+	background-color: #48a1d9;
     height: 3px;
     width: 100%;
-    border-bottom: 5px solid #292717;
+    border-bottom: 5px solid #111111;
     float:left;	
+}
+
+div.tab-content 
+{
+    padding-left: 20px;
 }
 
 /* Support for jQuery tablesorter w/ bootstrap */

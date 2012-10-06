@@ -3596,7 +3596,7 @@ input[type="submit"].btn.btn-mini {
   min-height: 40px;
   padding-right: 20px;
   padding-left: 20px;
-  background-color: #292717;
+  background-color: #111111;
   filter: progid:dximagetransform.microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
      -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -3823,7 +3823,7 @@ input[type="submit"].btn.btn-mini {
   float: none;
   padding: 13px 20px 11px;
   line-height: 19px;
-  color: #a2ab58;
+  color: #48a1d9;
   text-decoration: none;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
@@ -3841,16 +3841,16 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar .nav > li > a:hover {
-  color: #ffffff;
+  color: #111111;
   text-decoration: none;
-  background-color: transparent;
+    background-color: #48a1d9;
 }
 
 .navbar .nav .active > a,
 .navbar .nav .active > a:hover {
-  color: #bbc94b;
+  color: #111111;
   text-decoration: none;
-  background-color: #111007;
+  background-color: #48a1d9;
 }
 
 .navbar .divider-vertical {

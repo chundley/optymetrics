@@ -4,12 +4,13 @@ html(lang="en")
     title= title
     
     link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
-    link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.css')
+    //link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.css')
     link(rel='stylesheet', href='/css/ext/daterangepicker.css')
     link(rel='stylesheet', href='/css/ext/datepicker.css')
     link(rel='stylesheet', href='/css/optymetrics.css')
     link(rel='stylesheet', href='/css/engineering-view.css')
     link(rel='stylesheet', href='/css/widget.css')
+    link(rel='stylesheet', href='/css/widget2.css')
     style
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -37,14 +38,13 @@ body
             div(class='session')
               a(href='/profile') 
                 span(class='user') #{session.user.email} 
-              span -  
+              span |  
               - if(session.user.role === 'Admin')
                   a(href='/admin') admin
-                  &nbsp;-&nbsp;
+                  &nbsp;|&nbsp;
               a(href='/session/logout') logout
-      div(class='green-stripe') 
-  div(class='container-fluid')
-    div(class='tab-content')!= body
+      div(class='top-stripe')
+  div(class='tab-content')!= body
   
 
   // Javascript included on all pages
