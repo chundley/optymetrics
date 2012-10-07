@@ -1,6 +1,6 @@
 ﻿if (!window.Opty) { window.Opty = {}; }
 
-Opty.TriPanelMetricWidgetView = Backbone.View.extend({
+Opty.TriPaneMetricWidgetView = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, 'render');
 
@@ -20,7 +20,7 @@ Opty.TriPanelMetricWidgetView = Backbone.View.extend({
                 <div class="span9"> \
                     <div class="widget-group-header-container"> \
                         <div class="widget-group-header"> \
-                        <span>SALES</span> \
+                        <span><%= group %></span> \
                         </div> \
                     </div> \
                 </div> \
@@ -29,26 +29,26 @@ Opty.TriPanelMetricWidgetView = Backbone.View.extend({
                 <div class="span3"> \
                     <div class="widget-simple"> \
                         <div class="header"> \
-                        Last Month \
+                        Last <%= header %> \
                         </div> \
                         <div class="metric"> \
                         $12,289 \
                         </div> \
                         <div class="footer"> \
-                        MRR \
+                        <%= footer %> \
                         </div> \
                     </div> \
                 </div> \
                 <div class="span3"> \
                     <div class="widget-simple"> \
                         <div class="header"> \
-                        This Month \
+                        This <%= header %> \
                         </div> \
                         <div class="metric"> \
                         $9,774 \
                         </div> \
                         <div class="footer"> \
-                        MRR \
+                        <%= footer %> \
                         </div> \
                     </div> \
                 </div> \

@@ -23,9 +23,20 @@ Opty.DefaultView = Backbone.View.extend({
                     //$divContainer.append($divLeftPanel);
                     me.$el.append($divLeftPanel);
 
-                    var triPanelMetricSales = new Opty.TriPanelMetricWidgetView({ collection: null, group: 'SALES', header: 'Header', footer: 'Footer' });
+                    var $divRightPanel = $('<div>', { 'class': 'span3' });
+                    me.$el.append($divRightPanel);
 
-                    $divLeftPanel.append(triPanelMetricSales.$el);
+                    var $divWidgetContainer = $('<div>', { 'class': 'widget-container-outline' });
+                    $divRightPanel.append($divWidgetContainer);
+
+                    $divWidgetContainer.append('<div class="header">APP USAGE</div>');
+                    
+                    var triPaneMetricSales = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'SALES', header: 'Month', footer: 'New MRR' });
+
+                    $divLeftPanel.append(triPaneMetricSales.$el);
+
+                    var triPaneMetricMarketing = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'MARKETING', header: 'Month', footer: 'New Leads' });
+                    $divLeftPanel.append(triPaneMetricMarketing.$el);
 
                     /*
                     // Needs to be wired up to a date picker control to work now
