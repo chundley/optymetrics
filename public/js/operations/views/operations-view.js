@@ -18,7 +18,7 @@ Opty.OperationsView = Backbone.View.extend({
                     Opty.pubsub.unbind('reportrange:changed');
 
                     // Configure report date range picker
-                    var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+                    var $datePickerRow = $('<div>', { 'class': 'row' });
                     var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
 
                     $datePickerRow.append(datePickerView.$el);
@@ -26,7 +26,7 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // pre-render divs or the widgets will render in random order
                     // ROW 1
-                    var $row1 = $('<div>', { 'class': 'row-fluid' });
+                    var $row1 = $('<div>', { 'class': 'row' });
                     var $divUptimeServiceAggregate = $('<div>', { 'class': 'span3' });
                     var $divUptimeDashboardAggregate = $('<div>', { 'class': 'span3' });
                     var $divUptimePagesAggregate = $('<div>', { 'class': 'span3' });
@@ -38,7 +38,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $row1.append($divUptimeApiAggregate);
 
                     // ROW 2
-                    var $row2 = $('<div>', { 'class': 'row-fluid' });
+                    var $row2 = $('<div>', { 'class': 'row' });
                     var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
                     var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
                     var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
