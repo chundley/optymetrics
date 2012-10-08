@@ -6,21 +6,24 @@
 Opty.CategoryCostChart = Backbone.View.extend({
     id: 'category-cost-chart',
     vendorCostChartOptions: {
-        colors: ["#002066", "#E97F02", "#5B4086", "#0D6759"],
+        colors: ["#48a1d9", "#E97F02", "#d94848", "#0D6759"],
         chart: {
             renderTo: 'category-cost-chart',
+            borderColor: '#999999',
+            borderWidth: 1,
+            borderRadius: 6,
             backgroundColor: {
                 linearGradient: [0, 0, 0, 300],
                 stops: [
-                    [0, '#fffef2'],
-                    [1, '#dfded4']
+                    [0, '#464646'],
+                    [1, '#292929']
                 ]
             }
         },
         title: {
             text: 'Operations cost by category',
             style: {
-                color: '#3e3e3e'
+                color: '#cccccc'
             }
         },
         legend: {
@@ -28,14 +31,26 @@ Opty.CategoryCostChart = Backbone.View.extend({
             align: 'left',
             verticalAlign: 'top',
             layout: 'vertical',
-            backgroundColor: '#ffffff',
-            borderColor: '#ECE5CE',
+            backgroundColor: '#464646',
+            borderColor: '#999999',
             borderWidth: 2,
-            x: 80,
-            y: 35
+            x: 60,
+            y: 10,
+            itemStyle: {
+                color: '#999999'
+            }
         },
-        xAxis: {},
+        xAxis: {
+            gridLineColor: '#444444',
+            gridLineWidth: 1,
+            labels: {
+                style: {
+                    color: '#999999'
+                }
+            }        
+        },
         yAxis: [{
+            gridLineColor: '#444444',
             title: {
                 text: null,
                 style: {
@@ -50,6 +65,9 @@ Opty.CategoryCostChart = Backbone.View.extend({
             labels: {
                 formatter: function () {
                     return '$' + Highcharts.numberFormat(this.value / 1000, 0) + 'K';
+                },
+                style: {
+                    color: '#999999'
                 }
             }
         }],
@@ -60,7 +78,7 @@ Opty.CategoryCostChart = Backbone.View.extend({
             }
         },
         plotOptions: {
-            areaspline: {
+            area: {
                 stacking: 'normal',
                 marker: {
                     enabled: false
@@ -69,16 +87,44 @@ Opty.CategoryCostChart = Backbone.View.extend({
 
         },
         series: [{
-            type: 'areaspline',
+            fillColor: {
+                linearGradient: [0, 0, 0, 300],
+                stops: [
+                    [0, "#48a1d9"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
+            type: 'area',
             name: 'Overhead'
         }, {
-            type: 'areaspline',
+            fillColor: {
+                linearGradient: [0, 0, 0, 300],
+                stops: [
+                    [0, "#E97F02"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
+            type: 'area',
             name: 'Email'
         }, {
-            type: 'areaspline',
+            fillColor: {
+                linearGradient: [0, 0, 0, 400],
+                stops: [
+                    [0, "#d94848"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
+            type: 'area',
             name: 'SEO'
         }, {
-            type: 'areaspline',
+            fillColor: {
+                linearGradient: [0, 0, 0, 400],
+                stops: [
+                    [0, "#0D6759"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
+            type: 'area',
             name: 'Traffic/Leads'
         }
         ],
