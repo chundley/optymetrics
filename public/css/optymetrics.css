@@ -27,11 +27,6 @@ div.top-stripe
     float:left;	
 }
 
-div.tab-content 
-{
-    padding-left: 20px;
-}
-
 /* Support for jQuery tablesorter w/ bootstrap */
 table .tablesorter-header {
     cursor: pointer;
