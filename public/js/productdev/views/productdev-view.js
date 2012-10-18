@@ -39,7 +39,7 @@ Opty.ProductDevView = Backbone.View.extend({
     renderOverview: function() {
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
+        var datePickerView = new Opty.DateRangeView({defaultDays: 60});
         
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
@@ -68,7 +68,7 @@ Opty.ProductDevView = Backbone.View.extend({
     renderFeatureGroupSubsection: function() {
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
+        var datePickerView = new Opty.DateRangeView({defaultDays: 60});
         
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
@@ -168,7 +168,7 @@ Opty.ProductDevView = Backbone.View.extend({
     renderVelocitySubsection: function() {
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-        var datePickerView = new Opty.DateRangeView({defaultDays: 30});
+        var datePickerView = new Opty.DateRangeView({defaultDays: 60});
         
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
