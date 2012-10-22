@@ -218,6 +218,12 @@ app.get('/ops/monitors', requiresLogin, routes.operations.monitors);
 // Gets incident data as JSON
 app.get('/ops/incidents', requiresLogin, routes.operations.incidents);
 
+// Gets a single incident by ID as JSON
+app.get('/ops/incident/:id', requiresLogin, routes.operations.getIncident);
+
+// Adds a new incident to the system
+app.post('/ops/incident', requiresLogin, routes.operations.addIncident);
+
 // Gets incidents aggregated by day as JSON
 app.get('/ops/incidents/aggregate', requiresLogin, routes.operations.incidentsByDay);
 

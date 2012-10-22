@@ -10,10 +10,19 @@ var IncidentSchema = new Schema({
     subject             : String,
     status              : String,
     lastUpdatedOn       : Date,
-    lastUpdatedBy       : String
+    lastUpdatedBy       : String,
+    hidden              : Boolean,
+    notes               : String,
+    source              : String
 });
 
 var IncidentModel = mongoose.model('Incident', IncidentSchema);
+
+exports.IncidentSource = {
+    "PAGER_DUTY": 'PagerDuty',
+    "ON_CALL": 'On-call Engineer',
+    "OPS": 'Operations'
+};
 
 // The module's public api
 exports.IncidentModel = IncidentModel;

@@ -7,6 +7,7 @@ exports.index = function(req, res, next) {
         scripts: [
             '/js/ext/date.js',
             '/js/ext/daterangepicker.js',
+            '/js/ext/bootstrap-datepicker.js',
             '/js/d3.v2.min.js',
             '/js/highcharts.src.js',
             '/js/client-utils.js',
@@ -24,6 +25,7 @@ exports.index = function(req, res, next) {
             '/js/operations/models/uptime-model.js',
             '/js/operations/models/vendor-cost-model.js',
             '/js/operations/views/incidents-chart-view.js',
+            '/js/operations/views/incidents-form-view.js',
             '/js/operations/views/operations-view.js',
             '/js/operations/views/tcotable-view.js',
             '/js/operations/views/uptime-aggregate-widget-view.js',

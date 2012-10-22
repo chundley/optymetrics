@@ -1,6 +1,7 @@
 var async = require('async'),
     dateUtil = require('../util/date_util.js'),
     incidentsDao = require('../data_access/incidents-dao.js'),
+    IncidentSource = require('../data_access/model/incident-model.js').IncidentSource,
     logger = require('../util/logger.js'),
     moment = require('moment'),
     pagerduty = require('../data_access/pagerduty-api.js');
@@ -24,6 +25,9 @@ var pagerDutyBackfill = function() {
                             (incident.last_status_change_by) ? incident.last_status_change_by.name : null,
                             (incident.trigger_summary_data) ? incident.trigger_summary_data.subject : null,
                             incident.status,
+                            false,
+                            null,
+                            IncidentSource.PAGER_DUTY,
                             function(err) {
                                 if(err) {
                                     logger.log('error', 'Unable to insert incident: ' + err);

@@ -8,4 +8,8 @@
 
 #feature-group-table th {
     min-width: 100px;
-};
+}
+
+#incidents-chart {
+    height: 550px;
+}

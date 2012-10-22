@@ -19,9 +19,13 @@ var logger = require('../util/logger.js'),
  * @param {string}      lastUpdatedBy     The last update
  * @param {string}      subject           A description of the alarm
  * @param {string}      status            The incident status
+ * @param {boolean}     hidden            Flag indicating the incident is hidden. This is primarily used to hide duplicates in case
+ *                                        where someone was paged multiple times for the same incident
+ * @param {string}      notes             Incidents/notes
+ * @param {string}      source            The incident source, manually entered vs PagerDuty
  * @param {function}    callback          Executed when the save operation is complete or an error is encountered
  */
-var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpdatedBy, subject, status, callback) {
+var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpdatedBy, subject, status, hidden, notes, source,  callback) {
     incidentModel.IncidentModel.findOne({ incidentNumber: incidentNumber }, function(err, doc) {
         if(err) {
             callback(err);
@@ -36,7 +40,10 @@ var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpda
                 lastUpdatedOn: lastUpdatedOn,
                 lastUpdatedBy: lastUpdatedBy,
                 subject: subject,
-                status: status
+                status: status,
+                hidden: hidden,
+                notes: notes,
+                source: source
             });
             incident.save(function(err) {
                 (err) ? callback(err) : callback();

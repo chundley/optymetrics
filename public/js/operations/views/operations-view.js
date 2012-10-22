@@ -110,6 +110,11 @@ Opty.OperationsView = Backbone.View.extend({
                 me.$el.append($chartRow);
                 $chartRow.append($chartColumn);
 
+                var incidentForm = new Opty.IncidentsFormView({});
+                var $incidentFormColumn = $('<div>', { 'class': 'span6' });
+                $chartRow.append($incidentFormColumn);
+                $incidentFormColumn.append(incidentForm.render());
+
                 var incidentAggregates= new Opty.IncidentsAggregateCollection({});
                 var incidentsChartView = new Opty.IncidentsChartView({ collection: incidentAggregates });
                 
@@ -136,7 +141,15 @@ Opty.OperationsView = Backbone.View.extend({
                         },
                         {
                             field: 'subject',
-                            display_name: 'Detail'
+                            display_name: 'Summary'
+                        },
+                        {
+                            field: 'notes',
+                            display_name: 'Notes'
+                        },
+                        {
+                            field: 'source',
+                            display_name: 'Source'
                         },
                         {
                             field: 'lastUpdatedOn',

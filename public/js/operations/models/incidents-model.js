@@ -1,6 +1,8 @@
 if (!window.Opty) { window.Opty = {}; }
 
-Opty.IncidentsModel = Backbone.Model.extend({});
+Opty.IncidentsModel = Backbone.Model.extend({
+    urlRoot: '/ops/incident'
+});
 
 Opty.IncidentsCollection = Backbone.Collection.extend({
     model: Opty.IncidentsModel,
@@ -8,10 +10,13 @@ Opty.IncidentsCollection = Backbone.Collection.extend({
         return '/ops/incidents?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
     },
     initialize: function (options) {
+        var me = this;
+
         this.startDate = options.startDate;
         this.endDate = options.endDate;
         _.bindAll(this, 'reportRangeChanged', 'getStartDate', 'getEndDate');
         Opty.pubsub.bind('reportrange:changed', this.reportRangeChanged, this);
+        Opty.pubsub.bind('incident:add', function() { me.fetch(); }, this);
     },
 
     reportRangeChanged: function (data) {

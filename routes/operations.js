@@ -1,5 +1,7 @@
 var date_util = require('../util/date_util.js'),
     incidentsDao = require('../data_access/incidents-dao.js'),
+    logger = require('../util/logger.js'),
+    moment = require('moment'),
     pingdom_api = require('../data_access/pingdom-api.js'),
     tco_dao = require('../data_access/tco-dao.js'),
     uptime = require('../data_access/uptime-dao.js'),
@@ -52,6 +54,10 @@ exports.incidents = function(req, res, next) {
     });
 };
 
+exports.getIncident = function(req, res, next) {
+    res.send('not implemented');
+};
+
 exports.incidentsByDay = function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
@@ -67,6 +73,29 @@ exports.incidentsByDay = function(req, res, next) {
         res.send(results);
     });
 };
+
+exports.addIncident = function(req, res, next) {
+    var model = req.body;
+  
+    debugger;
+
+    if(model.detail == '' || model.notes == '' || !model.incidentDate) {
+        res.statusCode = 400;
+        res.send({ success: false, message: "Required fields missing" }); 
+        return;
+    }
+
+    incidentsDao.insertIncident(new Date().getTime(), model.incidentDate, new Date(), req.session.user.email, model.detail, model.status, false, model.notes, model.source, function(err) {
+        if(err) {
+            logger.log('error', err);
+            res.statusCode == 400;
+            res.send({ success: false, message: "Unable to add incident" });
+        } else {
+            res.statusCode = 200;
+            res.send();
+        }
+    });
+}
 
 exports.uptime = function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
