@@ -1,0 +1,45 @@
+h2 Production Incidents
+div.incident-entry
+  - var action = '';
+    if(mode == 'add') 
+      action = '/ops/incident';
+    else 
+      action = '/ops/incident/edit/' + model.incidentNumber;
+  form(id='incident-form', method='POST', action=action)
+    label(for='detail') Short Summary
+    input(type='text', name='detail', class='span8', maxlength='255', value=model.subject) 
+    label(for='notes') Notes
+    textarea(name='notes', class='span8', rows='8') #{model.notes} 
+    label IncidentDate
+    - var incidentDate = '';
+      if(model.createdOn) 
+        incidentDate = (model.createdOn.getMonth() + 1) + '/' + model.createdOn.getDate() + '/' + model.createdOn.getFullYear(); 
+    input(type='text', name='incidentdate', class='incident-date', value=incidentDate)
+    label(for='source') Source
+    - var sources = [ 'PagerDuty', 'On-call Engineer', 'Ops', 'P1 Defect' ];
+    select(name='source')
+      for item in sources 
+        option(selected=model.source == item, value = item) #{item}
+    label(for='status') Status
+    - var statuses = [ 'open', 'resolved' ];
+    select(name='status')
+      for item in statuses
+        option(selected=model.status == item, value=item) #{item}
+    if(mode == 'add') 
+      button(type='submit', name='submit', class='btn btn-primary', style='margin: 10px 0; display: block;') Add Incident
+    else  
+      button(type='submit', name='submit', class='btn btn-primary', style='margin: 10px 0; display: block;') Edit Incident
+    - if(message)
+      div(class='alert alert-#{message.level}') !{message.content}
+
+script
+  window.onload = function() {
+      var picker = $('#incident-form .incident-date');
+      if(!picker.val()) {
+          picker.val((Date.today().getMonth() + 1) + "/" 
+              + Date.today().getDate() + "/" + Date.today().getFullYear())
+              .datepicker({ format: 'mm/dd/yyyy' });
+      } else {
+          picker.datepicker({ format: 'mm/dd/yyyy' }); 
+      }
+  }

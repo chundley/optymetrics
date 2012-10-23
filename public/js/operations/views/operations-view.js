@@ -106,14 +106,13 @@ Opty.OperationsView = Backbone.View.extend({
                 me.$el.append($datePickerRow);
 
                 var $chartRow = $('<div>', { 'class': 'row-fluid' });
-                var $chartColumn = $('<div>', { 'class': 'span6' });
+                var $chartColumn = $('<div>', { 'class': 'span12' });
                 me.$el.append($chartRow);
                 $chartRow.append($chartColumn);
 
-                var incidentForm = new Opty.IncidentsFormView({});
-                var $incidentFormColumn = $('<div>', { 'class': 'span6' });
-                $chartRow.append($incidentFormColumn);
-                $incidentFormColumn.append(incidentForm.render());
+                var $controlsRow = $('<div>', { 'class': 'row-fluid incident-view-controls' });
+                $controlsRow.append($('<a>', { 'class': 'btn btn-primary', 'href': '/ops/incident', 'text': 'Add Incident' }));
+                me.$el.append($controlsRow);
 
                 var incidentAggregates= new Opty.IncidentsAggregateCollection({});
                 var incidentsChartView = new Opty.IncidentsChartView({ collection: incidentAggregates });
@@ -159,9 +158,18 @@ Opty.OperationsView = Backbone.View.extend({
                         {
                             field: 'lastUpdatedBy',
                             display_name: 'Updated By'
+                        },
+                        {
+                            field: 'incidentNumber',
+                            display_name: 'Actions',
+                            formatter: function(data) {
+                                return '<form method="POST" action="/ops/incident/hide/' + data + '"><button type="submit" class="btn btn-small">Hide</button></form>' +
+                                       '<a href="/ops/incident/edit/' + data + '" class="btn btn-small">Edit</a>'; 
+                            }
                         }
                     ],
 
+                    cssClass: 'incidentsTable', 
                     sortable: true,
                     defaultSort: [[0, 1]],
                     sortInitialOrder: 'desc',

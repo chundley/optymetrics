@@ -62,7 +62,7 @@ var insertIncident = function(incidentNumber, createdOn, lastUpdatedOn, lastUpda
  * @param {function}  callback  Callback that will be executed with any results or errors
  */
 var getIncidents = function(start, end, callback) {
-    incidentModel.IncidentModel.find({ createdOn: { $gte: start, $lte: end } })
+    incidentModel.IncidentModel.find({ createdOn: { $gte: start, $lte: end }, hidden: false })
         .sort('createdOn', 'descending')
         .execFind(function(err, docs) {
             if(err) { 
@@ -70,6 +70,23 @@ var getIncidents = function(start, end, callback) {
                 return;
             }
             callback(null, docs);
+        });
+};
+
+/**
+ * Gets an incident by incident number
+ *
+ * @param {int}    num    The incident number
+ */
+var getIncidentByIncidentNumber = function(num, callback) {
+    incidentModel.IncidentModel.findOne({ incidentNumber: num })
+        .execFind(function(err, doc) {
+            if(err) {
+                callback(err);
+                return;
+            } else {
+                callback(null, doc[0]);
+            }
         });
 };
 
@@ -99,7 +116,7 @@ var getIncidentAggregate = function(start, end, callback) {
         mapreduce: 'incidents',
         map: map.toString(),
         reduce: reduce.toString(),
-        query: { createdOn: { $gte: start, $lte: end } },
+        query: { createdOn: { $gte: start, $lte: end }, hidden: false },
         out: { inline: 1 }
     };
 
@@ -121,6 +138,7 @@ var getIncidentAggregate = function(start, end, callback) {
     );
 };
 
+exports.getIncidentByIncidentNumber = getIncidentByIncidentNumber;
 exports.insertIncident = insertIncident;
 exports.getIncidents = getIncidents;
 exports.getIncidentAggregate = getIncidentAggregate;

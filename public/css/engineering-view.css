@@ -11,5 +11,23 @@
 }
 
 #incidents-chart {
-    height: 550px;
+    height: 250px;
 }
+
+table.incidentsTable th {
+    min-width: 70px;
+}
+
+table.incidentsTable td form {
+    display: inline;
+    margin-right: 5px;
+}
+
+table.incidentsTable th.incidentNumber {
+    min-width: 80px;
+}
+
+table.incidentsTable th.subject {
+    min-width: 250px;
+}
+

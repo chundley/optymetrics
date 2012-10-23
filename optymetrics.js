@@ -218,11 +218,20 @@ app.get('/ops/monitors', requiresLogin, routes.operations.monitors);
 // Gets incident data as JSON
 app.get('/ops/incidents', requiresLogin, routes.operations.incidents);
 
-// Gets a single incident by ID as JSON
-app.get('/ops/incident/:id', requiresLogin, routes.operations.getIncident);
+// Add incident page
+app.get('/ops/incident', requiresLogin, routes.operations.incident);
+
+// Add incident page in edit mode
+app.get('/ops/incident/edit/:id', requiresLogin, routes.operations.getIncident);
+
+// Edit incident postbak
+app.post('/ops/incident/edit/:id', requiresLogin, routes.operations.updateIncident);
 
 // Adds a new incident to the system
-app.post('/ops/incident', requiresLogin, routes.operations.addIncident);
+app.post('/ops/incident', requiresLogin, routes.operations.createIncident);
+
+// Marks an incident as hidden 
+app.post('/ops/incident/hide/:id', requiresLogin, routes.operations.hideIncident);
 
 // Gets incidents aggregated by day as JSON
 app.get('/ops/incidents/aggregate', requiresLogin, routes.operations.incidentsByDay);

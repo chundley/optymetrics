@@ -57,3 +57,7 @@ table.tablesorter th.tablesorter-headerSortDown {
 .input .#daterange {
 	border-color: #ff0000;
 }
+
+.incident-view-controls {
+    margin: 10px 0 -5px 0;
+}

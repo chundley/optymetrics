@@ -1,7 +1,8 @@
 if (!window.Opty) { window.Opty = {}; }
 
 Opty.IncidentsModel = Backbone.Model.extend({
-    urlRoot: '/ops/incident'
+    urlRoot: '/ops/incident',
+    idAttribute: 'incidentNumber' 
 });
 
 Opty.IncidentsCollection = Backbone.Collection.extend({

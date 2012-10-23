@@ -21,7 +21,9 @@ Opty.TableView = Backbone.View.extend({
         this.collection = options.collection; 
         this.table_fields = options.table_fields;
         if(options.id) this.id = options.id;
-        
+      
+        if(options.cssClass) this.$el.addClass(options.cssClass);
+
         this.collection.on('reset', this.collectionChanged);
 
         this.$el.css('display', 'none');
@@ -38,7 +40,7 @@ Opty.TableView = Backbone.View.extend({
         var header_template = _.template(
            '<thead><tr> \
            <% _.each(table_fields, function(header) { %> \
-               <th class="<%= header.field %>" style="text-align: <%= header.text_align %>;"><%= header.display_name %></th> \
+               <th class="<%= header.field %>" style="text-align: <%= header.text_align || "left" %>;"><%= header.display_name %></th> \
             <% }); %> \
             </tr></thead>');
 
@@ -49,7 +51,7 @@ Opty.TableView = Backbone.View.extend({
                 <% data.forEach(function(row) { %> \
                         <tr> \
                         <% _.each(table_fields, function(field) { %> \
-                            <td style="text-align: <%= field.text_align %>;"> \
+                            <td style="text-align: <%= field.text_align || "left" %>;"> \
                                 <% if(field.formatter) { \
                                       if(typeof(field.formatter) === "function") { \
                                           %><%= field.formatter(row.get(field.field)) %>  \

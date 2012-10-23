@@ -7,12 +7,12 @@ var Schema = mongoose.Schema,
 var IncidentSchema = new Schema({
     incidentNumber      : Number,
     createdOn           : Date,
-    subject             : String,
+    subject             : { type: String, trim: true },
     status              : String,
     lastUpdatedOn       : Date,
     lastUpdatedBy       : String,
     hidden              : Boolean,
-    notes               : String,
+    notes               : { type: String, trim: true },
     source              : String
 });
 

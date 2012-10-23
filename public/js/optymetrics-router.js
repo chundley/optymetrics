@@ -120,7 +120,6 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty()
           .append(Optymetrics_subnav.render())
           .append(operations_view.render());
-
     },
 
     productRoute: function () {

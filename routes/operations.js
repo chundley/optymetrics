@@ -54,10 +54,6 @@ exports.incidents = function(req, res, next) {
     });
 };
 
-exports.getIncident = function(req, res, next) {
-    res.send('not implemented');
-};
-
 exports.incidentsByDay = function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
     var endDate = new Date(parseInt(req.query['end']));
@@ -74,28 +70,113 @@ exports.incidentsByDay = function(req, res, next) {
     });
 };
 
-exports.addIncident = function(req, res, next) {
-    var model = req.body;
-  
-    debugger;
+exports.incident = function(req, res, next) {
+    res.render('incident', { title: 'Add Incident', mode: 'add', scripts: [], message: null, model: {} });
+};
 
-    if(model.detail == '' || model.notes == '' || !model.incidentDate) {
-        res.statusCode = 400;
-        res.send({ success: false, message: "Required fields missing" }); 
+exports.getIncident = function(req, res, next) {
+    var incidentNumber = req.params.id;    
+    if(!incidentNumber) {
+        res.statusCode = 401;
+        res.send('Bad request');
         return;
     }
 
-    incidentsDao.insertIncident(new Date().getTime(), model.incidentDate, new Date(), req.session.user.email, model.detail, model.status, false, model.notes, model.source, function(err) {
+    incidentsDao.getIncidentByIncidentNumber(incidentNumber, function(err, incident) {
         if(err) {
             logger.log('error', err);
-            res.statusCode == 400;
-            res.send({ success: false, message: "Unable to add incident" });
+            res.statusCode = 500;
+            res.send('Unable to find incident with number ' + num);
+            return;
+        }
+
+        res.render('incident', { title: 'Edit Incident', mode: 'edit', scripts: [], message: null, model: incident });
+    });
+};
+
+exports.hideIncident = function(req, res, next) {
+    var incidentNumber = req.params.id;
+    if(!incidentNumber) {
+        res.statusCode = 401;
+        res.send('Bad request');
+        return;
+    }
+   
+    incidentsDao.getIncidentByIncidentNumber(incidentNumber, function(err, incident) {
+        if(err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('Unable to find incident with number ' + num);
+            return;
+        }
+
+        incident.hidden = true;
+        incident.save(function(err) {
+            if(err) {
+                logger.log('error', err);
+            }
+            res.redirect('/#operations/incidents'); 
+        });
+    });
+
+};
+
+exports.createIncident = function(req, res, next) {
+    var model = req.body;
+    
+    if(model.detail == '' || model.notes == '' || !model.incidentdate) {
+        res.render('incident', { 'title': 'Add Incident', mode: 'add', scripts: [], message: { level: 'error', content: 'Required fields missing' }, model: model}); 
+        return;
+    }
+
+    incidentsDao.insertIncident(new Date().getTime(), moment(model.incidentdate).toDate(), new Date(), req.session.user.email, 
+                                model.detail, model.status, false, model.notes, model.source, function(err) {
+        if(err) {
+            logger.log('error', err);
+            res.render('incident', { 'title': 'Add Incident', mode: 'add', scripts: [], message: { level: 'error', content: 'Unable to add incident' }, model: model }); 
+            return;
         } else {
-            res.statusCode = 200;
-            res.send();
+            res.render('incident', { title: 'Add Incident', mode: 'add', scripts: [], 
+                       message: { level: 'success', content: 'Incident added: <a href="/#operations/incidents">Back to Incidents Report</a>' }, model: {} });
+            return;
         }
     });
+};
+
+exports.updateIncident = function(req, res, next) {
+    var incidentNumber = req.params.id;
+    var model = req.body;
+    
+    if(model.detail == '' || model.notes == '' || !model.incidentdate) {
+        res.render('incident', { 'title': 'Edit Incident', mode: 'edit', scripts: [], message: { level: 'error', content: 'Required fields missing' }, model: model}); 
+        return;
+    }
+
+    incidentsDao.getIncidentByIncidentNumber(incidentNumber, function(err, incident) {
+        if(err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('Unable to find incident with number ' + num);
+            return;
+        }
+
+        incident.subject = model.detail;
+        incident.createdOn = moment(model.incidentdate).toDate();
+        incident.status = model.status;
+        incident.source = model.source;
+        incident.notes = model.notes;
+        incident.lastUpdatedOn = new Date();
+        incident.lastUpdatedBy = req.session.user.email;
+
+        incident.save(function(err) {
+            if(err) {
+                logger.log('error', err);
+            }
+            res.redirect('/#operations/incidents'); 
+        });
+    });
 }
+
 
 exports.uptime = function (req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
