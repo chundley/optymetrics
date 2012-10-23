@@ -6,30 +6,42 @@
 Opty.OperationsCostChart = Backbone.View.extend({
     id: 'operations-cost-chart',
     vendorCostChartOptions: {
-        colors: ["#0D6759", "#0c4e7f", "#6e317a", "#48a1d9", "#c5792a", "#00a695", "#f478a2"],
+        colors: ["#48a1d9", "#0c4e7f", "#6e317a", "#48a1d9", "#c5792a", "#00a695", "#f478a2"],
         chart: {
             renderTo: 'operations-cost-chart',
             spacingRight: 20,
+            borderColor: '#999999',
+            borderWidth: 1,
+            borderRadius: 6,
             backgroundColor: {
                 linearGradient: [0, 0, 0, 300],
                 stops: [
-                    [0, '#fffef2'],
-                    [1, '#dfded4']
+                    [0, '#363636'],
+                    [1, '#191919']
                 ]
             }
         },
         title: {
             text: 'Total operations cost',
             style: {
-                color: '#3e3e3e'
+                color: '#cccccc'
             }
         },
-        xAxis: {},
+        xAxis: {
+            gridLineColor: '#444444',
+            gridLineWidth: 1,
+            labels: {
+                style: {
+                    color: '#999999'
+                }
+            }
+        },
         yAxis: [{
+            gridLineColor: '#444444',
             title: {
                 text: null,
                 style: {
-                    color: '#3e3e3e',
+                    color: '#e3e3e3',
                     fontSize: '13px',
                     fontWeight: 'normal'
                 }
@@ -40,6 +52,9 @@ Opty.OperationsCostChart = Backbone.View.extend({
             labels: {
                 formatter: function () {
                     return '$' + Highcharts.numberFormat(this.value / 1000, 0) + 'K';
+                },
+                style: {
+                    color: '#999999'
                 }
             }
         },
@@ -48,6 +63,7 @@ Opty.OperationsCostChart = Backbone.View.extend({
             labels: {
                 enabled: false
             },
+            gridLineColor: '#444444',
             title: null,
             max: 20000,
             opposite: false
@@ -77,8 +93,8 @@ Opty.OperationsCostChart = Backbone.View.extend({
                         }
                     },
                     lineWidth: 2,
-                    lineColor: '#774F38',
-                    fillColor: '#ECE5CE'
+                    lineColor: '#48a1d9',
+                    fillColor: '#000000'
                 },
 
                 states: {
@@ -90,22 +106,30 @@ Opty.OperationsCostChart = Backbone.View.extend({
                 },
                 lineWidth: 0
             },
-            spline: {
+            area: {
+                lineWidth: 2,
+                fillColor: {
+                    linearGradient: [0, 0, 0, 400],
+                    stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, 'rgba(0,0,0,0)']
+                    ]
+                },
                 marker: {
-                    radius: 5,
-                    lineWidth: 2,
-                    lineColor: '#0D6759',
-                    fillColor: '#ffffff'
+                    radius: 4,
+                    lineWidth: 1,
+                    lineColor: '#48a1d9',
+                    fillColor: '#111111'
                 }
             }
         },
         series: [{
-            type: 'spline',
+            type: 'area',
             name: 'Cost'
         }, {
             type: 'line',
             name: 'Annotation',
-            color: '#774F38',
+            color: '#48a1d9',
             yAxis: 1
         }
         ],

@@ -2,7 +2,7 @@
 
 Opty.DefaultView = Backbone.View.extend({
     id: 'default-view',
-    className: 'row-fluid',
+    className: 'row',
 
     initialize: function (options) {
         var me = this;
@@ -16,6 +16,30 @@ Opty.DefaultView = Backbone.View.extend({
                 {
                     var me = this;
 
+                    //var $divContainer = $('<div>', { 'class': 'row' });
+                    //me.$el.append($divContainer);
+
+                    me.$el.append('<div class="span9" style="color: #ff3333; font-size: 22px;">DEMO DATA ON THIS PAGE, NOT LIVE YET!!!</div><br>');
+                    var $divLeftPanel = $('<div>', { 'class': 'span9' });
+                    //$divContainer.append($divLeftPanel);
+                    me.$el.append($divLeftPanel);
+
+                    var $divRightPanel = $('<div>', { 'class': 'span3' });
+                    me.$el.append($divRightPanel);
+
+                    var $divWidgetContainer = $('<div>', { 'class': 'widget-container-outline' });
+                    $divRightPanel.append($divWidgetContainer);
+
+                    $divWidgetContainer.append('<div class="header">APP USAGE</div>');
+
+                    var triPaneMetricSales = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'SALES', header: 'Month', footer: 'New MRR' });
+
+                    $divLeftPanel.append(triPaneMetricSales.$el);
+
+                    var triPaneMetricMarketing = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'MARKETING', header: 'Month', footer: 'New Leads' });
+                    $divLeftPanel.append(triPaneMetricMarketing.$el);
+
+                    /*
                     // Needs to be wired up to a date picker control to work now
 
 
@@ -42,7 +66,7 @@ Opty.DefaultView = Backbone.View.extend({
                     $divUptime.append($('<br />'));
                     $divUptime.append(uptimeWidget2.$el);
                     uptimeCollection.fetch();
-
+                    */
                     break;
                 }
 

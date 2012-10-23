@@ -18,7 +18,7 @@ Opty.OperationsView = Backbone.View.extend({
                     Opty.pubsub.unbind('reportrange:changed');
 
                     // Configure report date range picker
-                    var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+                    var $datePickerRow = $('<div>', { 'class': 'row' });
                     var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
 
                     $datePickerRow.append(datePickerView.$el);
@@ -26,7 +26,7 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // pre-render divs or the widgets will render in random order
                     // ROW 1
-                    var $row1 = $('<div>', { 'class': 'row-fluid' });
+                    var $row1 = $('<div>', { 'class': 'row' });
                     var $divUptimeServiceAggregate = $('<div>', { 'class': 'span3' });
                     var $divUptimeDashboardAggregate = $('<div>', { 'class': 'span3' });
                     var $divUptimePagesAggregate = $('<div>', { 'class': 'span3' });
@@ -38,7 +38,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $row1.append($divUptimeApiAggregate);
 
                     // ROW 2
-                    var $row2 = $('<div>', { 'class': 'row-fluid' });
+                    var $row2 = $('<div>', { 'class': 'row' });
                     var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
                     var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
                     var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
@@ -185,7 +185,7 @@ Opty.OperationsView = Backbone.View.extend({
             case 'tco':
                 {
 
-                    var tco_collection = new Opty.TCOCollection({}, { 'count': '100' });
+                    var tco_collection = new Opty.TCOCollection({}, { 'count': '500' });
 
                     var tco_table = new Opty.TableView({
                         table_fields: [
@@ -340,13 +340,13 @@ Opty.OperationsView = Backbone.View.extend({
 
                     $row2.append($divVendorCostChart);
 
-                    var chartWidgetView = new Opty.ChartWidgetView({ chart: new Opty.OperationsCostChart({ collection: vendorCostCollection }) });
+                    var chartWidgetView = new Opty.OperationsCostChart({ collection: vendorCostCollection });
                     $divOperationsCostChart.append(chartWidgetView.$el);
 
-                    var chartWidgetView2 = new Opty.ChartWidgetView({ chart: new Opty.CategoryCostChart({ collection: vendorCostCollection }) });
+                    var chartWidgetView2 = new Opty.CategoryCostChart({ collection: vendorCostCollection });
                     $divCategoryCostChart.append(chartWidgetView2.$el);
 
-                    var chartWidgetView3 = new Opty.ChartWidgetView({ chart: new Opty.VendorCostChart({ collection: vendorCostCollection }) });
+                    var chartWidgetView3 = new Opty.VendorCostChart({ collection: vendorCostCollection });
                     $divVendorCostChart.append(chartWidgetView3.$el);
 
                     datePickerView.render();

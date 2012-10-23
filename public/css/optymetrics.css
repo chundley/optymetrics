@@ -4,7 +4,7 @@
 
 body 
 {
-	background-color: #bebca9;
+	background-color: #464646;
 }
 
 /* login session div */
@@ -13,13 +13,17 @@ body
     margin-top: 12px;
 }
 
+.session a {
+    color: #999999;  
+}
+
 /* extra header styles */
-div.green-stripe 
+div.top-stripe 
 {
-	background-color: #a2ab58;
+	background-color: #48a1d9;
     height: 3px;
     width: 100%;
-    border-bottom: 5px solid #292717;
+    border-bottom: 5px solid #111111;
     float:left;	
 }
 
@@ -33,19 +37,19 @@ table.tablesorter .tablesorter-header {
     background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
     background-repeat: no-repeat;
     background-position: center right;
-    background-color: #aba995;
-    color: #292717;
+    background-color: #989898;
+    color: #000000;
     padding: 4px 20px 4px 4px;
     cursor: pointer;
 }
 table.tablesorter th.headerSortUp,
 table.tablesorter th.tablesorter-headerSortUp {
-    background-color: #a2ab58;
+    background-color: #a3c4d9;
     background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
 }
 table.tablesorter th.headerSortDown,
 table.tablesorter th.tablesorter-headerSortDown {
-    background-color: #a2ab58; /* black desc arrow */
+    background-color: #a3c4d9; /* black desc arrow */
     background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
 }
 
