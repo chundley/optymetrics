@@ -6,45 +6,58 @@
 Opty.VendorCostChart = Backbone.View.extend({
     id: 'vendor-cost-chart',
     vendorCostChartOptions: {
-        colors: ["#0D6759", "#E97F02", "#5B4086", "#002066", "#7AB317", "#F9D423", "#E98977", "#EF3F00", "#00A0B0", "#3D1C00"],
+        colors: ["#3e8bbc", "#FA6900", "#5B4086", "#002066", "#7AB317", "#F2DB13", "#FE4365", "#EF3F00", "#C5BC8E", "#3D1C00"],
         chart: {
             renderTo: 'vendor-cost-chart',
+            borderColor: '#999999',
+            borderWidth: 1,
+            borderRadius: 6,
             backgroundColor: {
                 linearGradient: [0, 0, 0, 300],
                 stops: [
-                    [0, '#fffef2'],
-                    [1, '#dfded4']
+                    [0, '#363636'],
+                    [1, '#191919']
                 ]
             }
         },
         title: {
             text: 'Operations cost by vendor',
             style: {
-                color: '#3e3e3e'
+                color: '#e3e3e3'
             }
         },
         legend: {
-            floating: true,
-            align: 'bottom',
-            verticalAlign: 'top',
+            //floating: true,
+            //align: 'bottom',
+            verticalAlign: 'bottom',
             layout: 'horizontal',
-            backgroundColor: '#ffffff',
-            borderColor: '#ECE5CE',
-            borderWidth: 2,
-            x: 60,
-            y: 5,
-            width: 200, // width and itemWidth create the two-column look
-            itemWidth: 100,
+            backgroundColor: '#191919',
+            borderColor: '#999999',
+            borderWidth: 1,
+            //x: 40,
+            //y: 20,
+            //width: 200, // width and itemWidth create the two-column look
+            //itemWidth: 100,
             itemStyle: {
-                fontSize: '9px'
+                fontSize: '10px',
+                color: '#999999'
             }
         },
-        xAxis: {},
+        xAxis: {
+            gridLineColor: '#444444',
+            gridLineWidth: 1,
+            labels: {
+                style: {
+                    color: '#999999'
+                }
+            }
+        },
         yAxis: [{
+            gridLineColor: '#444444',
             title: {
                 text: null,
                 style: {
-                    color: '#3e3e3e',
+                    color: '#e3e3e3',
                     fontSize: '13px',
                     fontWeight: 'normal'
                 }
@@ -55,6 +68,9 @@ Opty.VendorCostChart = Backbone.View.extend({
             labels: {
                 formatter: function () {
                     return '$' + Highcharts.numberFormat(this.value / 1000, 0) + 'K';
+                },
+                style: {
+                    color: '#999999'
                 }
             }
         }],
@@ -69,7 +85,8 @@ Opty.VendorCostChart = Backbone.View.extend({
                 stacking: 'normal',
                 marker: {
                     enabled: false
-                }
+                },
+                borderColor: '#999999'
             }
 
         },
@@ -100,10 +117,20 @@ Opty.VendorCostChart = Backbone.View.extend({
         me.vendorCostChartOptions.series = [];
 
         var data = me.formatData();
+        var idx = 0;
         _.each(data, function (d) {
             var series = {};
             series.name = d.vendorName;
             series.type = 'column';
+            var tempColor = {
+                linearGradient: [0, 0, 0, 500 + (50*idx)],
+                stops: [
+                    [0, me.vendorCostChartOptions.colors[idx]],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            };
+
+            series.color = tempColor;
             series.data = [];
             var stack;
             categories = []; // fix this later
@@ -114,6 +141,7 @@ Opty.VendorCostChart = Backbone.View.extend({
             });
             series.data.stack = stack;
             me.vendorCostChartOptions.series.push(series);
+            idx++;
         });
 
         me.vendorCostChartOptions.xAxis.categories = categories

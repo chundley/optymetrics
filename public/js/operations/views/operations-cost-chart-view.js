@@ -16,8 +16,8 @@ Opty.OperationsCostChart = Backbone.View.extend({
             backgroundColor: {
                 linearGradient: [0, 0, 0, 300],
                 stops: [
-                    [0, '#464646'],
-                    [1, '#292929']
+                    [0, '#363636'],
+                    [1, '#191919']
                 ]
             }
         },

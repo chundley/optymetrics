@@ -15,8 +15,8 @@ Opty.CategoryCostChart = Backbone.View.extend({
             backgroundColor: {
                 linearGradient: [0, 0, 0, 300],
                 stops: [
-                    [0, '#464646'],
-                    [1, '#292929']
+                    [0, '#363636'],
+                    [1, '#191919']
                 ]
             }
         },
@@ -31,9 +31,9 @@ Opty.CategoryCostChart = Backbone.View.extend({
             align: 'left',
             verticalAlign: 'top',
             layout: 'vertical',
-            backgroundColor: '#464646',
+            backgroundColor: '#363636',
             borderColor: '#999999',
-            borderWidth: 2,
+            borderWidth: 1,
             x: 60,
             y: 10,
             itemStyle: {
