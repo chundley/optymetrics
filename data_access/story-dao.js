@@ -163,11 +163,11 @@ var getDeploymentVelocity = function(startDate, endDate, callback) {
         by_week.excellence_velocity = 0;
         values.forEach(function(value){
             if(value.type == 'defect') {
-                by_week.defect_velocity += value.size;
+                by_week.defect_velocity += (isNaN(value.size) ? 0 : value.size);
             } else if(value.type == 'feature') { 
-                by_week.feature_velocity += value.size;
+                by_week.feature_velocity += (isNaN(value.size) ? 0 : value.size);
             } else if (value.type == 'excellence') {
-                by_week.excellence_velocity += value.size;
+                by_week.excellence_velocity += (isNaN(value.size) ? 0 : value.size);
             }
         });
         return by_week;
@@ -202,9 +202,11 @@ var getDeploymentVelocity = function(startDate, endDate, callback) {
                                   defect_velocity: result.value.defect_velocity, 
                                   feature_velocity: result.value.feature_velocity, 
                                   excellence_velocity: result.value.excellence_velocity, 
-                                  total: result.value.defect_velocity + result.value.feature_velocity + result.value.excellence_velocity 
+                                  total: (isNaN(result.value.defect_velocity) ? 0 :  result.value.defect_velocity) + 
+                                         (isNaN(result.value.feature_velocity) ? 0 : result.value.feature_velocity) + 
+                                         (isNaN(result.value.excellence_velocity) ? 0 : result.value.excellence_velocity) 
                               }; 
-                            
+
                               return result;
                           }
                     )
@@ -281,7 +283,6 @@ var getVelocityTrend = function(currentPeriodStartDate, currentPeriodEndDate, ca
                 currentPeriodCount++;
             }
         });
-
         var data = { 
             current: { 
                 points: (currentPeriodPoints / currentPeriodCount)
