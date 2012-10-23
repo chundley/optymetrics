@@ -185,7 +185,7 @@ Opty.OperationsView = Backbone.View.extend({
             case 'tco':
                 {
 
-                    var tco_collection = new Opty.TCOCollection({}, { 'count': '100' });
+                    var tco_collection = new Opty.TCOCollection({}, { 'count': '500' });
 
                     var tco_table = new Opty.TableView({
                         table_fields: [

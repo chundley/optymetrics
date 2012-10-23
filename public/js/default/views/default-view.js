@@ -19,6 +19,7 @@ Opty.DefaultView = Backbone.View.extend({
                     //var $divContainer = $('<div>', { 'class': 'row' });
                     //me.$el.append($divContainer);
 
+                    me.$el.append('<div class="span9" style="color: #ff3333; font-size: 22px;">DEMO DATA ON THIS PAGE, NOT LIVE YET!!!</div><br>');
                     var $divLeftPanel = $('<div>', { 'class': 'span9' });
                     //$divContainer.append($divLeftPanel);
                     me.$el.append($divLeftPanel);
@@ -30,7 +31,7 @@ Opty.DefaultView = Backbone.View.extend({
                     $divRightPanel.append($divWidgetContainer);
 
                     $divWidgetContainer.append('<div class="header">APP USAGE</div>');
-                    
+
                     var triPaneMetricSales = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'SALES', header: 'Month', footer: 'New MRR' });
 
                     $divLeftPanel.append(triPaneMetricSales.$el);
