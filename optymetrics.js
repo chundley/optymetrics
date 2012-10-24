@@ -70,8 +70,8 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
 });
 trelloBackfillJob.start();
 
-// Run the PagerDuty backfill daily at midnight PST
-var pagerDutyBackfillJob = new cronJob("0 0 7 * *", function() {
+// Run the PagerDuty backfill hourly (ten minutes after the hour) 
+var pagerDutyBackfillJob = new cronJob("0 10 * * *", function() {
     try {
         logger.log('info', 'Running PagerDuty backfill');
         pagerDutyJob.pagerDutyBackfill();
