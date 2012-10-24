@@ -5,7 +5,10 @@ Opty.IncidentsAggregateModel = Backbone.Model.extend({});
 Opty.IncidentsAggregateCollection = Backbone.Collection.extend({
     model: Opty.IncidentsAggregateModel,
     url: function () {
-        return '/ops/incidents/aggregate?start=' + this.startDate.getTime() + '&end=' + this.endDate.getTime();
+        var st = Date.UTC(this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate());
+        var ed = Date.UTC(this.endDate.getFullYear(), this.endDate.getMonth(), this.endDate.getDate());
+
+        return '/ops/incidents/aggregate?start=' + st + '&end=' + ed;
     },
     initialize: function (options) {
         var me = this;

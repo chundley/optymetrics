@@ -39,8 +39,8 @@ exports.monitors = function (req, res, next) {
 };
 
 exports.incidents = function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
 
     incidentsDao.getIncidents(startDate, endDate, function(err, results) {
          if(err) {
@@ -55,8 +55,8 @@ exports.incidents = function(req, res, next) {
 };
 
 exports.incidentsByDay = function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
 
     incidentsDao.getIncidentAggregate(startDate, endDate, function(err, results) {
          if(err) {
