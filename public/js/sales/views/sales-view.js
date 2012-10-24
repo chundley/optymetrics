@@ -53,10 +53,10 @@ Opty.SalesView = Backbone.View.extend({
                     series[model.get('sku')].data[dates[model.get("monthOf").substring(0,10)]] = model.get('customerCount');
                 });
                 series['Free Trial'].visible = false;
-                series_array = [];
+                window.sales_series_array = [];
                 for(var k in series)
-                    series_array.push(series[k]);
-                var customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: series_array, xAxisLabels:xAxisLabels, title:'Customers by SKU', yLabel:'Customer Count' });
+                    window.sales_series_array.push(series[k]);
+                window.customerHistoryChart = new Opty.SalesChart({ id:'customers-by-sku', series: sales_series_array, xAxisLabels:xAxisLabels, title:'Customers by SKU', yLabel:'Customer Count', type: 'area' });
 
                 var $row1 = $('<div>', { 'class': 'row-fluid'});
                 var $divCustomers = $('<div>', { 'class': 'span6', 'id':'customers-by-sku', 'height':'450px' });
