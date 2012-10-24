@@ -12,7 +12,7 @@ var IncidentSchema = new Schema({
     lastUpdatedOn       : Date,
     lastUpdatedBy       : String,
     hidden              : Boolean,
-    notes               : { type: String, trim: true },
+    notes               : { type: String, trim: true, 'default': '' },
     source              : String
 });
 
