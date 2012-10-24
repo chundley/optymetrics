@@ -52,7 +52,8 @@ Opty.IncidentsChartView = Backbone.View.extend({
             shared: false,
             formatter: function () {
                 var date = new Date(this.x);
-                return (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear() + ': ' + Highcharts.numberFormat(this.y, 0);
+                return (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear() + ' - ' + 
+                    this.series.name + ': ' + Highcharts.numberFormat(this.y, 0);
             }
         },
         legend: {
