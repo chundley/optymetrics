@@ -38,10 +38,12 @@ WeeklyFeatureUsageStats : >
     , '^dailyemail$', 'dailyemail') END feature
     FROM v_traffic_event;
     
+    DROP TABLE IF EXISTS __temp_t1;
     CREATE TEMP table __temp_t1
     AS
     select feature, user_id
     , to_char(pageview_date, 'yyyy-ww') week_num
+    , (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date week_of
     , (traffic_visitor_id*1000)::varchar || traffic_visit_num::varchar visit_num
     , extract(epoch from max(pageview_date) - min(pageview_date))/ 60 time_on_feature
     , count(*) pageviews
@@ -50,9 +52,10 @@ WeeklyFeatureUsageStats : >
     AND (url_host in('dashboard', 'help') OR feature in ('dailyemail'))
     AND feature ~* '(help|landing|lead|keyword|twitter|contact|email|link|report|page)'
     AND url_path !~* '(page-event|pagenot)'
-    GROUP BY 1, 2, 3, 4;
+    GROUP BY 1, 2, 3, 4, 5;
     
     
+    DROP TABLE IF EXISTS __temp_t2;
     CREATE TEMP TABLE __temp_t2
     AS
     SELECT t2.*
@@ -67,7 +70,7 @@ WeeklyFeatureUsageStats : >
     , row_number()over(partition by feature ORDER BY t2.visits desc) visits_row_num
     FROM
     (
-    SELECT feature, week_num
+    SELECT feature, week_num, week_of
     , count(distinct user_id) unique_users
     , count(distinct customer_id) unique_customers
     , count(*) visits, sum(time_on_feature) time_on_feature, sum(pageviews) pageviews
@@ -76,7 +79,7 @@ WeeklyFeatureUsageStats : >
     JOIN v_customer c on c.id = ou.customer_id
     WHERE sku !~* '(Complimentary)'
     AND email_address !~* '(optify.net)'
-    GROUP BY 1, 2
+    GROUP BY 1, 2, 3
     ) t2
     JOIN (
     SELECT week_num

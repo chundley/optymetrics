@@ -130,6 +130,7 @@ var backfillWeeklyFeatureUsageStats = function (callback) {
                     appUsageDao.upsertWeeklyFeatureUsageStats({
                         feature: result.rows[row].feature
                         , weekNum: result.rows[row].week_num
+                        , weekOf: result.rows[row].week_of
                         , uniqueUsers: result.rows[row].unique_users
                         , uniqueCustomers: result.rows[row].unique_customers
                         , visits: result.rows[row].visits
