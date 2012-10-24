@@ -100,16 +100,16 @@ var getIncidentByIncidentNumber = function(num, callback) {
 var getIncidentAggregate = function(start, end, callback) {
     var map = function() {
         var key = new Date(this.createdOn.getFullYear(), this.createdOn.getMonth(), this.createdOn.getDate());
-        emit(key, 1);
+        emit({ day: key, source: this.source}, { count: 1 });
     };
 
     var reduce = function(key, values) {
         var count = 0;
-        values.forEach(function(value) {
-            count++;
-        });
+        
+        if(values.length) count = values.length;
+        else count = 1;
 
-        return count;
+        return { count: count };
     };
 
     var command = {
@@ -129,7 +129,7 @@ var getIncidentAggregate = function(start, end, callback) {
             
             if(results.numberReturned > 0) {
                 callback(err, _.map(results.documents[0].results, function(result, key) {
-                    return { date: new Date(result._id), count: result.value };
+                    return { date: new Date(result._id.day), source: result._id.source, count: result.value.count };
                 }));
             } else {
                 callback(err, []);
