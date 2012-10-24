@@ -199,9 +199,9 @@ var getDeploymentVelocity = function(startDate, endDate, callback) {
                               
                               var result = {  
                                   week_of: new Date(date_util.firstDayOfWeek(weeknum, year)), 
-                                  defect_velocity: result.value.defect_velocity, 
-                                  feature_velocity: result.value.feature_velocity, 
-                                  excellence_velocity: result.value.excellence_velocity, 
+                                  defect_velocity: (result.value.defect_velocity) ? result.value.defect_velocity : 0, 
+                                  feature_velocity: (result.value.feature_velocity) ? result.value.feature_velocity: 0, 
+                                  excellence_velocity: (result.value.excellence_velocity) ? result.value.excellence_velocity : 0, 
                                   total: (isNaN(result.value.defect_velocity) ? 0 :  result.value.defect_velocity) + 
                                          (isNaN(result.value.feature_velocity) ? 0 : result.value.feature_velocity) + 
                                          (isNaN(result.value.excellence_velocity) ? 0 : result.value.excellence_velocity) 
@@ -356,7 +356,9 @@ var calculateCycleTime = function(callback) {
  */
 exports.getCycleTimeOverPeriod = function(startDate, endDate, callback) {
     var map = function() {
-        emit(this.size, this.cycleTimeDays);
+        if(this.size) {
+            emit(this.size, this.cycleTimeDays);
+        }
     };
 
     var reduce = function(key, values) {
