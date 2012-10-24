@@ -52,18 +52,33 @@ Opty.IncidentsChartView = Backbone.View.extend({
             shared: false,
             formatter: function () {
                 var date = new Date(this.x);
-                return (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear() + ': ' + Highcharts.numberFormat(this.y, 0);
+                return (date.getUTCMonth() + 1) + '/' + date.getUTCDate() + '/' + date.getUTCFullYear() + ' - ' + 
+                    this.series.name + ': ' + Highcharts.numberFormat(this.y, 0);
             }
         },
         legend: {
             enabled: false
         },
         plotOptions: {
-        
+            column: {
+                stacking: 'normal'
+            }
         },
         series: [{
             type: 'column',
-            name: 'Cost'
+            name: 'PagerDuty'
+        },
+        {
+            type: 'column',
+            name: 'P1 Defect'
+        }, 
+        {
+            type: 'column',
+            name: 'Ops'
+        },
+        {
+            type: 'column',
+            name: 'On-call Engineer'
         }
         ],
         credits: {
@@ -90,31 +105,26 @@ Opty.IncidentsChartView = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        var data = me.formatData();
+        this.chartOptions.series[0].data = me.formatData('PagerDuty');
+        this.chartOptions.series[1].data = me.formatData('P1 Defect');
+        this.chartOptions.series[2].data = me.formatData('Ops');
+        this.chartOptions.series[3].data = me.formatData('On-call Engineer');
 
-        this.chartOptions.series[0].data = data;
         this.chart = new Highcharts.Chart(this.chartOptions);
         return this.$el;
     },
-    formatData: function () {
+    formatData: function (source) {
         var me = this,
             series = [],
             start = this.getUTCDay(this.collection.getStartDate()),
             end = this.getUTCDay(this.collection.getEndDate());
-        
-        while(start < end) {
-            var aggregate = this.collection.find(function(agg) { 
-                return Date.compare(me.getUTCDay(new Date(agg.get('date'))), start) == 0; 
-            });
-            if(aggregate) {
-                var color = (aggregate.get('count') >= me.incidentsThreshold) ? '#FF1608' : '#FFC600';
-                series.push({ x: me.getUTCDay(new Date(aggregate.get('date'))).getTime(), y: aggregate.get('count'), color: color });
-            } else {
-                series.push([ start.getTime(), 0 ]);  
-            }
+       
+        this.collection.each(function(data) {
+            if(data.get('source') == source) {
+                series.push({ x: me.getUTCDay(new Date(data.get('date'))).getTime(), y: data.get('count') });
+            } 
+        });
 
-            start = me.getUTCDay(start.add(1).days())
-        }
         return series;
     },
     getUTCDay: function(date) {
