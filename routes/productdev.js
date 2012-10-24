@@ -1,5 +1,6 @@
-var storyDao = require('../data_access/story-dao.js');
-var appUsageDao = require('../data_access/appusage-dao.js');
+var storyDao = require('../data_access/story-dao.js'),
+    appUsageDao = require('../data_access/appusage-dao.js'),
+    date_util = require('../util/date_util.js');
 
 exports.velocityByFeatureGroup = function(req, res, next) {
     var startDate = new Date(parseInt(req.query['start']));
@@ -40,8 +41,8 @@ exports.stories = function(req, res, next) {
 };
 
 exports.velocityByWeek = function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
     
     storyDao.getDeploymentVelocity(startDate, endDate, function(err, results) {
          if(err) {
@@ -56,8 +57,8 @@ exports.velocityByWeek = function(req, res, next) {
 };
 
 exports.velocityTrend = function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
     
     storyDao.getVelocityTrend(startDate, endDate, function(err, results) {
          if(err) {
@@ -72,8 +73,8 @@ exports.velocityTrend = function(req, res, next) {
 };
 
 exports.averageCycleTime = function(req, res, next) {
-    var startDate = new Date(parseInt(req.query['start']));
-    var endDate = new Date(parseInt(req.query['end']));
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
     
     storyDao.getCycleTimeOverPeriod(startDate, endDate, function(err, results) {
          if(err) {
