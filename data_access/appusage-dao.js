@@ -32,22 +32,95 @@ var removeDailyAppUsageRawForDates = function(startDate, endDate, callback) {
 };
 
 var upsertWeeklyCustomerUserStats = function(data, callback) {
-    var WeeklyCustomerUserStatsRecord = new appUsageModel.WeeklyCustomerUserStatsModel(data);
-    WeeklyCustomerUserStatsRecord.save();
-    callback();
+    appUsageModel.WeeklyCustomerUserStatsModel.findOne({ 'weekOf': data.weekOf, 'sku': data.sku }, function (err, doc) {
+        if (err) {
+            logger.info('Failed on findOne!');
+            callback(err);
+        }
+        else {
+            if (doc) {
+                doc.days = data.days;
+                doc.customerCount = data.customerCount;
+                doc.userCount = data.userCount;
+                doc.totalDailyVisits = data.totalDailyVisits;
+                doc.save(function () {
+                    if (err) {
+                        logger.info('Failure1!!!');
+                        callback(err);
+                    }
+                    callback(null);
+                });
+            }else{
+                var WeeklyCustomerUserStatsRecord = new appUsageModel.WeeklyCustomerUserStatsModel(data);
+                WeeklyCustomerUserStatsRecord.save();
+                callback();
+            }
+        }
+    });
 };
 
 
 var upsertMonthlyCustomerStats = function(data, callback) {
-    var MonthlyCustomerStatsRecord = new appUsageModel.MonthlyCustomerStatsModel(data);
-    MonthlyCustomerStatsRecord.save();
-    callback();
+    appUsageModel.MonthlyCustomerStatsModel.findOne({ 'monthOf': data.monthOf, 'sku': data.sku }, function (err, doc) {
+        if (err) {
+            logger.info('Failed on findOne!');
+            callback(err);
+        }
+        else {
+            if (doc) {
+                doc.customerCount = data.customerCount;
+                doc.save(function () {
+                    if (err) {
+                        logger.info('Failure1!!!');
+                        callback(err);
+                    }
+                    callback(null);
+                });
+            }else{
+                var MonthlyCustomerStatsRecord = new appUsageModel.MonthlyCustomerStatsModel(data);
+                MonthlyCustomerStatsRecord.save();
+                callback();
+            }
+        }
+    });
+                
 };
 
 var upsertWeeklyFeatureUsageStats = function(data, callback) {
-    var WeeklyFeatureUsageStatsRecord = new appUsageModel.WeeklyFeatureUsageStatsModel(data);
-    WeeklyFeatureUsageStatsRecord.save();
-    callback();
+    appUsageModel.WeeklyFeatureUsageStatsModel.findOne({ 'weekNum': data.weekNum, 'feature': data.feature }, function (err, doc) {
+        if (err) {
+            logger.info('Failed on findOne!');
+            callback(err);
+        }
+        else {
+            if (doc) {
+                doc.weekOf = data.weekOf;
+                doc.uniqueUsers = data.uniqueUsers;
+                doc.uniqueCustomers = data.uniqueCustomers;
+                doc.visits = data.visits;
+                doc.timeOnFeature = data.timeOnFeature;
+                doc.pageviews = data.pageviews;
+                doc.percentCustomersUsing = data.percentCustomersUsing;
+                doc.percentUsersUsing = data.percentUsersUsing;
+                doc.percentCustomersUsingExcludeEmail = data.percentCustomersUsingExcludeEmail;
+                doc.percentUsersUsingExcludeEmail = data.percentUsersUsingExcludeEmail;
+                doc.timeOnfeatureRowNum = data.timeOnfeatureRowNum;
+                doc.pageviewsRowNum = data.pageviewsRowNum;
+                doc.visitsRowNum = data.visitsRowNum;
+                doc.save(function () {
+                    if (err) {
+                        logger.info('Failure1!!!');
+                        callback(err);
+                    }
+                    callback(null);
+                });
+            }else{
+                var WeeklyFeatureUsageStatsRecord = new appUsageModel.WeeklyFeatureUsageStatsModel(data);
+                WeeklyFeatureUsageStatsRecord.save();
+                callback();
+            }
+        }
+    });
 };
 
 var getDailyAppUsageRecordCount = function(callback){

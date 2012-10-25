@@ -35,6 +35,7 @@ WeeklyCustomerUserStatsSchema.index({ weekOf: 1, sku: 1 }, { unique: true });
 var WeeklyFeatureUsageStatsSchema = new Schema({
     feature  : String, 
     weekNum  : String, 
+    weekOf  : String, 
     uniqueUsers  : Number, 
     uniqueCustomers  : Number, 
     visits  : Number, 

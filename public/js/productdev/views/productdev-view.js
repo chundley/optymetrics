@@ -354,8 +354,10 @@ Opty.ProductDevView = Backbone.View.extend({
             var featureusage_week_count = 0;
             var xAxisLabels = [];
             _.each(data.models, function (model) {
-                featureusage_weeks[model.get("weekNum")]=0;
-                featureusage_series[model.get("feature")] = null;
+                if(model.get("weekOf") != null && ((new Date()) - new Date(model.get("weekOf")))/(1000*84000) > 1){
+                    featureusage_weeks[model.get("weekOf")]=0;
+                    featureusage_series[model.get("feature")] = null;
+                }
             });
             featureusage_weeks = Opty.util.objectKeySort(featureusage_weeks);
             for(k in window.featureusage_weeks){
@@ -366,7 +368,8 @@ Opty.ProductDevView = Backbone.View.extend({
             window.featureusage_series_array = {};
             window.featureusage_the_datas = {"uniqueUsers":"Unique Users", "uniqueCustomers":"Unique Customers", "visits":"Total Visits"
                                               , "timeOnFeature":"Time On Feature", "percentUsersUsing":"% Users Using", "percentCustomersUsing":"% Customers Using"
-                                                  , "percentUsersUsingExcludeEmail":"% Users Using W/O Email", "percentCustomersUsingExcludeEmail":"% Customers Using W/O Email"};
+                                                  , "percentUsersUsingExcludeEmail":"% Users Using W/O DailyEmail"
+                                                  , "percentCustomersUsingExcludeEmail":"% Customers Using W/O DailyEmail"};
             for(valueName in featureusage_the_datas){
                 var series = {};
                 for(k in featureusage_series)
@@ -383,7 +386,7 @@ Opty.ProductDevView = Backbone.View.extend({
                         num_val = parseFloat((num_val * 100).toFixed(1));
                     else
                         num_val = Math.round(num_val);
-                    series[model.get('feature')].data[featureusage_weeks[model.get("weekNum")]] = num_val;
+                    series[model.get('feature')].data[featureusage_weeks[model.get("weekOf")]] = num_val;
                 });
                 if(/(ExcludeEmail|timeon)/i.test(valueName))
                     delete series["dailyemail"];
@@ -402,7 +405,7 @@ Opty.ProductDevView = Backbone.View.extend({
                                 , xAxisLabels:xAxisLabels, title:'<b>% Users Using W/O Email</b> per week'
                                 , yLabel:'% Users Using W/O Email', type:'line' });
             window.featureUsageChart.salesChartOptions.xAxis = {"labels":{"rotation":90, "y":40, "x":-4}};
-            window.featureUsageChart.salesChartOptions.chart["marginBottom"] = 130;
+            window.featureUsageChart.salesChartOptions.chart["marginBottom"] = 145;
             var $row2 = $('<div>', { 'class': 'row-fluid'});
             var $divCustomers = $('<div>', { 'class': 'span6' });
             var $divCustomersChart = $('<div>', { 'id':'features-usage-weekly', 'height':'450px' });
