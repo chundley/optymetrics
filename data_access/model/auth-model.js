@@ -22,6 +22,7 @@ exports.UserRoles = {
 };
 
 exports.UserSchema = new Schema({
+    displayName     : { type: String, trim: true },
     email           : { type: String, required: true, unique: true, trim: true },
     password        : { type: String, set: encodePassword, required: true,  trim: true },
     role            : { type: String, required: true }

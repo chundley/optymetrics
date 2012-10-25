@@ -4,8 +4,9 @@ var encodePassword = require('./model/auth-model.js').encodePassword,
     UserModel = require('./model/auth-model.js').UserModel,
     UserRoles = require('./model/auth-model.js').UserRoles;
 
-exports.addUser = function(email, password, role, callback) {
+exports.addUser = function(displayName, email, password, role, callback) {
     var user = new UserModel({
+        displayName: displayName,
         email: email,
         password: password,
         role: role 

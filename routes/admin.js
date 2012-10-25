@@ -8,14 +8,15 @@ exports.index = function(req, res, next) {
 };
 
 exports.addUser = function(req, res, next) {
+    var displayName = req.body.displayname;
     var email = req.body.email;
     var password = req.body.password;
     var confirm = req.body.confirm;
     var role = req.body.role;
 
     authDao.getUsers(function(err, users) {
-        if(!(email && password && confirm)) {
-            res.render('admin', { title: 'Admin', roles: UserRoles, scripts: [], message: { level: 'error', content: 'Email, password, and repeat password are required' }, users: users });
+        if(!(email && password && confirm && displayName)) {
+            res.render('admin', { title: 'Admin', roles: UserRoles, scripts: [], message: { level: 'error', content: 'Display name, Email, password, and repeat password are required' }, users: users });
             return;
         }   
 
@@ -30,7 +31,7 @@ exports.addUser = function(req, res, next) {
                 return;
             }
 
-            authDao.addUser(email, password, role, function(err) {
+            authDao.addUser(displayName, email, password, role, function(err) {
                 if(err) {
                     res.render('admin', { title: 'Admin', roles: UserRoles, scripts: [], message: { level: 'error', content: 'Unable to add user' }, users: users });
                     return;

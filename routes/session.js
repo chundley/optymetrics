@@ -35,7 +35,7 @@ exports.loginSubmit = function(req, res, next) {
 
             // Auth successful
             req.session.userAuthenticated=true
-            req.session.user = { email: user.email, role: user.role };
+            req.session.user = { email: user.email, role: user.role, displayName: user.displayName };
 
             if(req.query.redir) {
                 res.redirect(req.query.redir);

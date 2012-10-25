@@ -129,7 +129,7 @@ exports.createIncident = function(req, res, next) {
         return;
     }
 
-    incidentsDao.insertIncident(new Date().getTime(), moment(model.incidentdate).toDate(), new Date(), req.session.user.email, 
+    incidentsDao.insertIncident(new Date().getTime(), moment(model.incidentdate).toDate(), new Date(), req.session.user.displayName, 
                                 model.detail, model.status, false, model.notes, model.source, function(err) {
         if(err) {
             logger.log('error', err);
@@ -166,7 +166,7 @@ exports.updateIncident = function(req, res, next) {
         incident.source = model.source;
         incident.notes = model.notes;
         incident.lastUpdatedOn = new Date();
-        incident.lastUpdatedBy = req.session.user.email;
+        incident.lastUpdatedBy = req.session.user.displayName;
 
         incident.save(function(err) {
             if(err) {

@@ -5,16 +5,20 @@ div.user-admin
     thead
       tr
         th Email
+        th Display Name
         th Role
     tbody  
       - each user in users
         tr
           td #{user.email}
+          td #{user.displayName}
           td #{user.role}
   h3 Add User
   form(method='POST', action='/admin/user/add')
     label(for='email') Email Address
     input(type='text', name='email', placeholder='user@optify.net')
+    label(for='displayname') Display Name
+    input(type='text', name='displayname', placeholder='First Last')
     label(for='role') Role
     select(name='role')
       - each role in roles
