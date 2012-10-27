@@ -134,6 +134,10 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
                 url_fragment: 'customers',
                 title: 'Customers',
                 selected: true // default
+            },
+            {
+                url_fragment: 'price',
+                title: 'Price Estimator'
             }
         ];
 

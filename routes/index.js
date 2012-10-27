@@ -43,6 +43,7 @@ exports.index = function(req, res, next) {
             '/js/sales/models/customer-history-model.js',
             '/js/sales/views/sales-chart.js',
             '/js/sales/views/sales-view.js',
+            '/js/sales/views/sales-calc-view.js',
             '/js/productdev/models/usage-by-sku.js',
             '/js/productdev/models/feature-usage-by-week.js'
 
