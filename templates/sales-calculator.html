@@ -1,0 +1,344 @@
+﻿<div class="row">
+    <div class="span5">
+        <div class="form-horizontal">
+            <legend>Price Estimator</legend>
+            <div class="control-group">
+                <label class="control-label">SKU</label>
+                <div class="controls">
+                    <select name="sku" id="sku" onchange="resetDefaults();">
+                        <option value="Express">Express</option>
+                        <option value="Pro">Pro</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Agency Pro">Agency Pro</option>
+                        <option value="Agency Unlimited">Agency Unlimited</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Page views</label>
+                <div class="controls">
+                    <input type="text" name="pageviews" id="pageviews" value="25000" onblur="calculate();" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Keywords</label>
+                <div class="controls">
+                    <input type="text" name="keywords" id="keywords" value="50" onblur="calculate();" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Emails</label>
+                <div class="controls">
+                    <input type="text" name="emails" id="emails" value="2500" onblur="calculate();" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Pageview discount</label>
+                <div class="controls">
+                    <div id="pv-discount"></div>
+                    <div id="pv-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Keyword discount</label>
+                <div class="controls">
+                    <div id="kw-discount"></div>
+                    <div id="kw-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Email discount</label>
+                <div class="controls">
+                    <div id="em-discount"></div>
+                    <div id="em-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">SKU Discount</label>
+                <div class="controls">
+                    <div id="discount"></div>
+                    <div id="discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                <!-- <button type="reset" class="btn" onclick="resetDefaults();">Reset Form</button> -->
+                </div>
+            </div>
+        </div> <!-- form -->
+    </div>
+    <div class="span1">&nbsp;</div>
+    <div class="span6">
+    <legend>Summary</legend>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th style="text-align: right;">$ COGS</th>
+                <th style="text-align: right;">$ Retail</th>
+                <th style="text-align: right;">$ MRR</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Baseline SKU</td>
+                <td style="text-align: right;" id="baseline-cost"></td>
+                <td style="text-align: right;" id="baseline-retail"></td>
+                <td style="text-align: right;" id="baseline-charge"></td>
+            </tr>
+            <tr>
+                <td>Extra page views</td>
+                <td style="text-align: right;" id="pageviews-cost"></td>
+                <td style="text-align: right;" id="pageviews-retail"></td>
+                <td style="text-align: right;" id="pageviews-charge"></td>
+            </tr>
+            <tr>
+                <td>Extra keywords</td>
+                <td style="text-align: right;" id="keywords-cost"></td>
+                <td style="text-align: right;" id="keywords-retail"></td>
+                <td style="text-align: right;" id="keywords-charge"></td>
+            </tr>
+            <tr>
+                <td>Extra email</td>
+                <td style="text-align: right;" id="email-cost"></td>
+                <td style="text-align: right;" id="email-retail"></td>
+                <td style="text-align: right;" id="email-charge"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; border-bottom: 4px double #999999;">
+                <td>Total</td>
+                <td style="text-align: right;" id="total-cost"></td>
+                <td style="text-align: right;" id="total-retail"></td>
+                <td style="text-align: right;" id="total-charge"></td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="tot-discount" style="text-align: right; font-size: 14px; padding-bottom: 8px;"></div>
+    <div id="margin" style="text-align: right; font-size: 14px; padding-bottom: 8px;"></div>
+    <div id="warning" style="color: #f06c20; font-size: 14px; font-weight: bold; text-align: center;"></div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    var skus = {
+        "Express": {
+            basePrice: 300,
+            pv: 25000,
+            kw: 50,
+            em: 2500
+        },
+        "Pro": {
+            basePrice: 600,
+            pv: 250000,
+            kw: 500,
+            em: 10000
+        },
+        "Premium": {
+            basePrice: 1500,
+            pv: 750000,
+            kw: 1500,
+            em: 30000
+        },
+        "Agency Pro": {
+            basePrice: 500,
+            pv: 250000,
+            kw: 1000,
+            em: 0
+        },
+        "Agency Unlimited": {
+            basePrice: 1000,
+            pv: 750000,
+            kw: 1500,
+            em: 0
+        }
+    }
+
+
+    var costPV = .000116,
+        costKW = .06,
+        costEM = .003,
+        thresholdPVAddOn = 100000,
+        costPVAddOn = 100,
+        thresholdKWAddOn = 500,
+        costKWAddOn = 100,
+        thresholdEMAddOn = 5000,
+        costEMAddOn = 50;
+
+    $(function () {
+        $("#pv-discount").slider({
+            min: 0,
+            max: 100,
+            change: function (event, ui) {
+                calculate();
+            },
+            slide: function (event, ui) {
+                $("#pv-discount-val").text(ui.value + "%");
+            }
+        });
+
+        $("#kw-discount").slider({
+            min: 0,
+            max: 100,
+            change: function (event, ui) {
+                calculate();
+            },
+            slide: function (event, ui) {
+                $("#kw-discount-val").text(ui.value + "%");
+            }
+        });
+
+        $("#em-discount").slider({
+            min: 0,
+            max: 100,
+            change: function (event, ui) {
+                calculate();
+            },
+            slide: function (event, ui) {
+                $("#em-discount-val").text(ui.value + "%");
+            }
+        });
+
+        $("#discount").slider({
+            min: 0,
+            max: 100,
+            change: function (event, ui) {
+                calculate();
+            },
+            slide: function (event, ui) {
+                var disc = ui.value;
+                $("#discount-val").text(disc + "%");
+            }
+        });
+        resetDefaults();
+    });
+
+    function calculate() {
+        var pvdisc = $("#pv-discount").slider("value") / 100;
+        var kwdisc = $("#kw-discount").slider("value") / 100;
+        var emdisc = $("#em-discount").slider("value") / 100;
+        var disc = $("#discount").slider("value") / 100;
+        var sku = $("#sku").val();
+        var totRetail = skus[sku].basePrice;
+        var totCharge = skus[sku].basePrice - (skus[sku].basePrice * disc);
+        var totCost = (skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
+
+        // Express doesn"t support add-ons, disable controls
+        if (sku == "Express") {
+            $("#pageviews").attr("disabled", "disabled");
+            $("#pv-discount").slider("option", "disabled", true);
+            $("#keywords").attr("disabled", "disabled");
+            $("#kw-discount").slider("option", "disabled", true);
+            $("#emails").attr("disabled", "disabled");
+            $("#em-discount").slider("option", "disabled", true);
+        }
+        else {
+            $("#pageviews").removeAttr("disabled");
+            $("#pv-discount").slider("option", "disabled", false);
+            $("#keywords").removeAttr("disabled");
+            $("#kw-discount").slider("option", "disabled", false);
+            $("#emails").removeAttr("disabled");
+            $("#em-discount").slider("option", "disabled", false);
+        }
+
+        var pvOver = $("#pageviews").val() - skus[sku].pv;
+        if (pvOver > 0) {
+            var addOns = Math.floor(pvOver / thresholdPVAddOn);
+            if (pvOver % thresholdPVAddOn > 0) {
+                addOns++;
+            }
+            totCost += addOns * thresholdPVAddOn * costPV;
+            totRetail += addOns * costPVAddOn;
+            totCharge += addOns * (costPVAddOn - (costPVAddOn * pvdisc));
+            $("#pageviews-cost").text(moneyFormat(addOns * thresholdPVAddOn * costPV));
+            $("#pageviews-retail").text(moneyFormat(addOns * costPVAddOn));
+            $("#pageviews-charge").text(moneyFormat(addOns * (costPVAddOn - (costPVAddOn * pvdisc))));
+        }
+
+        var kwOver = $("#keywords").val() - skus[sku].kw;
+        if (kwOver > 0) {
+            var addOns = Math.floor(kwOver / thresholdKWAddOn);
+            if (kwOver % thresholdKWAddOn > 0) {
+                addOns++;
+            }
+            totCost += addOns * thresholdKWAddOn * costKW;
+            totRetail += addOns * costKWAddOn;
+            totCharge += addOns * (costKWAddOn - (costKWAddOn * kwdisc));
+            $("#keywords-cost").text(moneyFormat(addOns * thresholdKWAddOn * costKW));
+            $("#keywords-retail").text(moneyFormat(addOns * costKWAddOn));
+            $("#keywords-charge").text(moneyFormat(addOns * (costKWAddOn - (costKWAddOn * kwdisc))));
+        }
+
+        var emOver = $("#emails").val() - skus[sku].em;
+        if (emOver > 0) {
+            var addOns = Math.floor(emOver / thresholdEMAddOn);
+            if (emOver % thresholdEMAddOn > 0) {
+                addOns++;
+            }
+            totCost += addOns * thresholdEMAddOn * costEM;
+            totRetail += addOns * costEMAddOn;
+            totCharge += addOns * (costEMAddOn - (costEMAddOn * emdisc));
+            $("#email-cost").text(moneyFormat(addOns * thresholdEMAddOn * costEM));
+            $("#email-retail").text(moneyFormat(addOns * costEMAddOn));
+            $("#email-charge").text(moneyFormat(addOns * (costEMAddOn - (costEMAddOn * emdisc))));
+        }
+
+        $("#baseline-charge").text(moneyFormat(skus[sku].basePrice - (skus[sku].basePrice * disc)));
+        $("#total-cost").text(moneyFormat(totCost));
+        $("#total-retail").text(moneyFormat(totRetail));
+        $("#total-charge").text(moneyFormat(totCharge));
+
+        console.log(totCharge + " " + totCost);
+        $("#tot-discount").text("Total discount: " + ((totRetail - totCharge) / totRetail * 100).toFixed(2) + "%");
+        $("#margin").text("Gross Margin: " + ((totCharge - totCost) / totCharge * 100).toFixed(2) + "%");
+
+        if ((totCharge - totCost) / totCharge < .75) {
+            $("#warning").text("Margin too low - talk to Woody, Rob, or Chris before closing");
+            $("#warning").css("border", "1px solid #f06c20");
+        }
+        else {
+            $("#warning").text('');
+            $("#warning").css("border", "none");
+        }
+    }
+
+    function moneyFormat(num) {
+        return "$" + num.toFixed(2);
+    }
+
+    function resetDefaults() {
+        $("#pv-discount").slider("value", 0);
+        $("#pv-discount-val").text("0%");
+        $("#kw-discount").slider("value", 0);
+        $("#kw-discount-val").text("0%");
+        $("#em-discount").slider("value", 0);
+        $("#em-discount-val").text("0%");
+        $("#discount").slider("value", 0);
+        $("#discount-val").text("0%");
+
+        $("#pageviews-cost").text("$0.00");
+        $("#pageviews-retail").text("$0.00");
+        $("#pageviews-charge").text("$0.00");
+
+        $("#keywords-cost").text("$0.00");
+        $("#keywords-retail").text("$0.00");
+        $("#keywords-charge").text("$0.00");
+
+        $("#email-cost").text("$0.00");
+        $("#email-retail").text("$0.00");
+        $("#email-charge").text("$0.00");
+
+        var sku = $("#sku").val();
+
+        $("#pageviews").val(skus[sku].pv);
+        $("#keywords").val(skus[sku].kw);
+        $("#emails").val(skus[sku].em);
+        $("#baseline-cost").text(moneyFormat((skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#baseline-retail").text(moneyFormat(skus[sku].basePrice));
+        $("#baseline-charge").text(moneyFormat(skus[sku].basePrice));
+        $("#total-cost").text(moneyFormat((skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#total-retail").text(moneyFormat(skus[sku].basePrice));
+        $("#total-charge").text(moneyFormat(skus[sku].basePrice));
+    }
+
+</script>
