@@ -17,7 +17,7 @@ exports.monthlyCustomersBySku = function (req, res, next) {
 };
 
 exports.salesCalculator = function (req, res, next) {
-    fs.readFile(__dirname + '../../templates/sales-calculator.html', 'utf8', function (err, text) {
+    fs.readFile('./templates/sales-calculator.html', 'utf8', function (err, text) {
         if (err) {
             logger.error(err);
         }
