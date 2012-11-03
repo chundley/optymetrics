@@ -23,7 +23,6 @@ Opty.SalesView = Backbone.View.extend({
 
                     me.$el.append($row);
                     $row.append($calcdiv);
-                    console.log(calc.render())
                     $calcdiv.append(calc.render());
                     break;
                 }
