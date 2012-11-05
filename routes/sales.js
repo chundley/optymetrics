@@ -1,5 +1,7 @@
 var date_util = require('../util/date_util.js'),
+    logger = require('../util/logger.js'),
     url = require('url'),
+    fs = require('fs'),
     appUsageDao = require('../data_access/appusage-dao.js');
 
 exports.monthlyCustomersBySku = function (req, res, next) {
@@ -11,5 +13,14 @@ exports.monthlyCustomersBySku = function (req, res, next) {
             return;
         }
         res.send(monthlyData);
+    });
+};
+
+exports.salesCalculator = function (req, res, next) {
+    fs.readFile('./templates/sales-calculator.html', 'utf8', function (err, text) {
+        if (err) {
+            logger.error(err);
+        }
+        res.send(text);
     });
 };

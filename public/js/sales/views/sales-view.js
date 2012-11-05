@@ -16,7 +16,7 @@ Opty.SalesView = Backbone.View.extend({
                 {
                     var me = this;
                     var $row = $('<div>', { 'class': 'row' });
-                    var $calcdiv = $('<div>', { 'class': 'span6' });
+                    var $calcdiv = $('<div>', { 'class': 'span12' });
 
 
                     var calc = new Opty.SalesCalcView();
