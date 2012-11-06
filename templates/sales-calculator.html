@@ -117,6 +117,7 @@
     <div id="tot-discount" style="text-align: right; font-size: 14px; padding-bottom: 8px; color: #dddddd;"></div>
     <div id="margin" style="text-align: right; font-size: 14px; padding-bottom: 8px; color: #dddddd;"></div>
     <div id="warning" style="color: #f06c20; font-size: 14px; font-weight: bold; text-align: center;"></div>
+    <div id="debug" style="text-align: left; font-size: 11px; padding-bottom: 8px; color: #ffff00;"></div>
     </div>
 </div>
 
@@ -221,7 +222,26 @@
         var sku = $("#sku").val();
         var totRetail = skus[sku].basePrice;
         var totCharge = skus[sku].basePrice - (skus[sku].basePrice * disc);
-        var totCost = (skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
+
+        // necessary to account for selling a SKU with reduced capacity (like Pro with no email)
+        var basePVCost = skus[sku].pv * costPV;
+        var baseKWCost = skus[sku].kw * costKW;
+        var baseEMCost = skus[sku].em * costEM;
+
+        if ($("#pageviews").val() < skus[sku].pv) {
+            basePVCost = $("#pageviews").val() * costPV;
+        }
+
+        if ($("#keywords").val() < skus[sku].kw) {
+            baseKWCost = $("#keywords").val() * costKW;
+        }
+
+        if ($("#emails").val() < skus[sku].em) {
+            baseEMCost = $("#emails").val() * costEM;
+        }
+
+        //var totCost = (skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
+        var totCost = (basePVCost) + (baseKWCost) + (baseEMCost);
 
         // Express doesn"t support add-ons, disable controls
         if (sku == "Express") {
@@ -254,6 +274,12 @@
             $("#pageviews-retail").text(moneyFormat(addOns * costPVAddOn));
             $("#pageviews-charge").text(moneyFormat(addOns * (costPVAddOn - (costPVAddOn * pvdisc))));
         }
+        else {
+            // reset defaults
+            $("#pageviews-cost").text("$0.00");
+            $("#pageviews-retail").text("$0.00");
+            $("#pageviews-charge").text("$0.00");
+        }
 
         var kwOver = $("#keywords").val() - skus[sku].kw;
         if (kwOver > 0) {
@@ -267,6 +293,12 @@
             $("#keywords-cost").text(moneyFormat(addOns * thresholdKWAddOn * costKW));
             $("#keywords-retail").text(moneyFormat(addOns * costKWAddOn));
             $("#keywords-charge").text(moneyFormat(addOns * (costKWAddOn - (costKWAddOn * kwdisc))));
+        }
+        else {
+            // reset defaults
+            $("#keywords-cost").text("$0.00");
+            $("#keywords-retail").text("$0.00");
+            $("#keywords-charge").text("$0.00");
         }
 
         var emOver = $("#emails").val() - skus[sku].em;
@@ -282,7 +314,14 @@
             $("#email-retail").text(moneyFormat(addOns * costEMAddOn));
             $("#email-charge").text(moneyFormat(addOns * (costEMAddOn - (costEMAddOn * emdisc))));
         }
+        else {
+            // reset defaults
+            $("#email-cost").text("$0.00");
+            $("#email-retail").text("$0.00");
+            $("#email-charge").text("$0.00");
+        }
 
+        $("#baseline-cost").text(moneyFormat(basePVCost + baseKWCost + baseEMCost));
         $("#baseline-charge").text(moneyFormat(skus[sku].basePrice - (skus[sku].basePrice * disc)));
         $("#total-cost").text(moneyFormat(totCost));
         $("#total-retail").text(moneyFormat(totRetail));
@@ -338,6 +377,8 @@
         $("#total-cost").text(moneyFormat((skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
         $("#total-retail").text(moneyFormat(skus[sku].basePrice));
         $("#total-charge").text(moneyFormat(skus[sku].basePrice));
+
+        calculate();
     }
 
 </script>
