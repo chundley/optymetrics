@@ -5,7 +5,7 @@
 */
 Opty.MRRRollupChart = Backbone.View.extend({
     id: 'mrr-rollup-chart',
-    vendorCostChartOptions: {
+    mrrRollupChartOptions: {
         colors: ["#3e8bbc", "#FA6900", "#5B4086", "#002066", "#7AB317", "#F2DB13", "#FE4365", "#EF3F00", "#C5BC8E", "#3D1C00"],
         chart: {
             renderTo: 'mrr-rollup-chart',
@@ -21,25 +21,19 @@ Opty.MRRRollupChart = Backbone.View.extend({
             }
         },
         title: {
-            text: 'MRR by product type',
+            text: 'MRR Software vs. Services',
             style: {
                 color: '#e3e3e3'
             }
         },
         legend: {
-            //floating: true,
-            //align: 'bottom',
             verticalAlign: 'bottom',
             layout: 'horizontal',
             backgroundColor: '#191919',
             borderColor: '#999999',
             borderWidth: 1,
-            //x: 40,
-            //y: 20,
-            //width: 200, // width and itemWidth create the two-column look
-            //itemWidth: 100,
             itemStyle: {
-                fontSize: '10px',
+                fontSize: '12px',
                 color: '#999999'
             }
         },
@@ -90,11 +84,30 @@ Opty.MRRRollupChart = Backbone.View.extend({
             }
 
         },
-        series: [{
+        series: [
+        {
+            color: {
+                linearGradient: [0, 0, 0, 400],
+                stops: [
+                    [0, "#48a1d9"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
             type: 'column',
-            name: 'MRR'
+            name: 'Software'
+        },
+        {
+            color: {
+                linearGradient: [0, 0, 0, 600],
+                stops: [
+                    [0, "#f04720"],
+                    [1, 'rgba(0,0,0,0)']
+                ]
+            },
+            type: 'column',
+            name: 'Services'
         }
-        ],  
+        ],
         credits: {
             enabled: false
         }
@@ -117,28 +130,22 @@ Opty.MRRRollupChart = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        /*
         var categories = [];
-        var cost = [];
-        var note = [];
+        var software = [];
+        var services = [];
 
         var data = me.formatData();
         _.each(data, function (d) {
-            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(d.month))));
-            cost.push(d.amount);
-            if (d.note) {
-                note.push({ y: 2000, name: d.note });
-            }
-            else {
-                note.push(null);
-            }
+            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(d.dateAdded))));
+            software.push(d.software);
+            services.push(d.services);
         });
 
-        this.vendorCostChartOptions.series[0].data = cost;
-        this.vendorCostChartOptions.series[1].data = note;
-        this.vendorCostChartOptions.xAxis.categories = categories
-        */
-        this.chart = new Highcharts.Chart(this.vendorCostChartOptions);
+        this.mrrRollupChartOptions.series[0].data = software;
+        this.mrrRollupChartOptions.series[1].data = services;
+        this.mrrRollupChartOptions.xAxis.categories = categories
+
+        this.chart = new Highcharts.Chart(this.mrrRollupChartOptions);
         return this.$el;
     },
 
@@ -148,25 +155,32 @@ Opty.MRRRollupChart = Backbone.View.extend({
         this.collection.each(function (model) {
             var found = false;
             _.each(data, function (d) {
-                if (model.get('billingMonth') == d.month) {
-                    d.amount += model.get('amount');
-                    if (model.get('notes').length > 0) {
-                        if (d.note) {
-                            d.note = d.note + '<br>• ' + model.get('notes');
-                        }
-                        else {
-                            d.note = '<b>Significant changes</b><br>• ' + model.get('notes');
-                        }
+                if (model.get('dateAdded') == d.dateAdded) {
+                    // would be nice if these weren't hard-coded to allow future proofing for other product types
+                    if (model.get('productType') == 'Software') {
+                        d.software += model.get('totalPrice')
+                    }
+                    else if (model.get('productType') == 'Services') {
+                        d.services += model.get('totalPrice');
                     }
                     found = true;
                 }
             });
+            // date wasn't found - add to results
             if (!found) {
-                if (model.get('notes').length > 0) {
-                    data.push({ month: model.get('billingMonth'), amount: model.get('amount'), note: '<b>Significant changes</b><br>• ' + model.get('notes') });
+                if (model.get('productType') == 'Software') {
+                    data.push({
+                        dateAdded: model.get('dateAdded'),
+                        software: model.get('totalPrice'),
+                        services: 0
+                    });
                 }
                 else {
-                    data.push({ month: model.get('billingMonth'), amount: model.get('amount'), note: null });
+                    data.push({
+                        dateAdded: model.get('dateAdded'),
+                        services: model.get('totalPrice'),
+                        software: 0
+                    });
                 }
             }
         });
