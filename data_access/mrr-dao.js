@@ -88,4 +88,22 @@ var saveMRRs = function (mrrs, callback) {
     });
 }
 
+/**
+* Gets all mrrs for the specified date range
+*/
+var getMRRs = function (startDate, endDate, callback) {
+    mrr_model.MRRModel
+        .find({ 'dateAdded': { $gte: startDate, $lte: endDate} })
+        .sort('dateAdded', 1)
+        .exec(function (err, mrrs) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, mrrs);
+            }
+        });
+};
+
 exports.saveMRRs = saveMRRs;
+exports.getMRRs = getMRRs;
