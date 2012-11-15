@@ -59,14 +59,19 @@ Opty.SalesView = Backbone.View.extend({
         var $row1 = $('<div>', { 'class': 'row-fluid' });
         var $row2 = $('<div>', { 'class': 'row-fluid', 'style': 'padding-top: 8px;' });
         var $divMRRRollupChart = $('<div>', { 'class': 'span6' });
+        var $divSKURollupChart = $('<div>', { 'class': 'span6' });
 
         me.$el.append($row1);
         me.$el.append($row2);
 
         $row1.append($divMRRRollupChart);
+        $row1.append($divSKURollupChart);
 
         var mrrRollupView = new Opty.MRRRollupChart({ collection: mrrHistoryCollection });
+        var mrrSKURollupView = new Opty.MRRSKUChart({ collection: mrrHistoryCollection });
+
         $divMRRRollupChart.append(mrrRollupView.$el);
+        $divSKURollupChart.append(mrrSKURollupView.$el);
 
         datePickerView.render();
     },
