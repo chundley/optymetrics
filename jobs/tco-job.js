@@ -16,7 +16,7 @@ var logger = require('../util/logger.js'),
     coredb = require('../data_access/coredb-api.js'),
     shard_api = require('../data_access/shard-api.js'),
     cost_dao = require('../data_access/cost-dao.js'),
-    mrr_api = require('../data_access/mrr-api.js');
+    mrr_api = require('../data_access/mrr-api-old.js');
 
 /**
 * Fixed amount - assume the system will scale and always have 20% headroom when calculating TCO

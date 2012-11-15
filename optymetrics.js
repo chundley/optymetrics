@@ -32,7 +32,8 @@ var authDao = require('./data_access/auth-dao.js'),
     vendorCostJob = require('./jobs/vendor-cost-job.js'),
     vendorCostDao = require('./data_access/vendor-cost-dao.js'),
     mixpanel_backfill = require('./jobs/mixpanel_backfill.js'),
-    aspen_backfill = require('./jobs/aspen_backfill.js');
+    aspen_backfill = require('./jobs/aspen_backfill.js'),
+    mrrjob = require('./jobs/mrr-job.js');
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
@@ -47,6 +48,17 @@ var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
     }
 });
 vendorCostBackfillJob.start();
+
+// Run the MRR backfill every 8 hours
+var mrrBackfillJob = new cronJob("0 0 0,7,15 * *", function () {
+    try {
+        logger.info('Running MRR backfill');
+        mrrjob.mrrJob();
+    } catch (err) {
+        logger.error(err);
+    }
+});
+mrrBackfillJob.start();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {

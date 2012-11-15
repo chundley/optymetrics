@@ -1,7 +1,8 @@
 ﻿/**
-* Access to MRR history data for Optify customers
+* Access to MRR data for Optify customers
 *
-* CSV data from Eli
+* Right now this is a simple .csv export from SalesForce but
+* should be replaced in the future with a real API call
 */
 
 /**
@@ -27,7 +28,6 @@ var logger = require('../util/logger.js');
 * MRR data before attempting to save, otherwise the last document in just
 * overwrites the other ones that aren't saved until the end
 */
-/*
 var cleanMRRData = function (mrr, callback) {
     var newMRR = [];
     _.each(mrr, function (m) {
@@ -47,7 +47,6 @@ var cleanMRRData = function (mrr, callback) {
     });
     callback(newMRR);
 };
-*/
 
 /**
 * Gets MRR data from the .csv file
@@ -57,10 +56,13 @@ var cleanMRRData = function (mrr, callback) {
 */
 var getMRRData = function (callback) {
     var mrrData = [];
-    csv().fromPath('./data_access/data_feed/mrr-raw.csv').on("data", function (data, index) {
+    csv().fromPath('./data_access/data_feed/mrr-data.csv').on("data", function (data, index) {
         mrrData.push(data);
     }).on('end', function (count) {
-        callback(null, mrrData);
+        cleanMRRData(mrrData, function (newMRRData) {
+            callback(null, newMRRData);
+        });
+
     }).on('error', function (err) {
         callback(err, null);
     });
