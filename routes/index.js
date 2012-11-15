@@ -41,9 +41,11 @@ exports.index = function(req, res, next) {
             '/js/productdev/views/feature-group-chart-view.js',
             '/js/productdev/views/velocity-trend-widget-view.js',
             '/js/sales/models/customer-history-model.js',
+            '/js/sales/models/mrr-history-model.js',
             '/js/sales/views/sales-chart.js',
             '/js/sales/views/sales-view.js',
             '/js/sales/views/sales-calc-view.js',
+            '/js/sales/views/mrr-history-rollup-view.js',
             '/js/productdev/models/usage-by-sku.js',
             '/js/productdev/models/feature-usage-by-week.js'
 

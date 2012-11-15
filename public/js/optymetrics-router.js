@@ -131,9 +131,13 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         this.updateNavState('sales');
         var nav_options = [
             {
-                url_fragment: 'customers',
-                title: 'Customers',
+                url_fragment: 'mrr',
+                title: 'MRR History',
                 selected: true // default
+            },
+            {
+                url_fragment: 'customers',
+                title: 'Customers'
             },
             {
                 url_fragment: 'price',

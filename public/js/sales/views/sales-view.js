@@ -27,15 +27,49 @@ Opty.SalesView = Backbone.View.extend({
                     break;
                 }
             case 'customers':
-            default:
                 {
                     this.renderCustomers();
+                    break;
+                }
+            case 'mrr':
+            default:
+                {
+                    this.renderMRR();
                     break;
                 }
         }
         return this.$el;
     },
 
+    renderMRR: function () {
+        var me = this;
+
+        // Unbind all reportrange:changed listeners. TODO: More robust view cleanup
+        Opty.pubsub.unbind('reportrange:changed');
+
+        // Configure report date range picker
+        var $datePickerRow = $('<div>', { 'class': 'row' });
+        var datePickerView = new Opty.DateRangeView({ defaultDays: 365 });
+
+        $datePickerRow.append(datePickerView.$el);
+        me.$el.append($datePickerRow);
+
+        var mrrHistoryCollection = new Opty.MRRHistoryCollection({});
+
+        var $row1 = $('<div>', { 'class': 'row-fluid' });
+        var $row2 = $('<div>', { 'class': 'row-fluid', 'style': 'padding-top: 8px;' });
+        var $divMRRRollupChart = $('<div>', { 'class': 'span6' });
+
+        me.$el.append($row1);
+        me.$el.append($row2);
+
+        $row1.append($divMRRRollupChart);
+
+        var mrrRollupView = new Opty.MRRRollupChart({ collection: mrrHistoryCollection });
+        $divMRRRollupChart.append(mrrRollupView.$el);
+
+        datePickerView.render();
+    },
     renderCustomers: function () {
         el = this.$el;
         var customerHistoryCollection = new Opty.CustomerHistoryCollection({});
