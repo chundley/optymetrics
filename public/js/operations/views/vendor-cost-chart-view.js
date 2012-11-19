@@ -67,7 +67,12 @@ Opty.VendorCostChart = Backbone.View.extend({
             showFirstLabel: false,
             labels: {
                 formatter: function () {
-                    return '$' + Highcharts.numberFormat(this.value / 1000, 0) + 'K';
+                    if (this.value >= 1000) {
+                        return '$' + Highcharts.numberFormat(this.value / 1000, 0) + 'K';
+                    }
+                    else {
+                        return '$' + Highcharts.numberFormat(this.value, 0);
+                    }
                 },
                 style: {
                     color: '#999999'
@@ -123,7 +128,7 @@ Opty.VendorCostChart = Backbone.View.extend({
             series.name = d.vendorName;
             series.type = 'column';
             var tempColor = {
-                linearGradient: [0, 0, 0, 500 + (50*idx)],
+                linearGradient: [0, 0, 0, 500 + (50 * idx)],
                 stops: [
                     [0, me.vendorCostChartOptions.colors[idx]],
                     [1, 'rgba(0,0,0,0)']
@@ -146,7 +151,6 @@ Opty.VendorCostChart = Backbone.View.extend({
 
         me.vendorCostChartOptions.xAxis.categories = categories
         this.chart = new Highcharts.Chart(this.vendorCostChartOptions);
-
         return this.$el;
     },
     formatData: function () {
