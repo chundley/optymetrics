@@ -3,3 +3,4 @@ node_modules
 *.ps1
 .settings
 .project
+*.sublime*
