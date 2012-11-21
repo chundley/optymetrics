@@ -34,7 +34,11 @@ var mrrJob = function () {
                     });
                 }
             });
-        } ],
+        },
+        function (callback) {
+            
+        }
+        ],
         function (err) {
             if (err) {
                 logger.error(err);

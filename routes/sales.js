@@ -33,6 +33,22 @@ exports.mrrs = function (req, res, next) {
     });
 };
 
+exports.mrrsByProductType = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+
+    mrr_dao.getMRRsByProductType(startDate, endDate, function (err, results) {
+        if (err) {
+            logger.log('info', err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+};
+
 exports.salesCalculator = function (req, res, next) {
     fs.readFile('./templates/sales-calculator.html', 'utf8', function (err, text) {
         if (err) {

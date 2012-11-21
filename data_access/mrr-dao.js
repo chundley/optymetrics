@@ -89,6 +89,59 @@ var saveMRRs = function (mrrs, callback) {
 }
 
 /**
+* Get MRRs aggregated by product type
+*/
+var getMRRsByProductType = function (startDate, endDate, callback) {
+    var map = function () {
+        emit('mrrs', 
+            {
+              'productType': this.productType, 
+              'totalPrice': this.totalPrice, 
+              'dateAdded': this.dateAdded
+            });
+    };
+
+    var reduce = function (key, values) {
+        var data = {};
+        data.arr = [];
+        for (var i in values) {
+            if (i.productType == 'Software') {
+                data.arr[values[i].dateAdded].software += i.totalPrice;
+            }
+            else if (i.productType == 'Services') {
+                data.arr[values[i].dateAdded].services += i.totalPrice;                
+            }
+
+        }
+        return data;
+    };
+
+    var where = {dateAdded: { $gte: startDate, $lte: endDate} };
+
+    var command = {
+        mapreduce: 'mrrs',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            logger.info(results);
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
+                callback(err, results.documents[0].results[0].value);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+}
+
+/**
 * Gets all mrrs for the specified date range
 */
 var getMRRs = function (startDate, endDate, callback) {
@@ -106,4 +159,5 @@ var getMRRs = function (startDate, endDate, callback) {
 };
 
 exports.saveMRRs = saveMRRs;
+exports.getMRRsByProductType = getMRRsByProductType;
 exports.getMRRs = getMRRs;

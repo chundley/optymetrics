@@ -27,6 +27,7 @@ var authDao = require('./data_access/auth-dao.js'),
     routes = require('./routes'),
     storyDao = require('./data_access/story-dao.js'),
     uptime = require('./data_access/uptime-dao.js'),
+    mrrdaoTEMP = require('./data_access/mrr-dao.js'), // JUST FOR TESTING
     tcojob = require('./jobs/tco-job.js'),
     UserRoles = require('./data_access/model/auth-model.js').UserRoles,
     vendorCostJob = require('./jobs/vendor-cost-job.js'),
@@ -37,6 +38,8 @@ var authDao = require('./data_access/auth-dao.js'),
 
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
+
+
 
 // Run the VendorCost backfill every day at 6:00 AM
 var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
@@ -253,6 +256,9 @@ app.get('/rest/sales/customer-history', requiresLogin, routes.sales.monthlyCusto
 
 //Gets raw mrrs
 app.get('/rest/sales/mrrs', requiresLogin, routes.sales.mrrs);
+
+//Gets mrrs by product type
+app.get('/rest/sales/mrrs-by-product', requiresLogin, routes.sales.mrrsByProductType);
 
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
