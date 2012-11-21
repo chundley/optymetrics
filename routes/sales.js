@@ -37,7 +37,23 @@ exports.mrrsByProductType = function (req, res, next) {
     var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
     var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
 
-    mrr_dao.getMRRsByProductType(startDate, endDate, function (err, results) {
+    mrr_dao.getMRRByProductType(startDate, endDate, function (err, results) {
+        if (err) {
+            logger.log('info', err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+};
+
+exports.mrrsSoftwareBySKU = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+
+    mrr_dao.getSoftwareMRRBySKU(startDate, endDate, function (err, results) {
         if (err) {
             logger.log('info', err);
             res.statusCode = 500;

@@ -90,34 +90,39 @@ var saveMRRs = function (mrrs, callback) {
 
 /**
 * Get MRRs aggregated by product type
+* 
+* VOLATILE: Everything here is hard-coded for 'Software' vs 'Services'
 */
-var getMRRsByProductType = function (startDate, endDate, callback) {
+var getMRRByProductType = function (startDate, endDate, callback) {
     var map = function () {
-        emit('mrrs', 
+        var d = new Date(this.dateAdded);
+        emit(d, 
             {
-              'productType': this.productType, 
-              'totalPrice': this.totalPrice, 
-              'dateAdded': this.dateAdded
+                'dateAdded': d,
+                'productType': this.productType, 
+                'totalPrice': this.totalPrice,
+                'software': 0,
+                'services': 0
             });
     };
 
     var reduce = function (key, values) {
-        var data = {};
-        data.arr = [];
-        for (var i in values) {
-            if (i.productType == 'Software') {
-                data.arr[values[i].dateAdded].software += i.totalPrice;
+        var data = {'dateAdded': null, 'productType': null, 'totalPrice': 0, 'software': 0, 'services': 0};
+        values.forEach(function(val) {
+            data.dateAdded = val.dateAdded;
+            data.productType = val.productType;
+            data.totalPrice += val.totalPrice;
+            if (val.productType == 'Software') {
+                data.software += val.totalPrice;
             }
-            else if (i.productType == 'Services') {
-                data.arr[values[i].dateAdded].services += i.totalPrice;                
+            else {
+                data.services += val.totalPrice;
             }
-
-        }
+        });
         return data;
     };
 
     var where = {dateAdded: { $gte: startDate, $lte: endDate} };
-
     var command = {
         mapreduce: 'mrrs',
         map: map.toString(),
@@ -125,15 +130,101 @@ var getMRRsByProductType = function (startDate, endDate, callback) {
         query: where,
         out: { inline: 1 }
     };
+
     mongoose.connection.db.executeDbCommand(
         command, function (err, results) {
-            logger.info(results);
             if (err) {
                 callback(err, null)
             }
             if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
-                // BUGBUG: this can result in bad things when no data is returned from mapreduce (but results is always returned)
-                callback(err, results.documents[0].results[0].value);
+                // get clean formatting
+                var retArr = [];
+                results.documents[0].results.forEach(function(r) {
+                    retArr.push({
+                        'dateAdded': r.value['dateAdded'],
+                        'software': r.value['software'],
+                        'services': r.value['services'],
+                        'total': r.value['totalPrice']
+                    });
+                });
+                callback(err, retArr);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+}
+
+/**
+* Get software MRR by SKU
+* 
+* VOLATILE: Everything here is hard-coded for skus
+*/
+var getSoftwareMRRBySKU = function (startDate, endDate, callback) {
+    var map = function () {
+        var d = new Date(this.dateAdded);
+        emit(d, 
+            {
+                'dateAdded': d,
+                'sku': this.sku,
+                'totalPrice': this.totalPrice,
+                'agency': 0,
+                'express': 0,
+                'pro': 0,
+                'enterprise': 0
+            });
+    };
+
+    var reduce = function (key, values) {
+        var data = {'dateAdded': null, 'sku': null, 'totalPrice': 0, 'agency': 0, 'express': 0, 'pro': 0, 'enterprise': 0};
+        values.forEach(function(val) {
+            data.dateAdded = val.dateAdded;
+            data.sku = val.sku;
+            data.totalPrice += val.totalPrice;
+            if (val.sku == 'AGENCY') {
+                data.agency += val.totalPrice;
+            }
+            else if (val.sku=='EXPRESS') {
+                data.express += val.totalPrice;
+            }
+            else if (val.sku=='PRO') {
+                data.pro += val.totalPrice;
+            }
+            else if (val.sku=='ENTERPRISE') {
+                data.enterprise += val.totalPrice;
+            }
+        });
+        return data;
+    };
+
+    var where = {dateAdded: { $gte: startDate, $lte: endDate}, productType: 'Software' };
+    var command = {
+        mapreduce: 'mrrs',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // get clean formatting
+                var retArr = [];
+                results.documents[0].results.forEach(function(r) {
+                    retArr.push({
+                        'dateAdded': r.value['dateAdded'],
+                        'agency': r.value['agency'],
+                        'express': r.value['express'],
+                        'pro': r.value['pro'],
+                        'enterprise': r.value['enterprise'],
+                        'total': r.value['totalPrice']
+                    });
+                });
+                callback(err, retArr);
             } else {
                 callback(err, []);
             }
@@ -159,5 +250,6 @@ var getMRRs = function (startDate, endDate, callback) {
 };
 
 exports.saveMRRs = saveMRRs;
-exports.getMRRsByProductType = getMRRsByProductType;
+exports.getMRRByProductType = getMRRByProductType;
+exports.getSoftwareMRRBySKU = getSoftwareMRRBySKU;
 exports.getMRRs = getMRRs;
