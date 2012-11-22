@@ -158,13 +158,13 @@ Opty.MRRSKUChart = Backbone.View.extend({
         var express = [];
         var agency = [];
 
-        var data = me.formatData();
-        _.each(data, function (d) {
-            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(d.dateAdded))));
-            enterprise.push(d.enterprise);
-            pro.push(d.pro);
-            express.push(d.express);
-            agency.push(d.agency);
+        this.collection.each(function(model){
+            console.log(model);
+            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))));
+            enterprise.push(model.get('enterprise'));
+            pro.push(model.get('pro'));
+            express.push(model.get('express'));
+            agency.push(model.get('agency'));
         });
 
         this.mrrSKUChartOptions.series[0].data = enterprise;
@@ -175,73 +175,6 @@ Opty.MRRSKUChart = Backbone.View.extend({
 
         this.chart = new Highcharts.Chart(this.mrrSKUChartOptions);
         return this.$el;
-    },
-
-    formatData: function () {
-        // get data set correctly for rendering the chart
-        var data = [];
-        this.collection.each(function (model) {
-            var found = false;
-            _.each(data, function (d) {
-                if (model.get('dateAdded') == d.dateAdded && model.get('productType') == 'Software') {
-                    // would be nice if these weren't hard-coded to allow future proofing for other skus
-                    if (model.get('sku') == 'ENTERPRISE') {
-                        d.enterprise += model.get('totalPrice')
-                    }
-                    else if (model.get('sku') == 'PRO') {
-                        d.pro += model.get('totalPrice');
-                    }
-                    else if (model.get('sku') == 'EXPRESS') {
-                        d.express += model.get('totalPrice');
-                    }
-                    else if (model.get('sku') == 'AGENCY') {
-                        d.agency += model.get('totalPrice');
-                    }
-                    found = true;
-                }
-            });
-            // date wasn't found - add to results
-            if (!found && model.get('productType') == 'Software') {
-                if (model.get('sku') == 'ENTERPRISE') {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        enterprise: model.get('totalPrice'),
-                        pro: 0,
-                        express: 0,
-                        agency: 0
-                    });
-                }
-                else if (model.get('sku') == 'PRO') {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        pro: model.get('totalPrice'),
-                        enterprise: 0,
-                        express: 0,
-                        agency: 0
-                    });
-                }
-                else if (model.get('sku') == 'EXPRESS') {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        express: model.get('totalPrice'),
-                        enterprise: 0,
-                        pro: 0,
-                        agency: 0
-                    });
-                }
-                else if (model.get('sku') == 'AGENCY') {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        agency: model.get('totalPrice'),
-                        enterprise: 0,
-                        express: 0,
-                        pro: 0
-                    });
-                }
-            }
-        });
-
-        return data;
     },
 
     convertDateToUTC: function (date) {

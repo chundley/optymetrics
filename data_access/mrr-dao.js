@@ -30,6 +30,8 @@ var saveMRRs = function (mrrs, callback) {
         function (inner_callback) {
             // save mrr to etlmrr collection
             async.forEach(mrrs, function (data, inner_callback2) {
+                var d = new Date(data[9]);
+                d.setHours(0, 0, 0, 0);                
                 var mrr = new mrr_model.MRRModelETL({
                     customerId: data[0],
                     accountName: data[1],
@@ -39,7 +41,7 @@ var saveMRRs = function (mrrs, callback) {
                     opportunityOwner: data[5],
                     productName: data[6],
                     totalPrice: data[7],
-                    dateAdded: data[9],
+                    dateAdded: d,
                     sku: data[10]
                 });
 
@@ -91,33 +93,25 @@ var saveMRRs = function (mrrs, callback) {
 /**
 * Get MRRs aggregated by product type
 * 
-* VOLATILE: Everything here is hard-coded for 'Software' vs 'Services'
+* VOLATILE: product types are hard-coded to support correct output after map reduce
 */
 var getMRRByProductType = function (startDate, endDate, callback) {
     var map = function () {
         var d = new Date(this.dateAdded);
-        emit(d, 
+        emit({dateAdded: d, productType: this.productType}, 
             {
                 'dateAdded': d,
                 'productType': this.productType, 
-                'totalPrice': this.totalPrice,
-                'software': 0,
-                'services': 0
+                'totalPrice': this.totalPrice
             });
     };
 
     var reduce = function (key, values) {
-        var data = {'dateAdded': null, 'productType': null, 'totalPrice': 0, 'software': 0, 'services': 0};
+        var data = {'dateAdded': null, 'productType': null, totalPrice: 0};
         values.forEach(function(val) {
             data.dateAdded = val.dateAdded;
             data.productType = val.productType;
             data.totalPrice += val.totalPrice;
-            if (val.productType == 'Software') {
-                data.software += val.totalPrice;
-            }
-            else {
-                data.services += val.totalPrice;
-            }
         });
         return data;
     };
@@ -140,12 +134,33 @@ var getMRRByProductType = function (startDate, endDate, callback) {
                 // get clean formatting
                 var retArr = [];
                 results.documents[0].results.forEach(function(r) {
-                    retArr.push({
-                        'dateAdded': r.value['dateAdded'],
-                        'software': r.value['software'],
-                        'services': r.value['services'],
-                        'total': r.value['totalPrice']
+                    var found = false;
+                    retArr.forEach(function(item) {
+                        if (item.dateAdded.toString() == r.value['dateAdded'].toString()) {
+                            found = true;
+                            if (r.value['productType'] == 'Software') {
+                                item.software = r.value['totalPrice'];
+                            }
+                            else {
+                                item.services = r.value['totalPrice'];
+                            }
+                        }
                     });
+
+                    if (!found) {
+                        if (r.value['productType'] == 'Software') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                software: r.value['totalPrice']
+                            });
+                        } 
+                        else {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                services: r.value['totalPrice']
+                            });
+                        }               
+                    }
                 });
                 callback(err, retArr);
             } else {
@@ -158,41 +173,25 @@ var getMRRByProductType = function (startDate, endDate, callback) {
 /**
 * Get software MRR by SKU
 * 
-* VOLATILE: Everything here is hard-coded for skus
+* VOLATILE: SKU's hard-coded to re-format map reduce results into readable data set
 */
 var getSoftwareMRRBySKU = function (startDate, endDate, callback) {
     var map = function () {
         var d = new Date(this.dateAdded);
-        emit(d, 
+        emit({dateAdded: d, sku: this.sku}, 
             {
                 'dateAdded': d,
-                'sku': this.sku,
-                'totalPrice': this.totalPrice,
-                'agency': 0,
-                'express': 0,
-                'pro': 0,
-                'enterprise': 0
+                'sku': this.sku, 
+                'totalPrice': this.totalPrice
             });
     };
 
     var reduce = function (key, values) {
-        var data = {'dateAdded': null, 'sku': null, 'totalPrice': 0, 'agency': 0, 'express': 0, 'pro': 0, 'enterprise': 0};
+        var data = {'dateAdded': null, 'sku': null, 'totalPrice': 0};
         values.forEach(function(val) {
             data.dateAdded = val.dateAdded;
             data.sku = val.sku;
             data.totalPrice += val.totalPrice;
-            if (val.sku == 'AGENCY') {
-                data.agency += val.totalPrice;
-            }
-            else if (val.sku=='EXPRESS') {
-                data.express += val.totalPrice;
-            }
-            else if (val.sku=='PRO') {
-                data.pro += val.totalPrice;
-            }
-            else if (val.sku=='ENTERPRISE') {
-                data.enterprise += val.totalPrice;
-            }
         });
         return data;
     };
@@ -215,14 +214,51 @@ var getSoftwareMRRBySKU = function (startDate, endDate, callback) {
                 // get clean formatting
                 var retArr = [];
                 results.documents[0].results.forEach(function(r) {
-                    retArr.push({
-                        'dateAdded': r.value['dateAdded'],
-                        'agency': r.value['agency'],
-                        'express': r.value['express'],
-                        'pro': r.value['pro'],
-                        'enterprise': r.value['enterprise'],
-                        'total': r.value['totalPrice']
+                    var found = false;
+                    retArr.forEach(function(item) {
+                        if (item.dateAdded.toString() == r.value['dateAdded'].toString()) {
+                            found = true;
+                            if (r.value['sku'] == 'EXPRESS') {
+                                item.express = r.value['totalPrice'];
+                            }
+                            else if (r.value['sku'] == 'PRO') {
+                                item.pro = r.value['totalPrice'];
+                            }
+                            else if (r.value['sku'] == 'ENTERPRISE') {
+                                item.enterprise = r.value['totalPrice'];
+                            }
+                            else if (r.value['sku'] == 'AGENCY') {
+                                item.agency = r.value['totalPrice'];
+                            }
+                        }
                     });
+
+                    if (!found) {
+                        if (r.value['sku'] == 'EXPRESS') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                express: r.value['totalPrice']
+                            });
+                        } 
+                        else if (r.value['sku'] == 'PRO') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                pro: r.value['totalPrice']
+                            });
+                        }
+                        else if (r.value['sku'] == 'ENTERPRISE') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                enterprise: r.value['totalPrice']
+                            });
+                        }
+                        else if (r.value['sku'] == 'AGENCY') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                agency: r.value['totalPrice']
+                            });
+                        }  
+                    }
                 });
                 callback(err, retArr);
             } else {

@@ -57,6 +57,7 @@ Opty.SalesView = Backbone.View.extend({
         var mrrHistoryCollection = new Opty.MRRHistoryCollection({});
 
         var mrrByProductCollection = new Opty.MRRByProductCollection({});
+        var mrrSoftwareBySKUCollection = new Opty.MRRSoftwareBySKUCollection({});
 
         var $row1 = $('<div>', { 'class': 'row-fluid' });
         var $row2 = $('<div>', { 'class': 'row-fluid', 'style': 'padding-top: 8px;' });
@@ -70,7 +71,7 @@ Opty.SalesView = Backbone.View.extend({
         $row1.append($divSKURollupChart);
 
         var mrrRollupView = new Opty.MRRRollupChart({ collection: mrrByProductCollection });
-        var mrrSKURollupView = new Opty.MRRSKUChart({ collection: mrrHistoryCollection });
+        var mrrSKURollupView = new Opty.MRRSKUChart({ collection: mrrSoftwareBySKUCollection });
 
         $divMRRRollupChart.append(mrrRollupView.$el);
         $divSKURollupChart.append(mrrSKURollupView.$el);
