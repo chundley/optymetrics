@@ -134,11 +134,10 @@ Opty.MRRRollupChart = Backbone.View.extend({
         var software = [];
         var services = [];
 
-        var data = me.formatData();
-        _.each(data, function (d) {
-            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(d.dateAdded))));
-            software.push(d.software);
-            services.push(d.services);
+        this.collection.each(function(model){
+            categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))));
+            software.push(model.get('software'));
+            services.push(model.get('services'));
         });
 
         this.mrrRollupChartOptions.series[0].data = software;
@@ -147,44 +146,6 @@ Opty.MRRRollupChart = Backbone.View.extend({
 
         this.chart = new Highcharts.Chart(this.mrrRollupChartOptions);
         return this.$el;
-    },
-
-    formatData: function () {
-        // get data set correctly for rendering the chart (dedup days, set annotations, etc.)
-        var data = [];
-        this.collection.each(function (model) {
-            var found = false;
-            _.each(data, function (d) {
-                if (model.get('dateAdded') == d.dateAdded) {
-                    // would be nice if these weren't hard-coded to allow future proofing for other product types
-                    if (model.get('productType') == 'Software') {
-                        d.software += model.get('totalPrice')
-                    }
-                    else if (model.get('productType') == 'Services') {
-                        d.services += model.get('totalPrice');
-                    }
-                    found = true;
-                }
-            });
-            // date wasn't found - add to results
-            if (!found) {
-                if (model.get('productType') == 'Software') {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        software: model.get('totalPrice'),
-                        services: 0
-                    });
-                }
-                else {
-                    data.push({
-                        dateAdded: model.get('dateAdded'),
-                        services: model.get('totalPrice'),
-                        software: 0
-                    });
-                }
-            }
-        });
-        return data;
     },
 
     convertDateToUTC: function (date) {
