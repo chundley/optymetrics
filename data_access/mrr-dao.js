@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Access to mrr collection in MongoDB
 */
 
@@ -90,6 +90,120 @@ var saveMRRs = function (mrrs, callback) {
     });
 }
 
+var saveMRRChurn = function(mrrs, callback) {
+    var products = [];
+    var dates = [];
+    var customers = [];
+
+    async.series([
+            function(callback_inner) {
+                getUniqueDates(mrrs, function (vals) {
+                    dates = vals;
+                    callback_inner();
+                });
+            },
+            function(callback_inner) {
+                getUniqueCustomers(mrrs, function (vals){
+                    customers = vals;
+                    callback_inner();
+                });
+            }
+        ],
+        function() { // callback_inner
+            var idx = 0;
+            async.forEach(dates, function (date, callback_inner2) {
+                    async.forEach(customers, function(customer, callback_inner3) {
+                        getMRRTotalByCustomerMonths(customer.customerId, dates[idx], dates[idx+1], function(err, data) {
+                            if (customer.customerId == 3135 && idx==0) {
+                                logger.info(data);
+                            }
+                        });
+                        /*
+                        if (idx + 1 < dates.length) {
+                            getMRRTotalByCustomerMonth(customer.customerId, dates[idx], function(err, mrrCurrent) {
+                                //logger.info('OUTER: ' + customer.customerId);
+                                //logger.info(mrrCurrent);
+                                getMRRTotalByCustomerMonth(customer.customerId, dates[idx + 1], function(err, mrrPrevious) {
+                                    logger.info('INNER: ' + customer.customerId + '  ' + dates[idx]);
+                                    logger.info(mrrCurrent);
+                                    logger.info(mrrPrevious);
+                                    callback_inner3();
+                                });                 
+                            });
+                        }*/
+                        //callback_inner3();
+                    },
+                    function(){ // callback_inner3
+                        idx += 1;
+                        callback_inner2();
+                    });
+                //idx += 1;
+                //callback_inner2();
+            },
+            function() { // callback_inner2
+                logger.info('Dates DONE');
+                callback(null);
+            });
+        });
+
+/*
+
+    async.forEach(mrrs, function (data, inner_callback) {
+        var dateFormatted = new Date(data[9]);
+        dateFormatted.setHours(0, 0, 0, 0);         
+        var dfound = false;
+        dates.forEach(function(d) {
+            logger.info(dates); 
+            if (d.toString() == dateFormatted.toString()) {
+                dfound = true;
+            }
+        });
+        if (!dfound) {
+            dates.push(dateFormatted);
+            iterator.push(idx);
+            idx += 1;
+        }
+
+        var cfound = false;
+        customers.forEach(function(c) {
+            logger.info(customers);
+            if (c.customerId.toString() == mrrs.customerId.toString()) {
+                cfound = true;
+            }
+        });
+        if (!cfound) {
+            customers.push({
+                customerId: mrrs.customerId,
+                accountName: mrrs.accountName,
+                sku: mrrs.sku
+            });
+        }
+        inner_callback();
+    },
+    function () { // inner callback for async.forEach
+        // walk dates and determine if/when products churned
+        var iterator = [];
+        iterator.push(0);
+        async.forEach(iterator, function(i, inner_callback2) {
+            if (dates[i+1]) {
+                async.forEach(customers, function(customer, inner_callback3) {
+                    getMRRTotalByCustomerMonth(customer.customerId, dates[i], function(err, results) {
+                        logger.info(results);
+                    });
+                },
+                function(){ // inner_callback3
+                    inner_callback2();
+                });
+
+
+            }
+        },
+        function(err) { // inner_callback2
+            callback(err);
+        });
+    });
+*/
+}
 /**
 * Get MRRs aggregated by product type
 * 
@@ -268,6 +382,176 @@ var getSoftwareMRRBySKU = function (startDate, endDate, callback) {
     );
 }
 
+/*
+*  Private helper function - get unique dates from a set of mrrs
+*/
+var getUniqueDates = function(mrrs, callback) {
+    var dates = [];
+    async.forEach(mrrs, function (data, inner_callback) {      
+        var dfound = function(dates) {
+            for (var i=0; i<dates.length; i++) {
+                if (dates[i] == data[9]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        if (!dfound(dates)) {
+                dates.push(data[9]);
+        }
+        inner_callback();
+    },
+    function() { // inner_callback
+        callback(dates);
+    });    
+}
+
+/*
+*  Private helper function - get unique customers from a set of mrrs
+*/
+var getUniqueCustomers = function(mrrs, callback) {
+    var customers = [];
+    async.forEach(mrrs, function (data, inner_callback) {         
+        var cfound = function(customers) {
+            for (var i=0; i<customers.length; i++) {
+                if (customers[i].customerId == data[0]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        if (!cfound(customers)) {
+                customers.push({
+                    customerId: data[0],
+                    accountName: data[1],
+                    sku: data[10]
+                });
+        }
+        inner_callback();
+    },
+    function() { // inner_callback
+        callback(customers);
+    });    
+}
+
+var getMRRTotalByCustomerMonths = function(customerId, monthCurrent, monthPrevious, callback) {
+    logger.info(customerId + '  ' + monthCurrent + '  ' + monthPrevious);
+    var map = function () {
+        emit({'customerId': this.customerId, 'productType': this.productType, 'dateAdded': this.dateAdded}, 
+            {
+                'totalPrice': this.totalPrice
+            });
+    };
+
+    var reduce = function (key, values) {
+        var total = 0;
+        values.forEach(function(val) {
+            total += val.totalPrice;
+        });
+        return total;
+    };
+
+    var d1 = new Date(monthCurrent);
+    var d2 = new Date(monthPrevious);
+    var where = {customerId: parseInt(customerId), dateAdded: { $gte: d2, $lte: d1} };
+    var command = {
+        mapreduce: 'mrrs',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        if (err) {
+            callback(err, null)
+        }
+        if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+            callback(null, results);
+            /*
+            var ret = [];
+            async.forEach(results.documents[0].results, function(result, callback_inner) {
+                ret.push({
+                    productType: result._id.productType,
+                    totalPrice: result.value.totalPrice
+                });
+                callback_inner();
+            },
+            function() {// callback_inner
+                callback(null, ret);
+            });*/
+        } else {
+            callback(err, 0);
+        }
+    });
+}
+
+/*
+* Private helper function - get software and services mrr for a specific customer in a specific month
+*/
+var getMRRTotalByCustomerMonth = function(customerId, month, callback) {
+    var map = function () {
+        emit({'customerId': this.customerId, 'productType': this.productType}, 
+            {
+                'totalPrice': this.totalPrice
+            });
+    };
+
+    var reduce = function (key, values) {
+        var total = 0;
+        values.forEach(function(val) {
+            total += val.totalPrice;
+        });
+        return total;
+    };
+
+    var d = new Date(month);
+    var where = {customerId: parseInt(customerId), dateAdded: d};
+    var command = {
+        mapreduce: 'mrrs',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        if (err) {
+            callback(err, null)
+        }
+        if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+            var ret = [];
+            async.forEach(results.documents[0].results, function(result, callback_inner) {
+                ret.push({
+                    productType: result._id.productType,
+                    totalPrice: result.value.totalPrice
+                });
+                callback_inner();
+            },
+            function() {// callback_inner
+                callback(null, ret);
+            });
+        } else {
+            callback(err, 0);
+        }
+    });
+}
+
+var getMRRsByCustomerId = function(startDate, endDate, customerId, callback) {
+    mrr_model.MRRModel
+        .find({'customerId': customerId, 'dateAdded': { $gte: startDate, $lte: endDate} })
+        .sort('dateAdded', 1)
+        .exec(function (err, mrrs) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, mrrs);
+            }
+        });
+}
 /**
 * Gets all mrrs for the specified date range
 */
@@ -286,6 +570,8 @@ var getMRRs = function (startDate, endDate, callback) {
 };
 
 exports.saveMRRs = saveMRRs;
+exports.saveMRRChurn = saveMRRChurn;
+
 exports.getMRRByProductType = getMRRByProductType;
 exports.getSoftwareMRRBySKU = getSoftwareMRRBySKU;
 exports.getMRRs = getMRRs;

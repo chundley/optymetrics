@@ -16,13 +16,13 @@ var logger = require('../util/logger.js'),
 
 
 var mrrJob = function () {
-    async.series([
-        function (callback) {
-            mrr_api.getMRRData(function (err, mrrs) {
-                if (err) {
-                    callback(err);
-                }
-                else {
+    mrr_api.getMRRData(function(err, mrrs) {
+        if (err) {
+            callback(err);
+        }
+        else {    
+            async.series([/*
+                function (callback) {
                     mrr_dao.saveMRRs(mrrs, function (err) {
                         if (err) {
                             callback(err);
@@ -31,22 +31,31 @@ var mrrJob = function () {
                             logger.info('MRR job step 1: [mrr] completed');
                             callback();
                         }
+                    }); 
+                },*/
+                function (callback) {
+                    mrr_dao.saveMRRChurn(mrrs, function (err) {
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('MRR job step 2: [mrr churn] completed');
+                            callback();
+                        }
                     });
                 }
-            });
-        },
-        function (callback) {
-            
+                ],
+                function (err) {
+                    if (err) {
+                        logger.error(err);
+                    }
+                    else {
+                        logger.info('MRR data refresh complete');
+                    }
+                });
         }
-        ],
-        function (err) {
-            if (err) {
-                logger.error(err);
-            }
-            else {
-                logger.info('MRR data refresh complete');
-            }
-        });
+    });
+
 }
 
 exports.mrrJob = mrrJob;
