@@ -62,6 +62,7 @@ var mrrBackfillJob = new cronJob("0 0 0,7,15 * *", function () {
     }
 });
 mrrBackfillJob.start();
+mrrjob.mrrJob();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {

@@ -110,35 +110,83 @@ var saveMRRChurn = function(mrrs, callback) {
             }
         ],
         function() { // callback_inner
-            var idx = 0;
             async.forEach(dates, function (date, callback_inner2) {
-                    async.forEach(customers, function(customer, callback_inner3) {
-                        getMRRTotalByCustomerMonths(customer.customerId, dates[idx], dates[idx+1], function(err, data) {
-                            if (customer.customerId == 3135 && idx==0) {
-                                logger.info(data);
+                logger.info(dates[dates.indexOf(date) + 1]);
+                async.forEach(customers, function(customer, callback_inner3) {
+                    getMRRTotalByCustomerMonths(customer.customerId, date, dates[dates.indexOf(date) + 1], function(err, data) {
+                        if (customer.customerId == 3135) {
+                            logger.info(date);
+                            logger.info(dates[dates.indexOf(date) + 1]);
+                            logger.info(data);
+                        
+                        var dateExists = function(data, date) {
+                            var exists = false;
+                            var d = new Date(date);
+                            for (var i=0; i<data.length; i++) {
+                                //logger.info('DA: ' + data[i].dateAdded + '    ' + d);
+                                if (data[i].dateAdded.toString() == d.toString()) {
+                                    exists = true;
+                                }
                             }
+                            return exists;
+                        }
+                        var softwareOld = 0;
+                        var softwareNew = 0;
+                        var servicesOld = 0;
+                        var servicesNew = 0;
+                        async.forEach(data, function(row, callback_inner4) {
+                            if (row.dateAdded.toString() == new Date(date).toString()) {
+                                if (row.productType == 'Services') {
+                                    servicesNew = row.totalPrice;
+                                }
+                                else {
+                                    softwareNew = row.totalPrice;
+                                }
+                            }
+                            else {
+                                if (row.productType == 'Services') {
+                                    servicesOld = row.totalPrice;
+                                }
+                                else {
+                                    softwareOld = row.totalPrice;
+                                }
+                            }
+                            callback_inner4();
+                        },
+                        function() { // callback_inner4
+                            // when we get here, there are several different combinations of data (for both software and services):
+                            //   1. All values are zero - neither date had MRR for this customer
+                            //   2. a. softwareNew > 0, softwareOld == 0 [new MRR, new software customer]
+                            //      b. softwareNew > 0, 0 < softwareOld < softwareNew [new MRR to existing customer (add-on)]
+                            //   3. a. softwareOld > 0, softwareNew == 0 [churn (100% software loss)]
+                            //      b. softwareOld > 0, 0 < softwareNew < softwareOld [MRR churn but the account is still active                         
+                            logger.error('Services NEW: ' + servicesNew);
+                            logger.error('Services OLD: ' + servicesOld);
+                            logger.error('Software NEW: ' + softwareNew);
+                            logger.error('Software OLD: ' + softwareOld);
+                                                    
                         });
-                        /*
-                        if (idx + 1 < dates.length) {
-                            getMRRTotalByCustomerMonth(customer.customerId, dates[idx], function(err, mrrCurrent) {
-                                //logger.info('OUTER: ' + customer.customerId);
-                                //logger.info(mrrCurrent);
-                                getMRRTotalByCustomerMonth(customer.customerId, dates[idx + 1], function(err, mrrPrevious) {
-                                    logger.info('INNER: ' + customer.customerId + '  ' + dates[idx]);
-                                    logger.info(mrrCurrent);
-                                    logger.info(mrrPrevious);
-                                    callback_inner3();
-                                });                 
-                            });
-                        }*/
-                        //callback_inner3();
-                    },
-                    function(){ // callback_inner3
-                        idx += 1;
-                        callback_inner2();
+
+
+                        if (dateExists(data, date) && dateExists(data, dates[dates.indexOf(date) + 1])) {
+                            logger.info('BOTH EXIST-------------------------------');
+                            // check amounts for software and services
+
+                            
+                        }
+                        else if (dateExists(data, date) && !dateExists(data, dates[dates.indexOf(date) + 1])) {
+                            logger.info('ONLY NEW EXISTS-------------------------------');
+                        }
+                        else if (!dateExists(data, date) && dateExists(data, dates[dates.indexOf(date) + 1])) {
+                            logger.info('ONLY OLD EXISTS-------------------------------');
+                        }
+                    }
+                        callback_inner3();
                     });
-                //idx += 1;
-                //callback_inner2();
+                },
+                function(){ // callback_inner3
+                    callback_inner2();
+                });
             },
             function() { // callback_inner2
                 logger.info('Dates DONE');
@@ -146,63 +194,6 @@ var saveMRRChurn = function(mrrs, callback) {
             });
         });
 
-/*
-
-    async.forEach(mrrs, function (data, inner_callback) {
-        var dateFormatted = new Date(data[9]);
-        dateFormatted.setHours(0, 0, 0, 0);         
-        var dfound = false;
-        dates.forEach(function(d) {
-            logger.info(dates); 
-            if (d.toString() == dateFormatted.toString()) {
-                dfound = true;
-            }
-        });
-        if (!dfound) {
-            dates.push(dateFormatted);
-            iterator.push(idx);
-            idx += 1;
-        }
-
-        var cfound = false;
-        customers.forEach(function(c) {
-            logger.info(customers);
-            if (c.customerId.toString() == mrrs.customerId.toString()) {
-                cfound = true;
-            }
-        });
-        if (!cfound) {
-            customers.push({
-                customerId: mrrs.customerId,
-                accountName: mrrs.accountName,
-                sku: mrrs.sku
-            });
-        }
-        inner_callback();
-    },
-    function () { // inner callback for async.forEach
-        // walk dates and determine if/when products churned
-        var iterator = [];
-        iterator.push(0);
-        async.forEach(iterator, function(i, inner_callback2) {
-            if (dates[i+1]) {
-                async.forEach(customers, function(customer, inner_callback3) {
-                    getMRRTotalByCustomerMonth(customer.customerId, dates[i], function(err, results) {
-                        logger.info(results);
-                    });
-                },
-                function(){ // inner_callback3
-                    inner_callback2();
-                });
-
-
-            }
-        },
-        function(err) { // inner_callback2
-            callback(err);
-        });
-    });
-*/
 }
 /**
 * Get MRRs aggregated by product type
@@ -469,11 +460,11 @@ var getMRRTotalByCustomerMonths = function(customerId, monthCurrent, monthPrevio
             callback(err, null)
         }
         if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
-            callback(null, results);
-            /*
+            // clean up the results before returning
             var ret = [];
             async.forEach(results.documents[0].results, function(result, callback_inner) {
                 ret.push({
+                    dateAdded: result._id.dateAdded,
                     productType: result._id.productType,
                     totalPrice: result.value.totalPrice
                 });
@@ -481,7 +472,7 @@ var getMRRTotalByCustomerMonths = function(customerId, monthCurrent, monthPrevio
             },
             function() {// callback_inner
                 callback(null, ret);
-            });*/
+            });
         } else {
             callback(err, 0);
         }
