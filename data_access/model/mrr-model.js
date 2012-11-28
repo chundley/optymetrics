@@ -25,10 +25,6 @@ var MRRChurnSchema = new Schema({
     customerId: Number,
     accountName: String,
     productType: String,
-    customerType: String,
-    opportunityName: String,
-    opportunityOwner: String,
-    productName: String,
     totalPrice: Number,
     dateAdded: Date,
     sku: String  
@@ -39,10 +35,6 @@ var MRRNewSchema = new Schema({
     customerId: Number,
     accountName: String,
     productType: String,
-    customerType: String,
-    opportunityName: String,
-    opportunityOwner: String,
-    productName: String,
     totalPrice: Number,
     dateAdded: Date,
     sku: String  
