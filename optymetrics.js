@@ -39,8 +39,6 @@ var authDao = require('./data_access/auth-dao.js'),
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
-
-
 // Run the VendorCost backfill every day at 6:00 AM
 var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
     try {
@@ -62,7 +60,6 @@ var mrrBackfillJob = new cronJob("0 0 0,7,15 * *", function () {
     }
 });
 mrrBackfillJob.start();
-mrrjob.mrrJob();
 
 // Run the TCO backfill every 8 hours
 var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
