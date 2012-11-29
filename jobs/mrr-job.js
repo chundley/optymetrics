@@ -21,7 +21,7 @@ var mrrJob = function () {
             callback(err);
         }
         else {    
-            async.series([/*
+            async.series([
                 function (callback) {
                     mrr_dao.saveMRRs(mrrs, function (err) {
                         if (err) {
@@ -32,7 +32,7 @@ var mrrJob = function () {
                             callback();
                         }
                     }); 
-                },*/
+                },
                 function (callback) {
                     mrr_dao.saveMRRChurn(mrrs, function (err) {
                         if (err) {
