@@ -48,6 +48,18 @@ exports.getTrafficCounts = getTrafficCounts;
 * Query "constants"
 */
 var QUERY_VISITORS = "select " +
+                             "d.organization_id, " +
+                             "count(*) as \"visitors\", " +
+                             "sum(num_visits) as \"visits\", " +
+                             "sum(num_pageviews) as \"pageviews\" " +
+                        "from visit_rollup_daily d " +
+                        "JOIN visit_aggregate_detail det on d.visit_aggregate_detail_id = det.id " +
+                        "where d.organization_id = $1 " +
+                        "and rollup_day < now() - INTERVAL '1 DAY' and rollup_day >= now() - INTERVAL '31 DAY' " +
+                        "group by d.organization_id";
+
+/*
+var QUERY_VISITORS = "select " +
                              "va.organization_id, " +
                              "count(va.id) as \"visitors\", " +
                              "sum(va.total_visits) as \"visits\", " +
@@ -56,3 +68,17 @@ var QUERY_VISITORS = "select " +
                         "where va.organization_id = $1 " +
                         "and va.last_visit_date < now() - INTERVAL '1 DAY' and va.last_visit_date  >= now() - INTERVAL '31 DAY' " +
                         "group by va.organization_id";
+*/
+/*
+SELECT
+  d.organization_id, 
+  count(*) as visitors
+, sum(num_visits) as visits
+, sum(num_pageviews) as pageviews
+FROM visit_rollup_daily d
+JOIN visit_aggregate_detail det on d.visit_aggregate_detail_id = det.id
+WHERE d.organization_id = $1
+AND rollup_day < now() - INTERVAL '1 DAY' and rollup_day  >= now() - INTERVAL '31 DAY' 
+GROUP BY d.organization_id
+
+*/
