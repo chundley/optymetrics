@@ -261,6 +261,12 @@ app.get('/rest/sales/mrrs-by-product', requiresLogin, routes.sales.mrrsByProduct
 //Gets software mrrs by sku
 app.get('/rest/sales/mrrs-software-by-sku', requiresLogin, routes.sales.mrrsSoftwareBySKU);
 
+//Gets churn by product type
+app.get('/rest/sales/churn-by-product', requiresLogin, routes.sales.mrrsChurnByProductType);
+
+//Gets new business by product type
+app.get('/rest/sales/new-by-product', requiresLogin, routes.sales.mrrsNewSalesByProductType);
+
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 

@@ -27,7 +27,8 @@ var MRRChurnSchema = new Schema({
     productType: String,
     totalPrice: Number,
     dateAdded: Date,
-    sku: String  
+    sku: String,
+    partial: Boolean
 });
 
 // new business is tough to calculate on they fly
@@ -37,7 +38,8 @@ var MRRNewSchema = new Schema({
     productType: String,
     totalPrice: Number,
     dateAdded: Date,
-    sku: String  
+    sku: String,
+    partial: Boolean
 });
 
 var MRRModelETL = mongoose.model('etlMRR', MRRSchema);

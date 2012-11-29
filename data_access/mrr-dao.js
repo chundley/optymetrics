@@ -671,9 +671,174 @@ var getSoftwareMRRBySKU = function (startDate, endDate, callback) {
     );
 }
 
+/**
+* Get churn aggregated by product type
+* 
+* VOLATILE: product types are hard-coded to support correct output after map reduce
+*/
+var getChurnByProductType = function (startDate, endDate, callback) {
+   var map = function () {
+        var d = new Date(this.dateAdded);
+        emit({dateAdded: d, productType: this.productType}, 
+            {
+                'dateAdded': d,
+                'productType': this.productType, 
+                'totalPrice': this.totalPrice
+            });
+    };
+
+    var reduce = function (key, values) {
+        var data = {'dateAdded': null, 'productType': null, totalPrice: 0};
+        values.forEach(function(val) {
+            data.dateAdded = val.dateAdded;
+            data.productType = val.productType;
+            data.totalPrice += val.totalPrice;
+        });
+        return data;
+    };
+
+    var where = {dateAdded: { $gte: startDate, $lte: endDate} };
+    var command = {
+        mapreduce: 'mrrchurns',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // get clean formatting
+                var retArr = [];
+                results.documents[0].results.forEach(function(r) {
+                    var found = false;
+                    retArr.forEach(function(item) {
+                        if (item.dateAdded.toString() == r.value['dateAdded'].toString()) {
+                            found = true;
+                            if (r.value['productType'] == 'Software') {
+                                item.software = r.value['totalPrice'];
+                            }
+                            else {
+                                item.services = r.value['totalPrice'];
+                            }
+                        }
+                    });
+
+                    if (!found) {
+                        if (r.value['productType'] == 'Software') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                software: r.value['totalPrice'],
+                                services: 0
+                            });
+                        } 
+                        else {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                services: r.value['totalPrice'],
+                                software:0
+                            });
+                        }               
+                    }
+                });
+                callback(err, retArr);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+}
+
+/**
+* Get new sales aggregated by product type
+* 
+* VOLATILE: product types are hard-coded to support correct output after map reduce
+*/
+var getNewSalesByProductType = function (startDate, endDate, callback) {
+   var map = function () {
+        var d = new Date(this.dateAdded);
+        emit({dateAdded: d, productType: this.productType}, 
+            {
+                'dateAdded': d,
+                'productType': this.productType, 
+                'totalPrice': this.totalPrice
+            });
+    };
+
+    var reduce = function (key, values) {
+        var data = {'dateAdded': null, 'productType': null, totalPrice: 0};
+        values.forEach(function(val) {
+            data.dateAdded = val.dateAdded;
+            data.productType = val.productType;
+            data.totalPrice += val.totalPrice;
+        });
+        return data;
+    };
+
+    var where = {dateAdded: { $gte: startDate, $lte: endDate} };
+    var command = {
+        mapreduce: 'mrrnews',
+        map: map.toString(),
+        reduce: reduce.toString(), // map and reduce functions need to be strings
+        query: where,
+        out: { inline: 1 }
+    };
+
+    mongoose.connection.db.executeDbCommand(
+        command, function (err, results) {
+            if (err) {
+                callback(err, null)
+            }
+            if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+                // get clean formatting
+                var retArr = [];
+                results.documents[0].results.forEach(function(r) {
+                    var found = false;
+                    retArr.forEach(function(item) {
+                        if (item.dateAdded.toString() == r.value['dateAdded'].toString()) {
+                            found = true;
+                            if (r.value['productType'] == 'Software') {
+                                item.software = r.value['totalPrice'];
+                            }
+                            else {
+                                item.services = r.value['totalPrice'];
+                            }
+                        }
+                    });
+
+                    if (!found) {
+                        if (r.value['productType'] == 'Software') {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                software: r.value['totalPrice'],
+                                services: 0
+                            });
+                        } 
+                        else {
+                            retArr.push({
+                                dateAdded: r.value['dateAdded'],
+                                services: r.value['totalPrice'],
+                                software:0
+                            });
+                        }               
+                    }
+                });
+                callback(err, retArr);
+            } else {
+                callback(err, []);
+            }
+        }
+    );
+}
 exports.saveMRRs = saveMRRs;
 exports.saveMRRChurn = saveMRRChurn;
 
+exports.getNewSalesByProductType = getNewSalesByProductType;
+exports.getChurnByProductType = getChurnByProductType;
 exports.getMRRByProductType = getMRRByProductType;
 exports.getSoftwareMRRBySKU = getSoftwareMRRBySKU;
 exports.getMRRs = getMRRs;
