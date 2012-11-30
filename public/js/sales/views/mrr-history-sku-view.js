@@ -21,7 +21,7 @@ Opty.MRRSKUChart = Backbone.View.extend({
             }
         },
         title: {
-            text: 'Software MRR by SKU',
+            text: 'Software-only MRR by SKU',
             style: {
                 color: '#e3e3e3'
             }
@@ -159,12 +159,35 @@ Opty.MRRSKUChart = Backbone.View.extend({
         var agency = [];
 
         this.collection.each(function(model){
-            console.log(model);
             categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))));
-            enterprise.push(model.get('enterprise'));
-            pro.push(model.get('pro'));
-            express.push(model.get('express'));
-            agency.push(model.get('agency'));
+            if (model.get('enterprise')) {
+                enterprise.push(model.get('enterprise'));
+            }
+            else {
+                enterprise.push(0);
+            }
+
+            if (model.get('pro')) {
+                pro.push(model.get('pro'));
+            }
+            else {
+                pro.push(0);
+            }
+            
+            if (model.get('express')) {
+                express.push(model.get('express'));
+            }
+            else {
+                express.push(0);
+            }
+
+            if (model.get('agency')) {
+                agency.push(model.get('agency'));
+            }
+            else {
+                agency.push(0);
+            }
+            
         });
 
         this.mrrSKUChartOptions.series[0].data = enterprise;

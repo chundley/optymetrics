@@ -117,6 +117,12 @@ var saveMRRChurn = function(mrrs, callback) {
             async.forEach(dates, function (date, callback_inner2) {
                 async.forEach(customers, function (customer, callback_inner3) {
                     getMRRTotalByCustomerMonths(customer.customerId, date, dates[dates.indexOf(date) + 1], function(err, data) {
+                                    /* DEBUG BLOCK
+                                    if (date.toString() == '31-Aug-12' &&customer.customerId == 50001) {
+                                        logger.error('---------------------------------------------');
+                                        logger.error(servicesNew + '   ' + servicesOld);
+                                    }
+                                    */             
                         var softwareOld = 0;
                         var softwareNew = 0;
                         var servicesOld = 0;
@@ -125,214 +131,30 @@ var saveMRRChurn = function(mrrs, callback) {
                             if (row.dateAdded.toString() == new Date(date).toString()) {
                                 if (row.productType == 'Services') {
                                     servicesNew = row.totalPrice;
+                                    callback_inner4();
                                 }
                                 else {
                                     softwareNew = row.totalPrice;
+                                    callback_inner4();
                                 }
                             }
-                            else {
+                            else {                                
                                 if (row.productType == 'Services') {
                                     servicesOld = row.totalPrice;
+                                    callback_inner4();
                                 }
                                 else {
                                     softwareOld = row.totalPrice;
+                                    callback_inner4();
                                 }
                             }
-                            callback_inner4();
                         },
                         function() { // callback_inner4
-
-                            // new software mrr
-                            if (softwareNew > 0 && softwareOld == 0) {
-                                var mrrNew = new mrr_model.MRRModelNew({
-                                    customerId: customer.customerId,
-                                    accountName: customer.accountName,
-                                    productType: 'Software',
-                                    totalPrice: softwareNew,
-                                    dateAdded: date,
-                                    sku: customer.sku,
-                                    partial: false
+                            resolveMRRChurnSoftware(softwareNew, softwareOld, customer, date, function(err) {
+                                resolveMRRChurnServices(servicesNew, servicesOld, customer, date, function(err2) {
+                                    callback_inner3(err);
                                 });
-
-                                mrrNew.save(function (err) {
-                                    if (err) {
-                                        callback_inner3(err);
-                                    }
-                                    else {
-                                        logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.productType);
-                                        callback_inner3(null);
-                                    }
-                                });
-                            }
-
-                            // software MRR changed, but not totally new or totally churned
-                            else if (softwareNew > 0 && softwareOld > 0 && softwareNew != softwareOld) {
-                                // new MRR added to existing account
-                                if (softwareNew > softwareOld) {
-                                    var mrrNew = new mrr_model.MRRModelNew({
-                                        customerId: customer.customerId,
-                                        accountName: customer.accountName,
-                                        productType: 'Software',
-                                        totalPrice: softwareNew - softwareOld,
-                                        dateAdded: date,
-                                        sku: customer.sku,
-                                        partial: true
-                                    });
-
-                                    mrrNew.save(function (err) {
-                                        if (err) {
-                                            callback_inner3(err);
-                                        }
-                                        else {
-                                            logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.productType);
-                                            callback_inner3(null);
-                                        }
-                                    });                                    
-                                }
-                                // MRR churn but not full account loss
-                                else {
-                                    var mrrChurn = new mrr_model.MRRModelChurn({
-                                        customerId: customer.customerId,
-                                        accountName: customer.accountName,
-                                        productType: 'Software',
-                                        totalPrice: softwareOld - softwareNew,
-                                        dateAdded: date,
-                                        sku: customer.sku,
-                                        partial: true
-                                    });
-
-                                    mrrChurn.save(function (err) {
-                                        if (err) {
-                                            callback_inner3(err);
-                                        }
-                                        else {
-                                            logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.productType);
-                                            callback_inner3(null);
-                                        }
-                                    });
-                                }
-                            }
-
-                            // new services mrr
-                            else if (servicesNew > 0 && servicesOld == 0) {
-                                var mrrNew = new mrr_model.MRRModelNew({
-                                    customerId: customer.customerId,
-                                    accountName: customer.accountName,
-                                    productType: 'Services',
-                                    totalPrice: servicesNew,
-                                    dateAdded: date,
-                                    sku: customer.sku,
-                                    partial: false
-                                });
-
-                                mrrNew.save(function (err) {
-                                    if (err) {
-                                        callback_inner3(err);
-                                    }
-                                    else {
-                                        logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.productType);
-                                        callback_inner3(null);
-                                    }
-                                });
-                            }
-
-                            // services MRR changed, but not totally new or totally churned
-                            else if (servicesNew > 0 && servicesOld > 0 && servicesNew != servicesOld) {
-                                // new MRR added to existing account
-                                if (servicesNew > servicesOld) {
-                                    var mrrNew = new mrr_model.MRRModelNew({
-                                        customerId: customer.customerId,
-                                        accountName: customer.accountName,
-                                        productType: 'Services',
-                                        totalPrice: servicesNew - servicesOld,
-                                        dateAdded: date,
-                                        sku: customer.sku,
-                                        partial: true
-                                    });
-
-                                    mrrNew.save(function (err) {
-                                        if (err) {
-                                            callback_inner3(err);
-                                        }
-                                        else {
-                                            logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.productType);
-                                            callback_inner3(null);
-                                        }
-                                    });                                    
-                                }
-                                // MRR churn but not full account loss
-                                else {
-                                    var mrrChurn = new mrr_model.MRRModelChurn({
-                                        customerId: customer.customerId,
-                                        accountName: customer.accountName,
-                                        productType: 'Services',
-                                        totalPrice: servicesOld - servicesNew,
-                                        dateAdded: date,
-                                        sku: customer.sku,
-                                        partial: true
-                                    });
-
-                                    mrrChurn.save(function (err) {
-                                        if (err) {
-                                            callback_inner3(err);
-                                        }
-                                        else {
-                                            logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.productType);
-                                            callback_inner3(null);
-                                        }
-                                    });
-                                }
-                            }
-
-                            // software 100% churn
-                            else if (softwareOld > 0 && softwareNew == 0) {
-                                var mrrChurn = new mrr_model.MRRModelChurn({
-                                    customerId: customer.customerId,
-                                    accountName: customer.accountName,
-                                    productType: 'Software',
-                                    totalPrice: softwareOld,
-                                    dateAdded: date,
-                                    sku: customer.sku,
-                                    partial: false
-                                });
-
-                                mrrChurn.save(function (err) {
-                                    if (err) {
-                                        callback_inner3(err);
-                                    }
-                                    else {
-                                        logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.productType);
-                                        callback_inner3(null);
-                                    }
-                                });
-                            }
-
-                            // services 100% churn
-                            else if (servicesOld > 0 && servicesNew == 0) {
-                                var mrrChurn = new mrr_model.MRRModelChurn({
-                                    customerId: customer.customerId,
-                                    accountName: customer.accountName,
-                                    productType: 'Services',
-                                    totalPrice: servicesOld,
-                                    dateAdded: date,
-                                    sku: customer.sku,
-                                    partial: false
-                                });
-
-                                mrrChurn.save(function (err) {
-                                    if (err) {
-                                        callback_inner3(err);
-                                    }
-                                    else {
-                                        logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.productType);
-                                        callback_inner3(null);
-                                    }
-                                });
-                            }
-                            else {
-                                // there was nothing to save for this customer/date combination
-                                callback_inner3(null);
-                            }
+                            });
                         });
                     });
                 },
@@ -351,6 +173,118 @@ var saveMRRChurn = function(mrrs, callback) {
             });
         });
 
+}
+
+/*
+*  Private helper function - save churn/new for software
+*/
+var resolveMRRChurnSoftware = function(softwareNew, softwareOld, customer, date, callback) {
+    if ( (softwareOld==0 && softwareNew==0) || (softwareOld == softwareNew) ) {
+        // nothing to save
+        callback(null);
+    }
+    else {
+        if (softwareNew > softwareOld) {
+            // new mrr
+            var mrrNew = new mrr_model.MRRModelNew({
+                customerId: customer.customerId,
+                accountName: customer.accountName,
+                productType: 'Software',
+                totalPrice: softwareNew - softwareOld,
+                dateAdded: date,
+                sku: customer.sku,
+                partial: softwareOld == 0 ? true : false
+            });
+
+            mrrNew.save(function (err) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.totalPrice);
+                    callback(null);
+                }
+            });                    
+        }
+        else {
+            // churn
+            var mrrChurn = new mrr_model.MRRModelChurn({
+                customerId: customer.customerId,
+                accountName: customer.accountName,
+                productType: 'Software',
+                totalPrice: softwareOld - softwareNew,
+                dateAdded: date,
+                sku: customer.sku,
+                partial: softwareNew == 0 ? true : false
+            });
+
+            mrrChurn.save(function (err) {
+                if (err) {
+                    callback(err);
+                }
+                else {                                          
+                    logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.totalPrice);
+                    callback(null);
+                }
+            });                    
+        }
+    }
+}
+
+/*
+*  Private helper function - save churn/new for services
+*/
+var resolveMRRChurnServices = function(servicesNew, servicesOld, customer, date, callback) {
+    if ( (servicesOld==0 && servicesNew==0) || (servicesOld == servicesNew) ) {
+        // nothing to save
+        callback(null);
+    }
+    else {
+        if (servicesNew > servicesOld) {
+            // new mrr
+            var mrrNew = new mrr_model.MRRModelNew({
+                customerId: customer.customerId,
+                accountName: customer.accountName,
+                productType: 'Services',
+                totalPrice: servicesNew - servicesOld,
+                dateAdded: date,
+                sku: customer.sku,
+                partial: servicesOld == 0 ? true : false
+            });
+
+            mrrNew.save(function (err) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    logger.info('New MRR saved: ' + mrrNew.accountName + ' ' + mrrNew.totalPrice);
+                    callback(null);
+                }
+            });                    
+        }
+        else {
+            // churn
+            var mrrChurn = new mrr_model.MRRModelChurn({
+                customerId: customer.customerId,
+                accountName: customer.accountName,
+                productType: 'Services',
+                totalPrice: servicesOld - servicesNew,
+                dateAdded: date,
+                sku: customer.sku,
+                partial: servicesNew == 0 ? true : false
+            });
+
+            mrrChurn.save(function (err) {
+                if (err) {
+                    callback(err);
+                }
+                else {                                          
+                    logger.info('MRR churn saved: ' + mrrChurn.accountName + ' ' + mrrChurn.totalPrice);
+                    callback(null);
+                }
+            });                    
+        }
+    }
 }
 
 /*
@@ -416,9 +350,9 @@ var getMRRTotalByCustomerMonths = function(customerId, monthCurrent, monthPrevio
     };
 
     var reduce = function (key, values) {
-        var total = 0;
+        var total = {totalPrice: 0};
         values.forEach(function(val) {
-            total += val.totalPrice;
+            total.totalPrice += val.totalPrice;
         });
         return total;
     };
@@ -438,7 +372,7 @@ var getMRRTotalByCustomerMonths = function(customerId, monthCurrent, monthPrevio
         if (err) {
             callback(err, null)
         }
-        if (results.numberReturned > 0 && results.documents[0].results.length > 0) {
+        if (results.numberReturned > 0 && results.documents[0].results.length > 0) {         
             // clean up the results before returning
             var ret = [];
             async.forEach(results.documents[0].results, function(result, callback_inner) {

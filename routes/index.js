@@ -44,11 +44,14 @@ exports.index = function(req, res, next) {
             '/js/sales/models/mrr-history-model.js',
             '/js/sales/models/mrr-by-product-model.js',
             '/js/sales/models/mrr-software-by-sku-model.js',
+            '/js/sales/models/churn-by-product-model.js',
+            '/js/sales/models/newsales-by-product-model.js',
             '/js/sales/views/sales-chart.js',
             '/js/sales/views/sales-view.js',
             '/js/sales/views/sales-calc-view.js',
             '/js/sales/views/mrr-history-rollup-view.js',
             '/js/sales/views/mrr-history-sku-view.js',
+            '/js/sales/views/churn-history-rollup-view.js',            
             '/js/productdev/models/usage-by-sku.js',
             '/js/productdev/models/feature-usage-by-week.js'
 

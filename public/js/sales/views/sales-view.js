@@ -59,10 +59,15 @@ Opty.SalesView = Backbone.View.extend({
         var mrrByProductCollection = new Opty.MRRByProductCollection({});
         var mrrSoftwareBySKUCollection = new Opty.MRRSoftwareBySKUCollection({});
 
+        var churnByProductCollection = new Opty.ChurnByProductCollection({});
+        var newsalesByProductCollection = new Opty.NewSalesByProductCollection({});
+
         var $row1 = $('<div>', { 'class': 'row-fluid' });
         var $row2 = $('<div>', { 'class': 'row-fluid', 'style': 'padding-top: 8px;' });
         var $divMRRRollupChart = $('<div>', { 'class': 'span6' });
         var $divSKURollupChart = $('<div>', { 'class': 'span6' });
+
+        var $divChurnRollupChart = $('<div>', { 'class': 'span6' });
 
         me.$el.append($row1);
         me.$el.append($row2);
@@ -70,11 +75,15 @@ Opty.SalesView = Backbone.View.extend({
         $row1.append($divMRRRollupChart);
         $row1.append($divSKURollupChart);
 
+        $row2.append($divChurnRollupChart);
+
         var mrrRollupView = new Opty.MRRRollupChart({ collection: mrrByProductCollection });
         var mrrSKURollupView = new Opty.MRRSKUChart({ collection: mrrSoftwareBySKUCollection });
-
+        var churnRollupView = new Opty.ChurnRollupChart({ churn: churnByProductCollection, newsales: newsalesByProductCollection});
+        
         $divMRRRollupChart.append(mrrRollupView.$el);
         $divSKURollupChart.append(mrrSKURollupView.$el);
+        $divChurnRollupChart.append(churnRollupView.$el);
 
         datePickerView.render();
     },

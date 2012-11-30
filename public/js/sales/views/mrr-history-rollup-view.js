@@ -21,7 +21,7 @@ Opty.MRRRollupChart = Backbone.View.extend({
             }
         },
         title: {
-            text: 'MRR Software vs. Services',
+            text: 'Total MRR Software vs. Services',
             style: {
                 color: '#e3e3e3'
             }
@@ -136,8 +136,19 @@ Opty.MRRRollupChart = Backbone.View.extend({
 
         this.collection.each(function(model){
             categories.push(Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))));
-            software.push(model.get('software'));
-            services.push(model.get('services'));
+            if (model.get('software')) {
+                software.push(model.get('software'));
+            }
+            else {
+                software.push(0);
+            }
+            
+            if (model.get('services')) {
+                services.push(model.get('services'));
+            }
+            else {
+                services.push(0);
+            }
         });
 
         this.mrrRollupChartOptions.series[0].data = software;
