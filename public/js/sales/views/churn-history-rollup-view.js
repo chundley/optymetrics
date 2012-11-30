@@ -194,7 +194,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
             this.newsales.each(function(model){
                 if (Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))) == categories[i] ) {
                     // dirty hack - this is our first date and makes everything look like new business
-                    if (model.get('dateAdded').toString() != '2011-12-31T08:00:00.000Z') {
+                    if (Highcharts.dateFormat('%b-%Y', me.convertDateToUTC(new Date(model.get('dateAdded')))) != 'Dec-2011') {
                         found = true;
                         softwareNew.push(model.get('software'));
                         servicesNew.push(model.get('services'));
@@ -221,13 +221,6 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                 servicesChurn.push(0);  
             }
         }
-
-/*
-        this.churn.each(function(model){
-            softwareChurn.push(model.get('software'));
-            servicesChurn.push(model.get('services'));
-        });
-*/
 
         this.churnRollupChartOptions.series[0].data = softwareChurn;
         this.churnRollupChartOptions.series[1].data = servicesChurn;
