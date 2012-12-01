@@ -267,6 +267,9 @@ app.get('/rest/sales/churn-by-product', requiresLogin, routes.sales.mrrsChurnByP
 //Gets new business by product type
 app.get('/rest/sales/new-by-product', requiresLogin, routes.sales.mrrsNewSalesByProductType);
 
+//Gets new business by product type
+app.get('/rest/sales/churn-detail', requiresLogin, routes.sales.mrrsChurnDetail);
+
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 

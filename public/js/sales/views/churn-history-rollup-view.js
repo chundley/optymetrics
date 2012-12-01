@@ -78,11 +78,53 @@ Opty.ChurnRollupChart = Backbone.View.extend({
             column: {
                 stacking: 'normal',
                 marker: {
-                    enabled: false
+                    enabled: true
                 },
                 borderColor: '#999999'
-            }
+            },
+            series: {
+                point: {
+                    events: {
+                        click: function() {
+                            // hack through the data set to find values to make another service call
+                            var productType = this.series.name.split(' ')[0];
+                            var type = this.series.name.split(' ')[1];
+                            //alert(type);
+                            var startDate = new Date(this.category);
+                            var endDate = new Date(startDate);
+                            endDate.setDate(startDate.getDate() + 31);
+                            var query = 'http://localhost:3000/rest/sales/churn-detail?start=' + 
+                                (startDate.getTime()).toString() +
+                                '&end=' +
+                                (endDate.getTime()).toString() +
+                                '&type=' +
+                                productType;
+                            var customers = 'doh';
 
+                            $.getJSON(query, function(result) {
+                                $.each(result, function(i, row) {
+                                    console.log(row);
+                                    customers += row.accountName + '<br/>';
+                                    //blah = 'hey there';
+                                });
+                                //alert(startDate + endDate);
+                            });
+                            
+                            // note... code gets here before the ajax call above finishes so no data
+                            hs.htmlExpand(null, {
+                                pageOrigin: {
+                                    x: this.pageX,
+                                    y: this.pageY
+                                },
+                                headingText: this.series.name,
+                                maincontentText: customers,
+                                width: 200
+                            });
+                            
+                        }
+                    }
+                }
+            }
         },
         series: [
         {
@@ -225,7 +267,8 @@ Opty.ChurnRollupChart = Backbone.View.extend({
         this.churnRollupChartOptions.series[0].data = softwareChurn;
         this.churnRollupChartOptions.series[1].data = servicesChurn;
         this.churnRollupChartOptions.series[2].data = softwareNew;
-        this.churnRollupChartOptions.series[3].data = servicesNew;        
+        this.churnRollupChartOptions.series[3].data = servicesNew;
+
         this.churnRollupChartOptions.xAxis.categories = categories
 
         this.chart = new Highcharts.Chart(this.churnRollupChartOptions);

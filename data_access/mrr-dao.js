@@ -768,9 +768,28 @@ var getNewSalesByProductType = function (startDate, endDate, callback) {
         }
     );
 }
+
+/**
+* Get mrr churn detail for a date range
+*/
+var getMRRChurnDetail = function(productType, startDate, endDate, callback) {
+    mrr_model.MRRModelChurn
+        .find({ 'productType': productType, 'dateAdded': { $gte: startDate, $lte: endDate} })
+        .sort('totalPrice', -1)
+        .exec(function (err, mrrs) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, mrrs);
+            }
+        });
+}
+
 exports.saveMRRs = saveMRRs;
 exports.saveMRRChurn = saveMRRChurn;
 
+exports.getMRRChurnDetail = getMRRChurnDetail;
 exports.getNewSalesByProductType = getNewSalesByProductType;
 exports.getChurnByProductType = getChurnByProductType;
 exports.getMRRByProductType = getMRRByProductType;
