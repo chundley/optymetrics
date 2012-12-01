@@ -2,7 +2,7 @@
 *	Site-specific configuration settings for Highslide JS
 */
 hs.graphicsDir = '/img/hs-graphics/';
-hs.outlineType = 'rounded-white';
+hs.outlineType = 'rounded-grey';
 hs.wrapperClassName = 'draggable-header';
 hs.captionEval = 'this.a.title';
 hs.showCredits = false;

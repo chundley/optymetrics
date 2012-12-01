@@ -87,40 +87,53 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                     events: {
                         click: function() {
                             // hack through the data set to find values to make another service call
-                            var productType = this.series.name.split(' ')[0];
-                            var type = this.series.name.split(' ')[1];
+                            var type = this.series.name.split(' ')[0];
+                            var productType = this.series.name.split(' ')[1];
                             //alert(type);
                             var startDate = new Date(this.category);
                             var endDate = new Date(startDate);
                             endDate.setDate(startDate.getDate() + 31);
-                            var query = 'http://localhost:3000/rest/sales/churn-detail?start=' + 
+                            var query = 'http://localhost:3000/rest/sales/'
+                            if (type == 'New') {
+                                query += 'new-detail';
+                            }
+                            else {
+                                query += 'churn-detail';
+                            }
+                            query += '?start=' + 
                                 (startDate.getTime()).toString() +
                                 '&end=' +
                                 (endDate.getTime()).toString() +
                                 '&type=' +
                                 productType;
-                            var customers = 'doh';
 
-                            $.getJSON(query, function(result) {
-                                $.each(result, function(i, row) {
-                                    console.log(row);
-                                    customers += row.accountName + '<br/>';
-                                    //blah = 'hey there';
-                                });
-                                //alert(startDate + endDate);
+                            // need async function call to resolve data before the popup renders
+                            var customers = '<table width="100%" cellpadding="0" cellspacing="0" border="0">';
+                            var getDetail = function(callback) {
+                                $.getJSON(query, function(result) {
+                                    var total = 0;
+                                    $.each(result, function(i) {
+                                        customers += '<tr><td>' + this.accountName + '</td><td>' + this.sku.toLowerCase() + '</td><td align="right">$' + Highcharts.numberFormat(this.totalPrice, 0) + '</td></tr>';
+                                        total += this.totalPrice;
+                                    });
+                                    customers += '<tr style="font-size: 120%; font-weight: bold; color: #dddddd;"><td><b>Total</b></td><td colspan="2" align="right"><b>$' + Highcharts.numberFormat(total, 0) + '</td></tr>';
+                                    customers += '</table>';
+                                    callback(customers);
+                                });                                
+                            }
+
+                            var me = this;
+                            getDetail(function(results) {
+                                hs.htmlExpand(null, {
+                                    pageOrigin: {
+                                        x: me.pageX,
+                                        y: me.pageY
+                                    },
+                                    headingText: me.series.name + ' ' + me.category,
+                                    maincontentText: results,
+                                    width: 450
+                                });                                
                             });
-                            
-                            // note... code gets here before the ajax call above finishes so no data
-                            hs.htmlExpand(null, {
-                                pageOrigin: {
-                                    x: this.pageX,
-                                    y: this.pageY
-                                },
-                                headingText: this.series.name,
-                                maincontentText: customers,
-                                width: 200
-                            });
-                            
                         }
                     }
                 }
@@ -136,7 +149,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                 ]
             },
             type: 'column',
-            name: 'Software Churn',
+            name: 'Churn Software',
             stack: 'churn'
         },
         {
@@ -148,14 +161,14 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                 ]
             },
             type: 'column',
-            name: 'Services Churn',
+            name: 'Churn Services',
             stack: 'churn'
         },
         {
             color: {
                 linearGradient: [0, 0, 0, 1000],
                 stops: [
-                    [0, "#02660e"],
+                    [0, "#325a1f"],
                     [1, 'rgba(0,0,0,0)']
                 ]
             },

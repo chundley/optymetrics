@@ -98,11 +98,26 @@ exports.mrrsNewSalesByProductType = function (req, res, next) {
 };
 
 exports.mrrsChurnDetail = function (req, res, next) {
-
     var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
     var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
     var productType = req.query['type'];
     mrr_dao.getMRRChurnDetail(productType, startDate, endDate, function (err, results) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+};
+
+exports.mrrsNewDetail = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+    var productType = req.query['type'];
+    mrr_dao.getMRRNewDetail(productType, startDate, endDate, function (err, results) {
         if (err) {
             logger.error(err);
             res.statusCode = 500;

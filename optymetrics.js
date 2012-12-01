@@ -270,6 +270,9 @@ app.get('/rest/sales/new-by-product', requiresLogin, routes.sales.mrrsNewSalesBy
 //Gets new business by product type
 app.get('/rest/sales/churn-detail', requiresLogin, routes.sales.mrrsChurnDetail);
 
+//Gets new business by product type
+app.get('/rest/sales/new-detail', requiresLogin, routes.sales.mrrsNewDetail);
+
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 
