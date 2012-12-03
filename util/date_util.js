@@ -72,6 +72,13 @@ function dateDiff(date1, date2, period) {
     }
 }
 
+
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+}
+
+
 exports.firstDayOfWeek = firstDayOfWeek;
 exports.firstDayOfYear = firstDayOfYear;
 exports.convertDateToUTC = convertDateToUTC;

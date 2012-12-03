@@ -8,6 +8,7 @@
  */
 var mongoConfig = require('config'), 
     mongoose = require('mongoose'),
+    moment = require('moment'),
     _ = require('underscore');
 
 /**
@@ -27,6 +28,12 @@ var insertDailyAppUsageRawRecord = function(data, callback) {
 
 var removeDailyAppUsageRawForDates = function(startDate, endDate, callback) {
     appUsageModel.DailyAppUsageRawModel.find({dateOf:{ $gte: startDate, $lte: endDate } } ).remove().exec(function(err){
+        callback();
+    });
+};
+
+var removeWeeklyCustomerUserStats = function(callback) {
+    appUsageModel.WeeklyCustomerUserStatsModel.remove().exec(function(err){
         callback();
     });
 };
@@ -152,7 +159,7 @@ var getMonthlyCustomersBySku = function(callback){
 
 var getWeeklyCustomerUserStats = function(callback){
     appUsageModel.WeeklyCustomerUserStatsModel
-        .find()
+        .find({weekOf:{ $gte: (new Date()).addHours(-24*240) } })
         .sort("sku",1)
         .sort("weekOf",1)
         .exec(function (err, docs) {
@@ -168,7 +175,7 @@ var getWeeklyCustomerUserStats = function(callback){
 
 var getWeeklyFeatureUsageStats = function(callback){
     appUsageModel.WeeklyFeatureUsageStatsModel
-        .find()
+        .find({weekOf:{ $gte: moment().subtract('days', 240).format("YYYY-MM-DD") } })
         .sort("feature",1)
         .sort("weekNum",1)
         .exec(function (err, docs) {
@@ -192,3 +199,4 @@ exports.upsertWeeklyCustomerUserStats = upsertWeeklyCustomerUserStats;
 exports.getWeeklyCustomerUserStats = getWeeklyCustomerUserStats;
 exports.upsertWeeklyFeatureUsageStats = upsertWeeklyFeatureUsageStats;
 exports.getWeeklyFeatureUsageStats = getWeeklyFeatureUsageStats;
+exports.removeWeeklyCustomerUserStats = removeWeeklyCustomerUserStats;

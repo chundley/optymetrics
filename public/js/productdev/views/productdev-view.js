@@ -281,7 +281,7 @@ Opty.ProductDevView = Backbone.View.extend({
         var xAxisLabels = [];
         weeklyCustomerUsageBySku.fetch({success:function(data){
             _.each(data.models, function (model) {
-                week_dates[Opty.util.getSundayDate(new Date(model.get("weekOf"))).toString("yyyy-MM-dd")]=0;
+                week_dates[(new Date(model.get("weekOf"))).addHours(9).toString("yyyy-MM-dd")]=0;
             });
             week_dates = Opty.util.objectKeySort(week_dates);
             for(k in week_dates){
@@ -308,7 +308,7 @@ Opty.ProductDevView = Backbone.View.extend({
                         for(var i=0;i<week_count; i++)
                             series[model.get('sku')].data[i] = 0;
                     }
-                    series[model.get('sku')].data[week_dates[Opty.util.getSundayDate(new Date(model.get("weekOf"))).toString("yyyy-MM-dd")]] = model.get(valueName);
+                    series[model.get('sku')].data[week_dates[(new Date(model.get("weekOf"))).addHours(9).toString("yyyy-MM-dd")]] = model.get(valueName);
                 });
     
                 series['Free Trial'].visible = false;
@@ -337,7 +337,6 @@ Opty.ProductDevView = Backbone.View.extend({
                     
                 );
             }
-            
             el.append($row1);
             $divCustomersChart.append(customerHistoryChart.$el);
             customerHistoryChart.render();

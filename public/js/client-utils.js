@@ -50,3 +50,9 @@ Opty.util.getSundayDate = function(d) {
     d.setDate(d2.getDate() + (6-d2.getDay()));
     return d;
 };
+
+
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+}

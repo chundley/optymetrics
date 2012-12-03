@@ -38,8 +38,8 @@ var backfillMonthlyCustomerStats = function (callback) {
             callback();
             return;
         }
+        appUsageDao.removeWeeklyCustomerUserStats(function(err){if(err){logger.log('error', "failed in remove weekly customer user stats.");}});
         logger.log('info', "Pulling monthly customer stats from db.");
-
         client.query(aspen_queries[0].MonthlyCustomerStats, function (err, result) {
             if (err) {
                 logger.log('error', 'Error: ' + err);

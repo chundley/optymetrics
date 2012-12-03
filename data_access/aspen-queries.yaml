@@ -13,7 +13,7 @@ MonthlyCustomerStats : >
 WeeklyCustomerUserStats : >
     SELECT to_char(pageview_date, 'yyyy-ww') week_num
     , case when sku = 'Premium' then 'Enterprise' ELSE sku END sku
-    , min(to_char(pageview_date, 'yyyy-mm-dd')) week_of
+    , (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date week_of
     , count(distinct to_char(pageview_date, 'yyyy-mm-dd')) days
     , count(distinct customer_id) customer_count
     , count(distinct user_id) user_count
@@ -23,7 +23,7 @@ WeeklyCustomerUserStats : >
     JOIN v_customer c on c.id = ou.customer_id
     WHERE url_host = 'dashboard'
     AND sku ~* '^(agency|basic|express|premium|enterprise|professional|free trial)'
-    AND pageview_date >= now() - INTERVAL '6 MONTHS'
+    AND pageview_date >= now() - INTERVAL '12 MONTHS'
     GROUP BY 1, 2
     HAVING count(distinct to_char(pageview_date, 'yyyy-mm-dd')) >= 6
 
@@ -49,7 +49,7 @@ WeeklyFeatureUsageStats : >
     , extract(epoch from max(pageview_date) - min(pageview_date))/ 60 time_on_feature
     , count(*) pageviews
     FROM v_traffic_with_feature
-    WHERE pageview_date >= now() - INTERVAL '6 MONTH'
+    WHERE pageview_date >= now() - INTERVAL '12 MONTH'
     AND (url_host in('dashboard', 'help') OR feature in ('dailyemail'))
     AND feature ~* '(help|landing|lead|keyword|twitter|contact|email|link|report|page)'
     AND url_path !~* '(page-event|pagenot)'
