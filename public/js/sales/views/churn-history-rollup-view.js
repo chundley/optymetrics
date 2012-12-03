@@ -93,7 +93,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                             var startDate = new Date(this.category);
                             var endDate = new Date(startDate);
                             endDate.setDate(startDate.getDate() + 31);
-                            var query = 'http://localhost:3000/rest/sales/'
+                            var query = '/rest/sales/'
                             if (type == 'New') {
                                 query += 'new-detail';
                             }
