@@ -110,7 +110,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                                     case 'Nov': numMonth = 10; numDay = 30; break;
                                     case 'Dec': numMonth = 11; numDay = 31; break;
                                 }
-                                var ret = new Date(year, numMonth, numDay);
+                                var ret = new Date(year, numMonth, numDay-1);
                                 callback(ret);
                             }
 
