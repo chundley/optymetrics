@@ -342,10 +342,10 @@
 2177,R2i,Software,Strategic,R2i - 2012 Renewal,Jeff Gibb,Add-on: SFDC Integration,80,41214,30-Nov-12,AGENCY
 2177,R2i,Software,Strategic,R2i - 2012 Renewal,Jeff Gibb,Optify Agency Bundle,320,41214,30-Nov-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,41214,30-Nov-12,ENTERPRISE
-,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Add-on: Page Views,656.25,41214,30-Nov-12,ENTERPRISE
-,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Add-on: Keywords,150,41214,30-Nov-12,ENTERPRISE
-,Top Right Group,Services,Strategic,Top Right Group,Jeff Gibb,Ongoing Consulting,112.5,41214,30-Nov-12,ENTERPRISE
-,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Software: Optify Premium,1125,41214,30-Nov-12,ENTERPRISE
+50003,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Add-on: Page Views,656.25,41214,30-Nov-12,ENTERPRISE
+50003,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Add-on: Keywords,150,41214,30-Nov-12,ENTERPRISE
+50003,Top Right Group,Services,Strategic,Top Right Group,Jeff Gibb,Ongoing Consulting,112.5,41214,30-Nov-12,ENTERPRISE
+50003,Top Right Group,Software,Strategic,Top Right Group,Jeff Gibb,Software: Optify Premium,1125,41214,30-Nov-12,ENTERPRISE
 10152,3C Marketing Group LLC,Software,Agency,3C Marketing Group-UNLIMITED YEAH,Will Wyatt,Optify Agency Shared Pro,500,41210,31-Oct-12,AGENCY
 10261,Accounting for Growth Limited,Software,Agency,Accounting for Growth Limited-,Shanelle Smith,Optify Agency Bundle,100,41183,31-Oct-12,AGENCY
 6052,AdPlace Marketing and Media Limited,Software,Agency,AdPlace Marketing and Media Limited 2012 Renewal,Elisabeth Wendl,Optify Agency Bundle,267,41188,31-Oct-12,AGENCY
@@ -1543,8 +1543,8 @@
 461,ADSI,Software,Consulting,ADSI - 2012 Renewal,Steven Woody,Software: Optify Professional,450,41094,31-Jul-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - MovingComfort,Jeff Gibb,Optify Professional,150,41092,31-Jul-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,41091,31-Jul-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41091,31-Jul-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41091,31-Jul-12,ENTERPRISE
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41091,31-Jul-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41091,31-Jul-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,41091,31-Jul-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,41097,31-Jul-12,ENTERPRISE
 725,Microsoft - Windows,Software,Consulting,Microsoft - Windows FY13 Renewal,Jeff Gibb,Software: Optify Enterprise,1500,41121,31-Jul-12,ENTERPRISE
@@ -1891,8 +1891,8 @@
 461,ADSI,Software,Consulting,ADSI - 2012 Renewal,Steven Woody,Software: Optify Professional,450,41064,30-Jun-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - MovingComfort,Jeff Gibb,Optify Professional,150,41062,30-Jun-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,41061,30-Jun-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41061,30-Jun-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41061,30-Jun-12,ENTERPRISE
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41061,30-Jun-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41061,30-Jun-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,41061,30-Jun-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,41067,30-Jun-12,ENTERPRISE
 26,Microsoft - Exchange - US,Services,Consulting,Microsoft - Exchange FY 12 Renewal,Kevin Ascher,Managed Services Silver,3500,41061,30-Jun-12,ENTERPRISE
@@ -2231,8 +2231,8 @@
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,41034,31-May-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - MovingComfort,Jeff Gibb,Optify Professional,150,41031,31-May-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,41030,31-May-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41030,31-May-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41030,31-May-12,ENTERPRISE
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41030,31-May-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41030,31-May-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,41030,31-May-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,41036,31-May-12,ENTERPRISE
 26,Microsoft - Exchange - US,Services,Consulting,Microsoft - Exchange FY 12 Renewal,Kevin Ascher,Managed Services Silver,3500,41030,31-May-12,ENTERPRISE
@@ -2306,8 +2306,6 @@
 2842,Easy Solutions,Software,Direct,Easy Solutions - 2012 Renewal,Alyssa Putnam,Optify Professional,250,41032,31-May-12,PRO
 8474,"ESL Power Systems, Inc.",Software,Direct,"ESL Power Systems, Inc.",Steven Woody,Optify Basic,141.78,41056,31-May-12,EXPRESS
 42,Eye Shield Technology,Software,Direct,Eye Shield Technology - 2011 Renewal,Scott Weiss,Optify Professional,400,41058,31-May-12,PRO
-,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,41045,31-May-12,PRO
-,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,41045,31-May-12,PRO
 6800,Federated Networks,Software,Direct,Federated Networks,Steven Woody,Optify Basic,99,41060,31-May-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,41039,31-May-12,EXPRESS
 374,Foothold Technology,Software,Direct,Foothold Technology - 2011 Renewal,Ting Van Osdol,Optify Basic,99,41055,31-May-12,EXPRESS
@@ -2442,6 +2440,10 @@
 2177,R2i,Software,Strategic,R2integrated,Sam Wheeler,Optify Basic,297,41030,31-May-12,AGENCY
 2177,R2i,Software,Strategic,R2i - Professional Upgrade,Jeff Gibb,Optify Professional,77,41030,31-May-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,41030,31-May-12,ENTERPRISE
+50002,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,41045,31-May-12,PRO
+50002,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,41045,31-May-12,PRO
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41000,30-Apr-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41000,30-Apr-12,ENTERPRISE
 6711,A Group Design,Software,Agency,Cor,Jeff Gibb,Optify Basic,99,41022,30-Apr-12,AGENCY
 6052,AdPlace Marketing and Media Limited,Software,Agency,AdPlace Marketing - Certa Trans,Steven Woody,Optify Basic,89,41002,30-Apr-12,AGENCY
 6052,AdPlace Marketing and Media Limited,Software,Agency,AdPlace Marketing and Media Limited,Steven Woody,Optify Basic,89,41002,30-Apr-12,AGENCY
@@ -2572,8 +2574,6 @@
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,41004,30-Apr-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - MovingComfort,Jeff Gibb,Optify Professional,150,41001,30-Apr-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,41000,30-Apr-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,41000,30-Apr-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,41000,30-Apr-12,ENTERPRISE
 2721,Expedia Inc,Services,Consulting,Expedia-Local,Jeff Gibb,Managed Services Silver,3000,41019,30-Apr-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,41000,30-Apr-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,41006,30-Apr-12,ENTERPRISE
@@ -2644,8 +2644,6 @@
 2842,Easy Solutions,Software,Direct,Easy Solutions - 2012 Renewal,Alyssa Putnam,Optify Professional,250,41002,30-Apr-12,PRO
 8474,"ESL Power Systems, Inc.",Software,Direct,"ESL Power Systems, Inc.",Steven Woody,Optify Basic,141.78,41026,30-Apr-12,EXPRESS
 42,Eye Shield Technology,Software,Direct,Eye Shield Technology - 2011 Renewal,Scott Weiss,Optify Professional,400,41028,30-Apr-12,PRO
-,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,41015,30-Apr-12,PRO
-,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,41015,30-Apr-12,PRO
 6800,Federated Networks,Software,Direct,Federated Networks,Steven Woody,Optify Basic,99,41029,30-Apr-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,41009,30-Apr-12,EXPRESS
 374,Foothold Technology,Software,Direct,Foothold Technology - 2011 Renewal,Ting Van Osdol,Optify Basic,99,41025,30-Apr-12,EXPRESS
@@ -2773,6 +2771,11 @@
 2177,R2i,Software,Strategic,R2integrated,Sam Wheeler,Optify Basic,297,41000,30-Apr-12,AGENCY
 2177,R2i,Software,Strategic,R2i - Professional Upgrade,Jeff Gibb,Optify Professional,77,41000,30-Apr-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,41000,30-Apr-12,ENTERPRISE
+50002,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,41015,30-Apr-12,PRO
+50002,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,41015,30-Apr-12,PRO
+50000,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40969,31-Mar-12,PRO
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40969,31-Mar-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40969,31-Mar-12,ENTERPRISE
 6711,A Group Design,Software,Agency,Cor,Jeff Gibb,Optify Basic,99,40991,31-Mar-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - CertSuperior,Steven Woody,Optify Agency Bundle,83,40999,31-Mar-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - Reachcore,Steven Woody,Optify Agency Bundle,83,40999,31-Mar-12,AGENCY
@@ -2916,8 +2919,6 @@
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,40973,31-Mar-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - MovingComfort,Jeff Gibb,Optify Professional,150,40970,31-Mar-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,40969,31-Mar-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40969,31-Mar-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40969,31-Mar-12,ENTERPRISE
 2721,Expedia Inc,Services,Consulting,Expedia-Local,Jeff Gibb,Managed Services Silver,3000,40988,31-Mar-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,40969,31-Mar-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,40975,31-Mar-12,ENTERPRISE
@@ -2972,7 +2973,6 @@
 6920,Cooperative Processing Resources,Software,Direct,Cooperative Processing Resources,Jeff Gibb,Optify Basic,99,40969,31-Mar-12,PRO
 5705,Corinthian Travel,Software,Direct,Corinthian Travel-,Steven Woody,Optify Basic,90,40976,31-Mar-12,EXPRESS
 6710,Couponology.com,Software,Direct,Couponology.com,Steven Woody,Optify Professional,199,40983,31-Mar-12,EXPRESS
-,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40969,31-Mar-12,PRO
 1218,Daptiv,Software,Direct,Daptiv 2012 - Renewal,Jeff Gibb,Optify Professional,500,40987,31-Mar-12,PRO
 871,Datapipe,Software,Direct,Datapipe - 2011 renewal,Jeff Gibb,Optify Professional,250,40969,31-Mar-12,PRO
 5464,Daycare Match LLC,Software,Direct,Daycare Match LLC,Scott Weiss,Optify Basic,99,40976,31-Mar-12,EXPRESS
@@ -2984,8 +2984,6 @@
 2842,Easy Solutions,Software,Direct,Easy Solutions - 2012 Renewal,Alyssa Putnam,Optify Professional,250,40971,31-Mar-12,PRO
 8474,"ESL Power Systems, Inc.",Software,Direct,"ESL Power Systems, Inc.",Steven Woody,Optify Basic,141.78,40995,31-Mar-12,EXPRESS
 42,Eye Shield Technology,Software,Direct,Eye Shield Technology - 2011 Renewal,Scott Weiss,Optify Professional,400,40997,31-Mar-12,PRO
-,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40984,31-Mar-12,PRO
-,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40984,31-Mar-12,PRO
 6800,Federated Networks,Software,Direct,Federated Networks,Steven Woody,Optify Basic,99,40999,31-Mar-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,40978,31-Mar-12,EXPRESS
 374,Foothold Technology,Software,Direct,Foothold Technology - 2011 Renewal,Ting Van Osdol,Optify Basic,99,40994,31-Mar-12,EXPRESS
@@ -3111,6 +3109,11 @@
 2177,R2i,Software,Strategic,R2integrated,Sam Wheeler,Optify Basic,297,40969,31-Mar-12,AGENCY
 2177,R2i,Software,Strategic,R2i - Professional Upgrade,Jeff Gibb,Optify Professional,77,40969,31-Mar-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,40969,31-Mar-12,ENTERPRISE
+50002,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40984,31-Mar-12,PRO
+50002,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40984,31-Mar-12,PRO
+50000,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40940,29-Feb-12,PRO
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40940,29-Feb-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40940,29-Feb-12,ENTERPRISE
 6711,A Group Design,Software,Agency,Cor,Jeff Gibb,Optify Basic,99,40962,29-Feb-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - CertSuperior,Steven Woody,Optify Agency Bundle,83,40968,29-Feb-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - Reachcore,Steven Woody,Optify Agency Bundle,83,40968,29-Feb-12,AGENCY
@@ -3250,8 +3253,6 @@
 7451,Young Company,Software,Agency,Young Company,Will Wyatt,Optify Basic,75,40968,29-Feb-12,AGENCY
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,40944,29-Feb-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,40940,29-Feb-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40940,29-Feb-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40940,29-Feb-12,ENTERPRISE
 2721,Expedia Inc,Services,Consulting,Expedia-Local,Jeff Gibb,Managed Services Silver,3000,40959,29-Feb-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,40940,29-Feb-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,40946,29-Feb-12,ENTERPRISE
@@ -3297,7 +3298,7 @@
 6920,Cooperative Processing Resources,Software,Direct,Cooperative Processing Resources,Jeff Gibb,Optify Basic,99,40940,29-Feb-12,PRO
 5705,Corinthian Travel,Software,Direct,Corinthian Travel-,Steven Woody,Optify Basic,90,40947,29-Feb-12,EXPRESS
 6710,Couponology.com,Software,Direct,Couponology.com,Steven Woody,Optify Professional,199,40954,29-Feb-12,EXPRESS
-,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40940,29-Feb-12,PRO
+50002,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40955,29-Feb-12,PRO
 1218,Daptiv,Software,Direct,Daptiv 2011 - Renewal,Denise Cranney,Optify Professional,500,40940,29-Feb-12,PRO
 1218,Daptiv,Software,Direct,Daptiv 2012 - Renewal,Jeff Gibb,Optify Professional,500,40958,29-Feb-12,PRO
 871,Datapipe,Software,Direct,Datapipe - 2011 renewal,Jeff Gibb,Optify Professional,250,40940,29-Feb-12,PRO
@@ -3309,8 +3310,6 @@
 2842,Easy Solutions,Software,Direct,Easy Solutions - 2012 Renewal,Alyssa Putnam,Optify Professional,250,40942,29-Feb-12,PRO
 8474,"ESL Power Systems, Inc.",Software,Direct,"ESL Power Systems, Inc.",Steven Woody,Optify Basic,141.78,40966,29-Feb-12,EXPRESS
 42,Eye Shield Technology,Software,Direct,Eye Shield Technology - 2011 Renewal,Scott Weiss,Optify Professional,400,40968,29-Feb-12,PRO
-,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40955,29-Feb-12,PRO
-,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40955,29-Feb-12,PRO
 6800,Federated Networks,Software,Direct,Federated Networks,Steven Woody,Optify Basic,99,40968,29-Feb-12,EXPRESS
 7029,filelytics,Software,Direct,filelytics,Optify Admin,Optify Basic,99,40968,29-Feb-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,40949,29-Feb-12,EXPRESS
@@ -3431,6 +3430,11 @@
 2177,R2i,Software,Strategic,R2integrated,Sam Wheeler,Optify Basic,297,40940,29-Feb-12,AGENCY
 2177,R2i,Software,Strategic,R2i - Professional Upgrade,Jeff Gibb,Optify Professional,77,40940,29-Feb-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,40940,29-Feb-12,ENTERPRISE
+50002,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40955,29-Feb-12,PRO
+50000,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40909,31-Jan-12,PRO
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40909,31-Jan-12,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40909,31-Jan-12,ENTERPRISE
+50002,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40924,31-Jan-12,PRO
 6711,A Group Design,Software,Agency,Cor,Jeff Gibb,Optify Basic,99,40931,31-Jan-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - CertSuperior,Steven Woody,Optify Agency Bundle,83,40939,31-Jan-12,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - Reachcore,Steven Woody,Optify Agency Bundle,83,40939,31-Jan-12,AGENCY
@@ -3555,8 +3559,6 @@
 7451,Young Company,Software,Agency,Young Company,Will Wyatt,Optify Basic,75,40938,31-Jan-12,AGENCY
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,40913,31-Jan-12,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,40909,31-Jan-12,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40909,31-Jan-12,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40909,31-Jan-12,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2012 renewal,Steven Woody,Optify Premium,800,40909,31-Jan-12,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,40915,31-Jan-12,ENTERPRISE
 4475,Metacafe,Services,Consulting,Metacafe-,Denise Cranney,Managed Services Silver,3000,40939,31-Jan-12,ENTERPRISE
@@ -3599,7 +3601,6 @@
 6920,Cooperative Processing Resources,Software,Direct,Cooperative Processing Resources,Jeff Gibb,Optify Basic,99,40909,31-Jan-12,PRO
 5705,Corinthian Travel,Software,Direct,Corinthian Travel-,Steven Woody,Optify Basic,90,40916,31-Jan-12,EXPRESS
 6710,Couponology.com,Software,Direct,Couponology.com,Steven Woody,Optify Professional,199,40923,31-Jan-12,EXPRESS
-,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40909,31-Jan-12,PRO
 1218,Daptiv,Software,Direct,Daptiv 2011 - Renewal,Denise Cranney,Optify Professional,500,40909,31-Jan-12,PRO
 1218,Daptiv,Software,Direct,Daptiv 2012 - Renewal,Jeff Gibb,Optify Professional,500,40927,31-Jan-12,PRO
 871,Datapipe,Software,Direct,Datapipe - 2011 renewal,Jeff Gibb,Optify Professional,250,40909,31-Jan-12,PRO
@@ -3610,8 +3611,7 @@
 71,Directions on Microsoft,Software,Direct,Directions on Microsoft - 2011 Renewal,Jeff Gibb,Optify Professional,500,40909,31-Jan-12,PRO
 2842,Easy Solutions,Software,Direct,Easy Solutions,Steven Woody,Optify Professional,250,40933,31-Jan-12,PRO
 42,Eye Shield Technology,Software,Direct,Eye Shield Technology - 2011 Renewal,Scott Weiss,Optify Professional,400,40937,31-Jan-12,PRO
-,Eye Shield Technology - Adhesive Bra,Software,Direct,Eye Shield Technology - Adhesive Bra,Will Wyatt,Optify Additional Site Agency Bundle,79,40924,31-Jan-12,PRO
-,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40924,31-Jan-12,PRO
+50002,Eye Shield Technology - Freedom Form,Software,Direct,Eye Shield Technology - Freedom Form,Will Wyatt,Optify Additional Site Agency Bundle,79,40924,31-Jan-12,PRO
 6800,Federated Networks,Software,Direct,Federated Networks,Steven Woody,Optify Basic,99,40939,31-Jan-12,EXPRESS
 7029,filelytics,Software,Direct,filelytics,Optify Admin,Optify Basic,99,40937,31-Jan-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,40918,31-Jan-12,EXPRESS
@@ -3726,6 +3726,9 @@
 2177,R2i,Software,Strategic,R2integrated,Sam Wheeler,Optify Basic,297,40909,31-Jan-12,AGENCY
 2177,R2i,Software,Strategic,R2i - Professional Upgrade,Jeff Gibb,Optify Professional,77,40909,31-Jan-12,AGENCY
 23,SonoSite,Services,Strategic,Sonosite-2012 Renewal,Steven Woody,Managed Services Silver,5000,40909,31-Jan-12,ENTERPRISE
+50000,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40878,31-Dec-11,PRO
+50001,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40878,31-Dec-11,ENTERPRISE
+50001,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40878,31-Dec-11,ENTERPRISE
 6711,A Group Design,Software,Agency,Cor,Jeff Gibb,Optify Basic,99,40900,31-Dec-11,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - CertSuperior,Steven Woody,Optify Agency Bundle,83,40908,31-Dec-11,AGENCY
 5556,Abatta Marketing,Software,Agency,Abatta - Reachcore,Steven Woody,Optify Agency Bundle,83,40908,31-Dec-11,AGENCY
@@ -3848,8 +3851,6 @@
 7451,Young Company,Software,Agency,Young Company,Will Wyatt,Optify Basic,75,40907,31-Dec-11,AGENCY
 461,ADSI,Services,Consulting,ADSI - 2011 Renewal,Steven Woody,Managed Services Silver,1600,40882,31-Dec-11,PRO
 3132,Brooks Running,Software,Consulting,Brooks Running - Pro,Jeff Gibb,Optify Professional,500,40878,31-Dec-11,PRO
-,Dow Jones,Services,Consulting,The Wall Street Journal,Denise Cranney,Managed Services Silver,1500,40878,31-Dec-11,ENTERPRISE
-,Dow Jones,Software,Consulting,The Wall Street Journal,Denise Cranney,Optify Monthly User (Seat),150,40878,31-Dec-11,ENTERPRISE
 547,"Fierce, Inc.",Software,Consulting,Fierce - 2011 renewal,Steven Woody,Optify Professional,800,40878,31-Dec-11,ENTERPRISE
 2316,Intellius,Services,Consulting,Intelius 2012 renewal,Steven Woody,Optify Enterprise,3500,40884,31-Dec-11,ENTERPRISE
 4475,Metacafe,Services,Consulting,Metacafe-,Denise Cranney,Managed Services Silver,3000,40908,31-Dec-11,ENTERPRISE
@@ -3891,7 +3892,6 @@
 248,Corensic,Software,Direct,Corensic - 2011 renewal,Steven Woody,Optify Professional,250,40878,31-Dec-11,PRO
 5705,Corinthian Travel,Software,Direct,Corinthian Travel-,Steven Woody,Optify Basic,90,40885,31-Dec-11,EXPRESS
 6710,Couponology.com,Software,Direct,Couponology.com,Steven Woody,Optify Professional,199,40892,31-Dec-11,EXPRESS
-,CQR Pay,Software,Direct,CQR Pay,Steven Woody,Optify Professional,499,40878,31-Dec-11,PRO
 1218,Daptiv,Software,Direct,Daptiv 2011 - Renewal,Denise Cranney,Optify Professional,500,40878,31-Dec-11,PRO
 871,Datapipe,Software,Direct,Datapipe - 2011 renewal,Jeff Gibb,Optify Professional,250,40878,31-Dec-11,PRO
 5464,Daycare Match LLC,Software,Direct,Daycare Match LLC,Scott Weiss,Optify Basic,99,40885,31-Dec-11,EXPRESS
