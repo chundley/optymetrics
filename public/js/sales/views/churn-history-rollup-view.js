@@ -89,8 +89,36 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                             // hack through the data set to find values to make another service call
                             var type = this.series.name.split(' ')[0];
                             var productType = this.series.name.split(' ')[1];
-                            //alert(type);
-                            var startDate = new Date(this.category);
+
+                            // silly, but needed for browser compatibility
+                            var formatDate = function(date, callback) {
+                                var month = date.split('-')[0];
+                                var year = date.split('-')[1];
+                                var numMonth = 0;
+                                var numDay = 0;
+                                switch(month) {
+                                    case 'Jan': numMonth = 0; numDay = 31; break;
+                                    case 'Feb': numMonth = 1; numDay = (year == 2012 || year == 2016) ? 29: 28; break;
+                                    case 'Mar': numMonth = 2; numDay = 31; break;
+                                    case 'Apr': numMonth = 3; numDay = 30; break;
+                                    case 'May': numMonth = 4; numDay = 31; break;
+                                    case 'Jun': numMonth = 5; numDay = 30; break;
+                                    case 'Jul': numMonth = 6; numDay = 31; break;
+                                    case 'Aug': numMonth = 7; numDay = 31; break;
+                                    case 'Sep': numMonth = 8; numDay = 30; break;
+                                    case 'Oct': numMonth = 9; numDay = 31; break;
+                                    case 'Nov': numMonth = 10; numDay = 30; break;
+                                    case 'Dec': numMonth = 11; numDay = 31; break;
+                                }
+                                var ret = new Date(year, numMonth, numDay-1);
+                                callback(ret);
+                            }
+
+                            var startDate = null;
+                            formatDate(this.category, function(formattedDate) {
+                                startDate = new Date(formattedDate);
+                            });
+
                             var endDate = new Date(startDate);
                             endDate.setDate(startDate.getDate() + 31);
                             var query = '/rest/sales/'
