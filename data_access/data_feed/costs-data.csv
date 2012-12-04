@@ -49,7 +49,7 @@ Softlayer,Server,prod-tr-101.optify.net,199,0,1,0,0,
 Softlayer,Server,prod-tr-102.optify.net,199,0,1,0,0,
 Softlayer,Server,prod-vhost-101.optify.net,432,0,0,0,1,"IT, code review, DRE build server"
 Softlayer,Server,prod-www-102.optify.net,289,0,0,0,1,Corp www server
-Softlayer,Network,Bandwidth,792,0.2,0.8,0,0,
+Softlayer,Network,Bandwidth,680,0.2,0.8,0,0,
 AWS,Server,Development environment,1554,0,0,0,1,
 Anonymizer,Service,Keyword rank proxy,1496,1,0,0,0,
 WonderProxy,Service,Int''l Keyword rank proxy,240,1,0,0,0,
