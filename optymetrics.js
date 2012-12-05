@@ -84,8 +84,9 @@ var trelloBackfillJob = new cronJob("0 0 * * *", function() {
 trelloBackfillJob.start();
 
 // Run the PagerDuty backfill every 10 minutes 
-var pagerDutyBackfillJob = new cronJob("* */10 * * * *", function() {
+var pagerDutyBackfillJob = new cronJob("0 */10 * * *", function() {
     try {
+        debugger;
         logger.log('info', 'Running PagerDuty backfill');
         pagerDutyJob.pagerDutyBackfill();
     } catch(err) {
