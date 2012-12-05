@@ -153,6 +153,7 @@ Opty.MRRRollupChart = Backbone.View.extend({
 
         this.mrrRollupChartOptions.series[0].data = software;
         this.mrrRollupChartOptions.series[1].data = services;
+        this.mrrRollupChartOptions.series[1].visible = false;
         this.mrrRollupChartOptions.xAxis.categories = categories
 
         this.chart = new Highcharts.Chart(this.mrrRollupChartOptions);

@@ -120,7 +120,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                             });
 
                             var endDate = new Date(startDate);
-                            endDate.setDate(startDate.getDate() + 31);
+                            endDate.setDate(startDate.getDate() + 3);
                             var query = '/rest/sales/'
                             if (type == 'New') {
                                 query += 'new-detail';
@@ -307,8 +307,10 @@ Opty.ChurnRollupChart = Backbone.View.extend({
 
         this.churnRollupChartOptions.series[0].data = softwareChurn;
         this.churnRollupChartOptions.series[1].data = servicesChurn;
+        this.churnRollupChartOptions.series[1].visible = false;
         this.churnRollupChartOptions.series[2].data = softwareNew;
         this.churnRollupChartOptions.series[3].data = servicesNew;
+        this.churnRollupChartOptions.series[3].visible = false;
 
         this.churnRollupChartOptions.xAxis.categories = categories
 
