@@ -9,7 +9,7 @@ Opty.IncidentsCollection = Backbone.Collection.extend({
     model: Opty.IncidentsModel,
     url: function () {
         var st = Date.UTC(this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate());
-        var ed = Date.UTC(this.endDate.getFullYear(), this.endDate.getMonth(), this.endDate.getDate());
+        var ed = Date.UTC(this.endDate.getFullYear(), this.endDate.getMonth(), this.endDate.getDate(), 23, 59, 59);
 
         return '/ops/incidents?start=' + st + '&end=' + ed;
     },
