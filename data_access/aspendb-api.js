@@ -7,6 +7,7 @@
 */
 var async = require('async'),
     pg = require('pg'),
+    moment = require('moment'),
     _ = require('underscore');
 
 /**
@@ -131,6 +132,7 @@ var backfillWeeklyFeatureUsageStats = function (callback) {
                         feature: result.rows[row].feature
                         , weekNum: result.rows[row].week_num
                         , weekOf: result.rows[row].week_of
+                        , weekOfDate: moment(result.rows[row].week_of).toDate()
                         , uniqueUsers: result.rows[row].unique_users
                         , uniqueCustomers: result.rows[row].unique_customers
                         , visits: result.rows[row].visits

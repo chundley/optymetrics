@@ -36,6 +36,7 @@ var WeeklyFeatureUsageStatsSchema = new Schema({
     feature  : String, 
     weekNum  : String, 
     weekOf  : String, 
+    weekOfDate: Date,
     uniqueUsers  : Number, 
     uniqueCustomers  : Number, 
     visits  : Number, 
