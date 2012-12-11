@@ -1,5 +1,6 @@
 var storyDao = require('../data_access/story-dao.js'),
     appUsageDao = require('../data_access/appusage-dao.js'),
+    logger = require('../util/logger.js'),
     date_util = require('../util/date_util.js');
 
 exports.velocityByFeatureGroup = function(req, res, next) {
@@ -87,7 +88,6 @@ exports.averageCycleTime = function(req, res, next) {
     });
 };
 
-
 exports.weeklyCustomerUserStats = function (req, res, next) {
     appUsageDao.getWeeklyCustomerUserStats(function (err, weeklyData) {
          if(err) {
@@ -100,7 +100,6 @@ exports.weeklyCustomerUserStats = function (req, res, next) {
     });
 };
 
-
 exports.weeklyFeatureUsageStats = function (req, res, next) {
     appUsageDao.getWeeklyFeatureUsageStats(function (err, weeklyData) {
          if(err) {
@@ -110,5 +109,20 @@ exports.weeklyFeatureUsageStats = function (req, res, next) {
             return;
         }
         res.send(weeklyData);
+    });
+};
+
+exports.featureUseByCustomerId = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+    var customerId = parseInt(req.query['id']);
+    appUsageDao.getFeatureUsageByCustomerId(customerId, startDate, endDate, function (err, data) {
+         if(err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(data);
     });
 };

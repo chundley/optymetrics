@@ -223,6 +223,15 @@ app.get('/rest/productdev/velocity/trend', requiresLogin, routes.productdev.velo
 // Gets average cycle time data as JSON
 app.get('/rest/productdev/cycletime', requiresLogin, routes.productdev.averageCycleTime);
 
+//Gets customer counts by sku aggregated weekly as JSON
+app.get('/rest/productdev/weekly-customer-user-stats', requiresLogin, routes.productdev.weeklyCustomerUserStats);
+
+//Gets feature usage stats aggregated weekly as JSON
+app.get('/rest/productdev/weekly-feature-usage', requiresLogin, routes.productdev.weeklyFeatureUsageStats);
+
+//Gets feature usage stats aggregated weekly as JSON
+app.get('/rest/productdev/feature-use-by-customer', requiresLogin, routes.productdev.featureUseByCustomerId);
+
 // Gets TCO data as JSON
 app.get('/ops/tco', requiresLogin, routes.operations.tco);
 
@@ -277,11 +286,6 @@ app.get('/rest/sales/new-detail', requiresLogin, routes.sales.mrrsNewDetail);
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 
-//Gets customer counts by sku aggregated weekly as JSON
-app.get('/rest/productdev/weekly-customer-user-stats', requiresLogin, routes.productdev.weeklyCustomerUserStats);
-
-//Gets feature usage stats aggregated weekly as JSON
-app.get('/rest/productdev/weekly-feature-usage', requiresLogin, routes.productdev.weeklyFeatureUsageStats);
 
 /**
 * fetch uptime data (detailed)

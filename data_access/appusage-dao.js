@@ -189,7 +189,24 @@ var getWeeklyFeatureUsageStats = function(callback){
     
 };
 
+var getFeatureUsageByCustomerId = function(customerId, startDate, endDate, callback) {
+    var command = {
+        aggregate: 'dailyappusageraws',
+        pipeline:
+          [
+            { $match: { customerId: customerId, dateOf: {$gte : startDate, $lt : endDate} }},  
+            { $group: {_id: { app:"$app", eventApp: "$eventApp", eventName:"$eventName"}, count: { $sum:1 }}},
+            { $project: {_id: 0, app: "$_id.app", eventApp: "$_id.eventApp", eventName: "$_id.eventName", count: "$count"}}
+          ]
+    };
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        callback(null, results.documents[0].result);
+    });
+}
+
 // The module's public API
+exports.getFeatureUsageByCustomerId = getFeatureUsageByCustomerId;
+
 exports.insertDailyAppUsageRawRecord = insertDailyAppUsageRawRecord;
 exports.removeDailyAppUsageRawForDates = removeDailyAppUsageRawForDates;
 exports.getDailyAppUsageRecordCount = getDailyAppUsageRecordCount;
