@@ -54,7 +54,7 @@ var getUptimeData = function (monitorName, startDate, endDate, callback) {
             mapreduce: 'uptimes',
             map: map.toString(),
             reduce: reduce.toString(), // map and reduce functions need to be strings
-            query: { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} },
+            query: { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gte: startDate, $lte: endDate} },
             out: { inline: 1 }
         };
 
@@ -114,7 +114,7 @@ var getUptimeDataAggregate = function (monitorName, startDate, endDate, callback
         where = { 'monitorName': monitorName, monitorDate: { $gte: startDate, $lte: endDate} };
     }
     else {
-        where = { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gt: startDate, $lte: endDate} };
+        where = { $or: [{ 'monitorName': 'service' }, { 'monitorName': 'dashboardormaint' }, { 'monitorName': 'landingpages' }, { 'monitorName': 'api'}], monitorDate: { $gte: startDate, $lte: endDate} };
     }
 
     var command = {

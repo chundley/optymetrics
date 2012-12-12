@@ -42,13 +42,13 @@ Opty.OperationsView = Backbone.View.extend({
                     var $dashboardrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>dashboard.optify.net</span></div></div></div></div>');
                     var $dashboardrow = $('<div>', { 'class': 'row' });
 
-                    var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboard' });
+                    var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboardormaint' });
                     var $dashboardCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionDashboard, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
                     var $dashboardPreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionDashboard, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
                     $dashboardrow.append($dashboardCurrentPeriodWidget.$el);
                     $dashboardrow.append($dashboardPreviousPeriodWidget.$el);
 
-                    var uptimeCollectionDashboardDetail = new Opty.UptimeCollection({ 'monitorName': 'dashboard' });
+                    var uptimeCollectionDashboardDetail = new Opty.UptimeCollection({ 'monitorName': 'dashboardormaint' });
                     var $uptimeWidgetDashboardTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboardDetail, cssClass: 'span3', header: 'Daily Detail' });
                     $dashboardrow.append($uptimeWidgetDashboardTrend.$el);
 
