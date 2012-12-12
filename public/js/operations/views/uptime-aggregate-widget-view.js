@@ -11,8 +11,10 @@ Opty.UptimeAggregateWidgetView = Backbone.View.extend({
         _.bindAll(me, 'render', 'widgetDataChanged');
 
         me.collection = options.collection;
-        me.title = options.title;
-        me.goal = options.goal;
+        me.cssClass = options.cssClass;
+        me.header = options.header;
+        me.footer = options.footer;
+        me.current = options.current;
         me.collection.on('reset', me.widgetDataChanged);
     },
     widgetDataChanged: function () {
@@ -26,19 +28,30 @@ Opty.UptimeAggregateWidgetView = Backbone.View.extend({
         var model = me.collection.models[0];
         var currentPerc = model.get('current').uptime / (model.get('current').uptime + model.get('current').downtime) * 100;
         var oldPerc = model.get('previous').uptime / (model.get('previous').uptime + model.get('previous').downtime) * 100;
-
+        
         if (Math.abs(currentPerc - oldPerc) < .001) {
             currentPerc = oldPerc;
         }
-        var updown = (oldPerc == currentPerc || isNaN(currentPerc) || isNaN(oldPerc)) ? 'neutral' : (oldPerc < currentPerc) ? 'up' : 'down';
-        var widget_table = new Opty.PeriodCompareWidgetView({
-            title: me.title,
-            goal: me.goal,
-            actual: Opty.util.formatNumber(currentPerc, 3) + '%',
-            type: updown,
-            delta: Opty.util.formatNumber(Math.abs(oldPerc - currentPerc), 3) + '%'
+        var metric = 0;
+
+        if (me.current) {
+            metric = currentPerc;
+        }
+        else {
+            metric = oldPerc;
+        }
+        var digits = 3;
+        if (metric == 100) {
+            digits = 0;
+        }
+        var widget = new Opty.SingleMetricWidgetView({
+            cssClass: me.cssClass,
+            header: me.header,
+            metric: Opty.util.formatNumber(metric, digits) + '%',
+            footer: me.footer
         });
-        this.$el.append(widget_table.$el);
+
+        this.$el.append(widget.$el);
         return this.$el;
     }
 });

@@ -24,71 +24,90 @@ Opty.OperationsView = Backbone.View.extend({
                     $datePickerRow.append(datePickerView.$el);
                     me.$el.append($datePickerRow);
 
-                    // pre-render divs or the widgets will render in random order
-                    // ROW 1
-                    var $row1 = $('<div>', { 'class': 'row' });
-                    var $divUptimeServiceAggregate = $('<div>', { 'class': 'span3' });
-                    var $divUptimeDashboardAggregate = $('<div>', { 'class': 'span3' });
-                    var $divUptimePagesAggregate = $('<div>', { 'class': 'span3' });
-                    var $divUptimeApiAggregate = $('<div>', { 'class': 'span3' });
-                    me.$el.append($row1);
-                    $row1.append($divUptimeServiceAggregate);
-                    $row1.append($divUptimeDashboardAggregate);
-                    $row1.append($divUptimePagesAggregate);
-                    $row1.append($divUptimeApiAggregate);
+                    // overall system uptime
+                    var $overallrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>Entire System</span></div></div></div></div>');
+                    var $overallrow = $('<div>', { 'class': 'row' });
 
-                    // ROW 2
-                    var $row2 = $('<div>', { 'class': 'row' });
-                    var $divUptimeService = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
-                    var $divUptimeDashboard = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
-                    var $divUptimePages = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
-                    var $divUptimeApi = $('<div>', { 'class': 'span3', 'style': 'padding-top: 10px;' });
-                    me.$el.append($row2);
-                    $row2.append($divUptimeService);
-                    $row2.append($divUptimeDashboard);
-                    $row2.append($divUptimePages);
-                    $row2.append($divUptimeApi);
+                    var uptimeCollectionSystem = new Opty.UptimeAggregateCollection({ });
+                    var $overallCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionSystem, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
+                    var $overallPreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionSystem, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
+                    $overallrow.append($overallCurrentPeriodWidget.$el);
+                    $overallrow.append($overallPreviousPeriodWidget.$el);
 
-                    // fetch and render uptime widget for service.optify.net
+                    var uptimeCollectionSystemDetail = new Opty.UptimeCollection({ });
+                    var $uptimeWidgetSystemTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionSystemDetail, cssClass: 'span3', header: 'Daily Detail' });
+                    $overallrow.append($uptimeWidgetSystemTrend.$el);
+
+                    // dashboard uptime
+                    var $dashboardrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>dashboard.optify.net</span></div></div></div></div>');
+                    var $dashboardrow = $('<div>', { 'class': 'row' });
+
+                    var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboard' });
+                    var $dashboardCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionDashboard, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
+                    var $dashboardPreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionDashboard, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
+                    $dashboardrow.append($dashboardCurrentPeriodWidget.$el);
+                    $dashboardrow.append($dashboardPreviousPeriodWidget.$el);
+
+                    var uptimeCollectionDashboardDetail = new Opty.UptimeCollection({ 'monitorName': 'dashboard' });
+                    var $uptimeWidgetDashboardTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboardDetail, cssClass: 'span3', header: 'Daily Detail' });
+                    $dashboardrow.append($uptimeWidgetDashboardTrend.$el);
+
+                    // service uptime
+                    var $servicerowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>service.optify.net</span></div></div></div></div>');
+                    var $servicerow = $('<div>', { 'class': 'row' });
+
                     var uptimeCollectionService = new Opty.UptimeAggregateCollection({ 'monitorName': 'service' });
-                    var uptimeWidgetService = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionService, title: 'service uptime', goal: '99.99%' });
-                    $divUptimeServiceAggregate.append(uptimeWidgetService.$el);
+                    var $serviceCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionService, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
+                    var $servicePreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionService, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
+                    $servicerow.append($serviceCurrentPeriodWidget.$el);
+                    $servicerow.append($servicePreviousPeriodWidget.$el);
 
-                    // fetch and render uptime widget for dashboard.optify.net
-                    var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboardormaint' });
-                    var uptimeWidgetDashboard = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionDashboard, title: 'dashboard uptime', goal: '99.99%' });
-                    $divUptimeDashboardAggregate.append(uptimeWidgetDashboard.$el);
+                    var uptimeCollectionServiceDetail = new Opty.UptimeCollection({ 'monitorName': 'service' });
+                    var $uptimeWidgetServiceTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionServiceDetail, cssClass: 'span3', header: 'Daily Detail' });
+                    $servicerow.append($uptimeWidgetServiceTrend.$el);
 
+                    // pages uptime
+                    var $pagesrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>pages.optify.net</span></div></div></div></div>');
+                    var $pagesrow = $('<div>', { 'class': 'row' });
 
-                    // fetch and render uptime widget for pages.optify.net
-                    var uptimeCollectionLandingPages = new Opty.UptimeAggregateCollection({ 'monitorName': 'landingpages' });
-                    var uptimeWidgetLandingPages = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionLandingPages, title: 'landing pages uptime', goal: '99.99%' });
-                    $divUptimePagesAggregate.append(uptimeWidgetLandingPages.$el);
+                    var uptimeCollectionPages = new Opty.UptimeAggregateCollection({ 'monitorName': 'landingpages' });
+                    var $pagesCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionPages, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
+                    var $pagesPreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionPages, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
+                    $pagesrow.append($pagesCurrentPeriodWidget.$el);
+                    $pagesrow.append($pagesPreviousPeriodWidget.$el);
 
-                    // fetch and render uptime widget for api.optify.net
+                    var uptimeCollectionPagesDetail = new Opty.UptimeCollection({ 'monitorName': 'landingpages' });
+                    var $uptimeWidgetPagesTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionPagesDetail, cssClass: 'span3', header: 'Daily Detail' });
+                    $pagesrow.append($uptimeWidgetPagesTrend.$el);
+
+                    // api uptime
+                    var $apirowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>api.optify.net</span></div></div></div></div>');
+                    var $apirow = $('<div>', { 'class': 'row' });
+
                     var uptimeCollectionApi = new Opty.UptimeAggregateCollection({ 'monitorName': 'api' });
-                    var uptimeWidgetApi = new Opty.UptimeAggregateWidgetView({ collection: uptimeCollectionApi, title: 'api uptime', goal: '99.99%' });
-                    $divUptimeApiAggregate.append(uptimeWidgetApi.$el);
+                    var $apiCurrentPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionApi, cssClass: 'span3', header: 'This Period', footer: 'Uptime', current: true});
+                    var $apiPreviousPeriodWidget = new Opty.UptimeAggregateWidgetView({collection: uptimeCollectionApi, cssClass: 'span3', header: 'Previous Period', footer: 'Uptime', current: false});
+                    $apirow.append($apiCurrentPeriodWidget.$el);
+                    $apirow.append($apiPreviousPeriodWidget.$el);
 
-                    // fetch and render uptime trend widget for service.optify.net
-                    var uptimeCollectionService2 = new Opty.UptimeCollection({ 'monitorName': 'service' });
-                    var uptimeWidgetService2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionService2, title: 'service - daily status' });
-                    $divUptimeService.append(uptimeWidgetService2.$el);
+                    var uptimeCollectionApiDetail = new Opty.UptimeCollection({ 'monitorName': 'api' });
+                    var $uptimeWidgetApiTrend = new Opty.UptimeWidgetView({ collection: uptimeCollectionApiDetail, cssClass: 'span3', header: 'Daily Detail' });
+                    $apirow.append($uptimeWidgetApiTrend.$el);
 
-                    // fetch and render uptime trend widget for dashboard.optify.net
-                    var uptimeCollectionDashboard2 = new Opty.UptimeCollection({ 'monitorName': 'dashboardormaint' });
-                    var uptimeWidgetDashboard2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionDashboard2, title: 'dashboard - daily status' });
-                    $divUptimeDashboard.append(uptimeWidgetDashboard2.$el);
+                    me.$el.append($overallrowheader);
+                    me.$el.append($overallrow);
 
-                    // fetch and render uptime trend widget for pages.optify.net
-                    var uptimeCollectionPages2 = new Opty.UptimeCollection({ 'monitorName': 'landingpages' });
-                    var uptimeWidgetPages2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionPages2, title: 'landing pages - daily status' });
-                    $divUptimePages.append(uptimeWidgetPages2.$el);
+                    me.$el.append($dashboardrowheader);
+                    me.$el.append($dashboardrow);
 
-                    // fetch and render uptime trend widget for api.optify.net
-                    var uptimeCollectionApi2 = new Opty.UptimeCollection({ 'monitorName': 'api' });
-                    var uptimeWidgetApi2 = new Opty.UptimeWidgetView({ collection: uptimeCollectionApi2, title: 'api - daily status' });
-                    $divUptimeApi.append(uptimeWidgetApi2.$el);
+                    me.$el.append($servicerowheader);
+                    me.$el.append($servicerow);
+
+                    me.$el.append($pagesrowheader);
+                    me.$el.append($pagesrow);
+
+                    me.$el.append($apirowheader);
+                    me.$el.append($apirow);
 
                     datePickerView.render();
                     break;
