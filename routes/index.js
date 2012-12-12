@@ -52,7 +52,8 @@ exports.index = function(req, res, next) {
             '/js/sales/views/sales-calc-view.js',
             '/js/sales/views/mrr-history-rollup-view.js',
             '/js/sales/views/mrr-history-sku-view.js',
-            '/js/sales/views/churn-history-rollup-view.js',            
+            '/js/sales/views/churn-history-rollup-view.js',
+            '/js/services/views/services-view.js',
             '/js/productdev/models/usage-by-sku.js',
             '/js/productdev/models/feature-usage-by-week.js'
 
@@ -66,3 +67,4 @@ exports.productdev = require('./productdev.js');
 exports.profile = require('./profile.js');
 exports.session = require('./session.js');
 exports.sales = require('./sales.js');
+exports.services = require('./services.js');

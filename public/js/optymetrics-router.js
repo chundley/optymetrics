@@ -13,7 +13,9 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         'productdev': 'productdevRoute',
         'productdev/:subpage': 'productdevRoute',
         'sales': 'salesRoute',
-        'sales/:subpage': 'salesRoute'
+        'sales/:subpage': 'salesRoute',
+        'services': 'servicesRoute',
+        'services/:subpage': 'servicesRoute'        
     },
 
     initialize: function (options) {
@@ -25,6 +27,7 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
                   'operationsRoute',
                   'productdevRoute',
                   'salesRoute',
+                  'servicesRoute',
                   'updateNavState');
     },
 
@@ -160,6 +163,37 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty()
             .append(Optymetrics_subnav.render())
             .append(sales_view.render());
+    },
+
+    servicesRoute: function (subpage) {
+        this.updateNavState('services');
+        var nav_options = [
+            {
+                url_fragment: 'research',
+                title: 'Customer Research',
+                selected: true // default
+            },
+            {
+                url_fragment: 'support',
+                title: 'Tier 1 Support'
+            }
+        ];
+
+        if (subpage) {
+            _.each(nav_options, function (option) {
+                option.selected = (option.url_fragment == subpage);
+            });
+        }
+
+        var services_view = new Opty.ServicesView({ selected: subpage });
+        var Optymetrics_subnav = new Opty.OptyMetricSubNav({
+            root_hash: '#services',
+            nav_options: nav_options
+        });
+
+        $('div.tab-content').empty()
+            .append(Optymetrics_subnav.render())
+            .append(services_view.render());
     },
 
     updateNavState: function (tab_name) {
