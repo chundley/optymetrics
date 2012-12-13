@@ -14,7 +14,7 @@ Opty.CustomerSummaryView = Backbone.View.extend({
         var widget_template = _.template(' \
             <table class="table table-striped table-bordered table-condensed"> \
              <tr> \
-                <td colspan="2"style="font-weight: bold; text-align: center; background: #343434; color: #eeeeee"><%= customerName %></td> \
+                <td colspan="2"style="font-size: 16px; font-weight: bold; text-align: center; background: #48a1d9; color: #000000"><%= customerName %></td> \
             </tr> \
             <tr> \
                 <td>Optify customer ID</td> \
@@ -60,6 +60,8 @@ Opty.CustomerSummaryView = Backbone.View.extend({
         ');
         
         // set up some of the data
+        var customerId = '<a href="http://dashboard.optify.net/admin/customer/edit/' + this.collection.models[0].get('id') + '" target="_new">' + this.collection.models[0].get('id') + '</a>';
+        var salesforceName = '<a href="https://na1.salesforce.com/search/SearchResults?searchType=2&str=' + this.collection.models[0].get('salesforceName') + '" target="_new">' + this.collection.models[0].get('salesforceName') + '</a>';
         var createdAt = new Date(this.collection.models[0].get('createdAt'));
 
         var activeSites = 0, inactiveSites = 0;
@@ -77,8 +79,8 @@ Opty.CustomerSummaryView = Backbone.View.extend({
 
         this.$el.append(widget_template({
             customerName: this.collection.models[0].get('name'),
-            customerId: this.collection.models[0].get('id'),
-            salesForceName: this.collection.models[0].get('salesforceName'),
+            customerId: customerId,
+            salesForceName: salesforceName,
             dateCreated: createdAt.getFullYear() + '-' + Opty.util.padNumber(createdAt.getMonth() + 1, 2) + '-' + Opty.util.padNumber(createdAt.getDate(), 2),
             sku: this.collection.models[0].get('sku'),
             totalSites: inactiveSites + activeSites,

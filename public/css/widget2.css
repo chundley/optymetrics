@@ -58,12 +58,12 @@
 	background-position: center;
 	width: 100%;
     background-repeat: repeat-x;
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .widget-group-header 
 {
-	color: #dfba69;
+	color: #48a1d9;
 	font-size: 16px;
 	margin-bottom: 5px;
 	letter-spacing: 2px;

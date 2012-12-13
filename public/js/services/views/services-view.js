@@ -46,7 +46,8 @@ Opty.ServicesView = Backbone.View.extend({
         // end search box config
 
         var $firstRow = $('<div>', { 'class': 'row' });
-        var $sitesDiv = $('<div>', { 'class': 'span12' });
+        var $secondRow = $('<div>', { 'class': 'row' });
+        var $sitesDiv = $('<div>', { 'class': 'span14' });
         var $summaryDiv = $('<div>', { 'class': 'span4' });
         var customerCollection = new Opty.CustomerCollection({});
         var customerSummaryView = new Opty.CustomerSummaryView({collection: customerCollection});
@@ -56,11 +57,13 @@ Opty.ServicesView = Backbone.View.extend({
 
         $firstRow.append($sitesDiv);
         $firstRow.append($summaryDiv);
-        me.$el.append($firstRow);
 
+
+        me.$el.append($firstRow);
+        me.$el.append($secondRow);
+
+        // if an id is present this was a hard-coded request for customer detail
         if (id) {
-            // TEST TEST.  Can we trigger this here so the rest of the views refresh?  Need to fill in the searchbox as well
-            me.$el.append('Link case');
             Opty.pubsub.trigger('searchbox:changed', { id: id });
         }
 

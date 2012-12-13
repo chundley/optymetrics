@@ -9,42 +9,96 @@ Opty.CustomerSiteView = Backbone.View.extend({
     },
 
     render: function () {
+        var me = this;
         this.$el.empty();
 
-        var widget_template = _.template(' \
-            <table class="table table-striped table-bordered table-condensed"> \
-            <thead style="background: #343434; color: #eeeeee"> \
-            <tr> \
-                <th>Name</th> \
-                <th>Domain</th> \
-                <th style="text-align: right;">Date created</th> \
-                <th style="text-align: right;">Visitors (30d)</th> \
-                <th style="text-align: right;">Keywords</th> \
-                <th style="text-align: right;">TCO Traffic</th> \
-                <th style="text-align: right;">TCO Keywords</th> \
-                <th style="text-align: right;">Total TCO</th> \
-            </tr> \
-            </thead> \
-            <% _.each(sites, function(site) { %> \
-                <% var date = new Date(site.createdAt); %> \
-                <tr> \
-                    <td> <%= site.name %> </td> \
-                    <td> <%= site.siteDomain %> </td> \
-                    <td style="text-align: right;"> <%= date.getFullYear() + "-" + Opty.util.padNumber(date.getMonth() + 1, 2) + "-" + Opty.util.padNumber(date.getDate(), 2) %> </td> \
-                    <td style="text-align: right;"> <%= Opty.util.formatNumber(site.visitors, 0) %> </td> \
-                    <td style="text-align: right;"> <%= Opty.util.formatNumber(site.keywords, 0) %> </td> \
-                    <td style="text-align: right;"> <%= "$" + Opty.util.formatNumber(site.tcoTraffic, 0) %> </td> \
-                    <td style="text-align: right;"> <%= "$" + Opty.util.formatNumber(site.tcoSEO, 0) %> </td> \
-                    <td style="text-align: right;"> <%= "$" + Opty.util.formatNumber(site.tcoTotal, 0) %> </td> \
-                </tr> \
-            <% }); %> \
-            </table> \
-        ');
-        
-        this.$el.append(widget_template({
-            sites: this.collection.models[0].get('organizations')
-        }));
+        // crappy boilerplate to convert site array into a backbone collection for table rendering
+        var SiteModel = Backbone.Model.extend({});
+        var SiteCollection = Backbone.Collection.extend({
+            model: SiteModel
+        });
 
+        var siteCollection = new SiteCollection();
+        siteCollection.reset(me.collection.models[0].get('organizations'));
+
+        
+        var sites_table = new Opty.TableView({
+            table_fields: [
+                {
+                    field: 'name',
+                    display_name: 'Site name'
+                },
+                {
+                    field: 'siteDomain',
+                    display_name: 'Domain',
+                    formatter: function(data) {
+                        return '<a href="' + data + '" target="_new">' + data + '</a>';
+                    }
+                },
+                {
+                    field: 'id',
+                    display_name: 'Spoof',
+                    text_align: 'center',
+                    formatter: function(data) {
+                        return '<a href="http://dashboard.optify.net/admin/index:spoofSite/' + data + '" target="_new">==></a>';
+                    }
+                },
+                {
+                    field: 'createdAt',
+                    display_name: 'Date created',
+                    formatter: 'date',
+                    text_align: 'right'
+                },
+                {
+                    field: 'visitors',
+                    display_name: 'Visitors (30d)',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return Opty.util.formatNumber(data, 0)
+                    }
+                },
+                {
+                    field: 'keywords',
+                    display_name: 'Keywords',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return Opty.util.formatNumber(data, 0)
+                    }
+                },
+                {
+                    field: 'tcoTraffic',
+                    display_name: '$ Traffic',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return '$' + Opty.util.formatNumber(data, 0)
+                    }
+                },
+                {
+                    field: 'tcoSEO',
+                    display_name: '$ SEO',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return '$' + Opty.util.formatNumber(data, 0)
+                    }
+                },
+                {
+                    field: 'tcoTotal',
+                    display_name: '$ Total',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return '$' + Opty.util.formatNumber(data, 0)
+                    }
+                }
+            ],
+            sortable: true,
+            defaultSort: [[8, 1]],            
+            collection: siteCollection
+        });
+        
+        var $divTitle = $('<div class="widget-group-header-container"><div class="widget-group-header"><span>Sites</span></div></div>');
+        this.$el.append($divTitle);
+        this.$el.append(sites_table.$el);
+        sites_table.render();
         return this.$el;
     }
 });
