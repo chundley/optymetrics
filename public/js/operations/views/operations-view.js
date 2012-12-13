@@ -208,104 +208,107 @@ Opty.OperationsView = Backbone.View.extend({
 
                     var tco_table = new Opty.TableView({
                         table_fields: [
-                    {
-                        field: 'name',
-                        display_name: 'Customer'
-                    },
-                    {
-                        field: 'sku',
-                        display_name: 'SKU'
-                    },
-                    {
-                        field: 'pageviews',
-                        display_name: 'Page views',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return Opty.util.formatNumber(data, 0);
-                            } else {
-                                return '0';
+                        {
+                            field: 'name',
+                            display_name: 'Customer',
+                            formatter: function(data, id) {
+                                return '<a href="/#services/research/' + id + '">' + data + '</a>';
                             }
-                        }
-                    },
-                    {
-                        field: 'tcoTraffic',
-                        display_name: 'Traffic TCO',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return '$' + Opty.util.formatNumber(data, 2);
-                            } else {
-                                return '$0.00';
-                            }
-                        }
-                    },
-                    {
-                        field: 'keywords',
-                        display_name: 'Keywords',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return Opty.util.formatNumber(data, 0);
-                            } else {
-                                return '0';
-                            }
-                        }
-                    },
-                    {
-                        field: 'tcoSEO',
-                        display_name: 'Keyword TCO',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return '$' + Opty.util.formatNumber(data, 2);
-                            } else {
-                                return '$0.00';
-                            }
-                        }
-                    },
-                    {
-                        field: 'tcoTotal',
-                        display_name: 'Total TCO',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return '$' + Opty.util.formatNumber(data, 2);
-                            } else {
-                                return '$0.00';
-                            }
-                        }
-                    },
-                    {
-                        field: 'mrr',
-                        display_name: 'Software MRR',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                return '$' + Opty.util.formatNumber(data, 2);
-                            } else {
-                                return '$0.00';
-                            }
-                        }
-                    },
-                    {
-                        field: 'netRevenue',
-                        display_name: 'Net Revenue',
-                        text_align: 'right',
-                        formatter: function (data) {
-                            if (data) {
-                                if (data < 0) {
-                                    return '($' + Opty.util.formatNumber(data, 2).replace(/-/, '') + ')';
+                        },
+                        {
+                            field: 'sku',
+                            display_name: 'SKU'
+                        },
+                        {
+                            field: 'pageviews',
+                            display_name: 'Page views',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return Opty.util.formatNumber(data, 0);
+                                } else {
+                                    return '0';
                                 }
-                                else {
+                            }
+                        },
+                        {
+                            field: 'tcoTraffic',
+                            display_name: 'Traffic TCO',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
                                     return '$' + Opty.util.formatNumber(data, 2);
+                                } else {
+                                    return '$0.00';
                                 }
-                            } else {
-                                return '$0.00';
+                            }
+                        },
+                        {
+                            field: 'keywords',
+                            display_name: 'Keywords',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return Opty.util.formatNumber(data, 0);
+                                } else {
+                                    return '0';
+                                }
+                            }
+                        },
+                        {
+                            field: 'tcoSEO',
+                            display_name: 'Keyword TCO',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return '$' + Opty.util.formatNumber(data, 2);
+                                } else {
+                                    return '$0.00';
+                                }
+                            }
+                        },
+                        {
+                            field: 'tcoTotal',
+                            display_name: 'Total TCO',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return '$' + Opty.util.formatNumber(data, 2);
+                                } else {
+                                    return '$0.00';
+                                }
+                            }
+                        },
+                        {
+                            field: 'mrr',
+                            display_name: 'Software MRR',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return '$' + Opty.util.formatNumber(data, 2);
+                                } else {
+                                    return '$0.00';
+                                }
+                            }
+                        },
+                        {
+                            field: 'netRevenue',
+                            display_name: 'Net Revenue',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    if (data < 0) {
+                                        return '($' + Opty.util.formatNumber(data, 2).replace(/-/, '') + ')';
+                                    }
+                                    else {
+                                        return '$' + Opty.util.formatNumber(data, 2);
+                                    }
+                                } else {
+                                    return '$0.00';
+                                }
                             }
                         }
-                    }
-                    ],
+                        ],
 
                         sortable: true,
                         defaultSort: [[6, 1]],
@@ -317,16 +320,6 @@ Opty.OperationsView = Backbone.View.extend({
                     this.$el.append($reportRow);
 
                     tco_collection.fetch();
-
-
-                    /*
-                    var tco_collection = new Opty.TCOCollection();
-
-
-                    var tcotable_view = new Opty.TCOTableView({ collection: tco_collection });
-                    this.$el.append(tcotable_view.$el);
-                    tco_collection.fetch();
-                    */
                     break;
                 }
             case 'vendor':

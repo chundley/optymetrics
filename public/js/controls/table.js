@@ -54,7 +54,7 @@ Opty.TableView = Backbone.View.extend({
                             <td style="text-align: <%= field.text_align || "left" %>;"> \
                                 <% if(field.formatter) { \
                                       if(typeof(field.formatter) === "function") { \
-                                          %><%= field.formatter(row.get(field.field)) %>  \
+                                          %><%= field.formatter(row.get(field.field), row.get("id")) %>  \
                                    <% } else if(typeof(field.formatter) === "string") { \
                                           %><%= view.columnFormatters[field.formatter](row.get(field.field)) %> \
                                    <% } \
