@@ -289,6 +289,9 @@ app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 //Searches for customers
 app.get('/rest/services/find-customer', requiresLogin, routes.services.findCustomer);
 
+//Searches for customers
+app.get('/rest/services/customer/:id', requiresLogin, routes.services.getCustomerById);
+
 /**
 * fetch uptime data (detailed)
 * @param monitorName            which monitor to pull data for

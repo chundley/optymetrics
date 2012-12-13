@@ -17,3 +17,22 @@ exports.findCustomer = function (req, res, next) {
         res.send(customers);
     });
 };
+
+exports.getCustomerById = function (req, res, next) {
+    var customerId = req.params.id;
+    if(!customerId) {
+        res.statusCode = 401;
+        res.send('Bad request');
+        return;
+    }
+    
+    customerDao.getCustomerById(customerId, function (err, customer) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(customer);
+    });
+};

@@ -57,7 +57,10 @@ exports.index = function(req, res, next) {
             '/js/sales/views/mrr-history-sku-view.js',
             '/js/sales/views/churn-history-rollup-view.js',
             '/js/services/views/services-view.js',
-            '/js/services/models/customer-search-model.js'
+            '/js/services/views/customer-summary-view.js',
+            '/js/services/views/customer-site-view.js',
+            '/js/services/models/customer-search-model.js',
+            '/js/services/models/customer-model.js'
         ],
     });
 };
