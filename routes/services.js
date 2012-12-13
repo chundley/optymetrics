@@ -2,18 +2,18 @@ var date_util = require('../util/date_util.js'),
     logger = require('../util/logger.js'),
     url = require('url'),
     fs = require('fs');
-    //appUsageDao = require('../data_access/appusage-dao.js'),
+    customerDao = require('../data_access/customer-dao.js'),
     //mrr_dao = require('../data_access/mrr-dao.js');
 
-exports.dummy = function (req, res, next) {
-    /*
-    appUsageDao.getMonthlyCustomersBySku(function (err, monthlyData) {
+exports.findCustomer = function (req, res, next) {
+    var query = req.query['q'];
+    customerDao.findCustomers(query, function (err, customers) {
         if (err) {
             logger.error(err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
-        }*/
-        res.send('nothing');
-    //});
+        }
+        res.send(customers);
+    });
 };

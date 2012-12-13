@@ -29,6 +29,20 @@ var getAllCustomers = function (callback) {
 };
 
 /**
+* Returns customers starting with the criteria passed in
+*/
+var findCustomers = function(customerName, callback) {
+    customer_model.CustomerModel.find({name: new RegExp(customerName, 'i')}, { name:1, id:1 }, function (err, docs) {
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, docs);
+        }
+    });
+}
+
+/**
 * Completely re-writes the customers collection with the passed in
 * set of customers
 */
@@ -143,6 +157,7 @@ var getSummaryCounts = function (callback) {
     });
 };
 
+exports.findCustomers = findCustomers;
 exports.getAllCustomers = getAllCustomers;
 exports.refreshAllCustomers = refreshAllCustomers;
 exports.saveCustomer = saveCustomer;

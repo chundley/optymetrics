@@ -286,6 +286,8 @@ app.get('/rest/sales/new-detail', requiresLogin, routes.sales.mrrsNewDetail);
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);
 
+//Searches for customers
+app.get('/rest/services/find-customer', requiresLogin, routes.services.findCustomer);
 
 /**
 * fetch uptime data (detailed)

@@ -15,6 +15,7 @@ exports.index = function(req, res, next) {
             '/js/controls/chart-widget-view.js',
             'js/controls/tri-pane-metric-widget.js',
             'js/controls/single-text-metric-widget.js',
+            'js/controls/search-box-view.js',
             '/js/optymetrics-router.js',
             '/js/optymetrics-subnav.js',
             '/js/default/views/default-view.js',
@@ -37,6 +38,8 @@ exports.index = function(req, res, next) {
             '/js/productdev/models/velocity-model.js',
             '/js/productdev/models/velocity-trend-model.js',
             '/js/productdev/models/story-model.js',
+            '/js/productdev/models/usage-by-sku.js',
+            '/js/productdev/models/feature-usage-by-week.js',
             '/js/productdev/views/productdev-view.js',
             '/js/productdev/views/velocity-chart-view.js',
             '/js/productdev/views/feature-group-chart-view.js',
@@ -54,9 +57,7 @@ exports.index = function(req, res, next) {
             '/js/sales/views/mrr-history-sku-view.js',
             '/js/sales/views/churn-history-rollup-view.js',
             '/js/services/views/services-view.js',
-            '/js/productdev/models/usage-by-sku.js',
-            '/js/productdev/models/feature-usage-by-week.js'
-
+            '/js/services/models/customer-search-model.js'
         ],
     });
 };

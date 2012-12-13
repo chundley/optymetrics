@@ -15,7 +15,8 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         'sales': 'salesRoute',
         'sales/:subpage': 'salesRoute',
         'services': 'servicesRoute',
-        'services/:subpage': 'servicesRoute'        
+        'services/:subpage': 'servicesRoute',
+        'services/:subpage/:id': 'servicesRoute'
     },
 
     initialize: function (options) {
@@ -165,7 +166,7 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
             .append(sales_view.render());
     },
 
-    servicesRoute: function (subpage) {
+    servicesRoute: function (subpage, id) {
         this.updateNavState('services');
         var nav_options = [
             {
@@ -185,7 +186,7 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
             });
         }
 
-        var services_view = new Opty.ServicesView({ selected: subpage });
+        var services_view = new Opty.ServicesView({ selected: subpage, id: id });
         var Optymetrics_subnav = new Opty.OptyMetricSubNav({
             root_hash: '#services',
             nav_options: nav_options
