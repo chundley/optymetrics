@@ -59,8 +59,10 @@ exports.index = function(req, res, next) {
             '/js/services/views/services-view.js',
             '/js/services/views/customer-summary-view.js',
             '/js/services/views/customer-site-view.js',
+            '/js/services/views/customer-usage-view.js',
             '/js/services/models/customer-search-model.js',
-            '/js/services/models/customer-model.js'
+            '/js/services/models/customer-model.js',
+            '/js/services/models/customer-usage-model.js'
         ],
     });
 };

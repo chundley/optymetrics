@@ -45,22 +45,47 @@ Opty.ServicesView = Backbone.View.extend({
         me.$el.append($customerSearchRow);
         // end search box config
 
-        var $firstRow = $('<div>', { 'class': 'row' });
-        var $secondRow = $('<div>', { 'class': 'row' });
+        var $outerRow = $('<div>', { 'class': 'row' });
+        var $leftDiv = $('<div>', { 'class': 'span14' });
+        var $rightDiv = $('<div>', { 'class': 'span4' });
+
+
+
+        var $firstRowLeft = $('<div>', { 'class': 'row' });
+        var $secondRowLeft = $('<div>', { 'class': 'row' });
+
+        var $firstRowRight = $('<div>', { 'class': 'row' });
+
+
         var $sitesDiv = $('<div>', { 'class': 'span14' });
+        var $usageDiv = $('<div>', { 'class': 'span14' });
         var $summaryDiv = $('<div>', { 'class': 'span4' });
+
+        $firstRowLeft.append($sitesDiv);
+        $secondRowLeft.append($usageDiv);
+
+        $firstRowRight.append($summaryDiv);
+
+        $leftDiv.append($firstRowLeft);
+        $leftDiv.append($secondRowLeft);
+        $rightDiv.append($firstRowRight);
+
+
+        $outerRow.append($leftDiv);
+        $outerRow.append($rightDiv);
+
         var customerCollection = new Opty.CustomerCollection({});
         var customerSummaryView = new Opty.CustomerSummaryView({collection: customerCollection});
         var customerSiteView = new Opty.CustomerSiteView({collection: customerCollection});
         $summaryDiv.append(customerSummaryView.$el);
         $sitesDiv.append(customerSiteView.$el);
 
-        $firstRow.append($sitesDiv);
-        $firstRow.append($summaryDiv);
+        var usageCollection = new Opty.CustomerUsageCollection({startDate: Date.today().add({ days: -30 }), endDate: Date.today()});
+        var usageSummaryView = new Opty.CustomerUsageView({collection: usageCollection});
+        $usageDiv.append(usageSummaryView.$el);
 
 
-        me.$el.append($firstRow);
-        me.$el.append($secondRow);
+        me.$el.append($outerRow);
 
         // if an id is present this was a hard-coded request for customer detail
         if (id) {
