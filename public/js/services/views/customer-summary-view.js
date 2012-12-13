@@ -41,6 +41,14 @@ Opty.CustomerSummaryView = Backbone.View.extend({
                 <td style="text-align: center"><%= activeSites %></td> \
             </tr> \
             <tr> \
+                <td>Visitors (30d)</td> \
+                <td style="text-align: center"><%= totalVisitors %></td> \
+            </tr> \
+            <tr> \
+                <td>Keywords</td> \
+                <td style="text-align: center"><%= totalKeywords %></td> \
+            </tr> \
+            <tr> \
                 <td>MRR</td> \
                 <td style="text-align: center"><%= mrr %></td> \
             </tr> \
@@ -85,6 +93,8 @@ Opty.CustomerSummaryView = Backbone.View.extend({
             sku: this.collection.models[0].get('sku'),
             totalSites: inactiveSites + activeSites,
             activeSites: activeSites,
+            totalVisitors: Opty.util.formatNumber(this.collection.models[0].get('visitors'), 0),
+            totalKeywords: Opty.util.formatNumber(this.collection.models[0].get('keywords'), 0),
             mrr: '$' + Opty.util.formatNumber(this.collection.models[0].get('mrr'), 0),
             cogs: '$' + Opty.util.formatNumber(this.collection.models[0].get('tcoTotal'), 0),
             net: (netRevenue >= 0) ? '$' + Opty.util.formatNumber(netRevenue, 0) : '$(' + Opty.util.formatNumber(netRevenue, 0) + ')',
