@@ -7,7 +7,20 @@ Opty.CustomerSiteView = Backbone.View.extend({
         me.collection = options.collection;
         me.collection.on('reset', this.render);
     },
-
+    events : {
+        'click #sitetableheader' : 'toggleSiteTable'
+    },
+    toggleSiteTable: function(e) {
+        var theDiv = this.$el.find('#sitetablecontainer');
+        if (theDiv.is(':visible')) {
+            theDiv.removeClass('show');
+            theDiv.addClass('hide');
+        }
+        else {
+            theDiv.removeClass('hide');
+            theDiv.addClass('show');
+        }
+    },
     render: function () {
         var me = this;
         this.$el.empty();
@@ -95,9 +108,11 @@ Opty.CustomerSiteView = Backbone.View.extend({
             collection: siteCollection
         });
         
-        var $divTitle = $('<div class="widget-group-header-container"><div class="widget-group-header"><span>Sites</span></div></div>');
+        var $divTitle = $('<div class="widget-group-header-container" id="sitetableheader"><div class="widget-group-header"><span>Sites</span></div></div>');
+        var $divTableContainer = $('<div id="sitetablecontainer"></div>');
+        $divTableContainer.append(sites_table.$el);
         this.$el.append($divTitle);
-        this.$el.append(sites_table.$el);
+        this.$el.append($divTableContainer);
         sites_table.render();
         return this.$el;
     }
