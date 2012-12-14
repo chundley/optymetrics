@@ -195,7 +195,7 @@ var getFeatureUsageByCustomerId = function(customerId, startDate, endDate, callb
         pipeline:
           [
             { $match: { customerId: customerId, dateOf: {$gte : startDate, $lt : endDate} }},  
-            { $group: {_id: { app:"$app", eventApp: "$eventApp", eventName:"$eventName"}, count: { $sum:1 }}},
+            { $group: {_id: { app:"$app", eventApp: "$eventApp", eventName:"$eventName"}, count: { $sum: "$eventCount" }}},
             { $project: {_id: 0, app: "$_id.app", eventApp: "$_id.eventApp", eventName: "$_id.eventName", count: "$count"}}
           ]
     };
