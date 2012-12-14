@@ -271,6 +271,9 @@ app.get('/rest/sales/mrrs-by-product', requiresLogin, routes.sales.mrrsByProduct
 //Gets software mrrs by sku
 app.get('/rest/sales/mrrs-software-by-sku', requiresLogin, routes.sales.mrrsSoftwareBySKU);
 
+//Gets software mrrs by sku
+app.get('/rest/sales/mrr-trend-by-customer', requiresLogin, routes.sales.mrrTrendByCustomer);
+
 //Gets churn by product type
 app.get('/rest/sales/churn-by-product', requiresLogin, routes.sales.mrrsChurnByProductType);
 

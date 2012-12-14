@@ -803,9 +803,71 @@ var getMRRNewDetail = function(productType, startDate, endDate, callback) {
         });
 }
 
+/**
+* Get mrr for software/services by customer
+*/
+var getMRRTrendByCustomer = function(customerId, startDate, endDate, callback) {
+    var command = {
+        aggregate: 'mrrs',
+        pipeline:
+          [
+            { $match: { customerId: parseInt(customerId), dateAdded: {$gte : startDate, $lte : endDate} }},  
+            { $group: {_id: { dateAdded:"$dateAdded", productType: "$productType"}, mrr: { $sum: "$totalPrice" }}},
+            { $project: {_id: 0, dateAdded: '$_id.dateAdded', productType: '$_id.productType', mrr: '$mrr'}},
+            { $sort: {'dateAdded': 1}}
+          ]
+    };
+
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        if (err) {
+            callback(err, null)
+        }
+        if (results.numberReturned > 0 && results.documents[0].result.length > 0) {
+            // get clean formatting
+            var retArr = [];
+            results.documents[0].result.forEach(function(r) {
+                var found = false;
+                retArr.forEach(function(item) {
+                    
+                    if (item.dateAdded.toString() == r['dateAdded'].toString()) {
+                        found = true;
+                        if (r['productType'] == 'Software') {
+                            item.software = r['mrr'];
+                        }
+                        else {
+                            item.services = r['mrr'];
+                        }
+                    }
+                });
+
+                if (!found) {
+                    if (r['productType'] == 'Software') {
+                        retArr.push({
+                            dateAdded: r['dateAdded'],
+                            software: r['mrr'],
+                            services: 0
+                        });
+                    } 
+                    else {
+                        retArr.push({
+                            dateAdded: r['dateAdded'],
+                            services: r['mrr'],
+                            software: 0
+                        });
+                    }               
+                }
+            });
+            callback(err, retArr);
+        } else {
+            callback(err, []);
+        }
+    });    
+}
+
 exports.saveMRRs = saveMRRs;
 exports.saveMRRChurn = saveMRRChurn;
 
+exports.getMRRTrendByCustomer = getMRRTrendByCustomer;
 exports.getMRRNewDetail = getMRRNewDetail;
 exports.getMRRChurnDetail = getMRRChurnDetail;
 exports.getNewSalesByProductType = getNewSalesByProductType;

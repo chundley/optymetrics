@@ -55,21 +55,26 @@ Opty.ServicesView = Backbone.View.extend({
         var $secondRowLeft = $('<div>', { 'class': 'row' });
 
         var $firstRowRight = $('<div>', { 'class': 'row' });
+        var $secondRowRight = $('<div>', { 'class': 'row' });
 
-
+        // left
         var $sitesDiv = $('<div>', { 'class': 'span14' });
         var $usageDiv = $('<div>', { 'class': 'span14' });
+        
+        // right
         var $summaryDiv = $('<div>', { 'class': 'span4' });
+        var $mrrHistoryDiv = $('<div>', { 'class': 'span4' });
 
         $firstRowLeft.append($sitesDiv);
         $secondRowLeft.append($usageDiv);
 
         $firstRowRight.append($summaryDiv);
+        $secondRowRight.append($mrrHistoryDiv);
 
         $leftDiv.append($firstRowLeft);
         $leftDiv.append($secondRowLeft);
         $rightDiv.append($firstRowRight);
-
+        $rightDiv.append($secondRowRight);
 
         $outerRow.append($leftDiv);
         $outerRow.append($rightDiv);
@@ -84,6 +89,9 @@ Opty.ServicesView = Backbone.View.extend({
         var usageSummaryView = new Opty.CustomerUsageView({collection: usageCollection});
         $usageDiv.append(usageSummaryView.$el);
 
+        var mrrTrendCollection = new Opty.MRRTrendForCustomerCollection({startDate: Date.today().add({ days: -365 }), endDate: Date.today()});
+        var mrrTrendView = new Opty.MRRCustomerHistoryChart({collection: mrrTrendCollection});
+        $mrrHistoryDiv.append(mrrTrendView.$el);
 
         me.$el.append($outerRow);
 

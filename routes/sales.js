@@ -129,6 +129,22 @@ exports.mrrsNewDetail = function (req, res, next) {
     });
 };
 
+exports.mrrTrendByCustomer = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+    var customerId = req.query['id'];
+    mrr_dao.getMRRTrendByCustomer(customerId, startDate, endDate, function (err, results) {
+        if (err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(results);
+    });
+};
+
 exports.salesCalculator = function (req, res, next) {
     fs.readFile('./templates/sales-calculator.html', 'utf8', function (err, text) {
         if (err) {
