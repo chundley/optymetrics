@@ -3,7 +3,7 @@ if(!window.Opty) { window.Opty = {}; }
 Opty.WeeklyCustomerUsageBySku = Backbone.Model.extend({});
 
 Opty.WeeklyCustomerUsageBySku = Backbone.Collection.extend({
-    model: Opty.CustomerHistoryModel, 
+    model: Opty.WeeklyCustomerUsageBySku, 
     url: function() {
         var url = '/rest/productdev/weekly-customer-user-stats';
         return url;
