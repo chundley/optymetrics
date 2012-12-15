@@ -47,12 +47,13 @@ var processSingleEvent = function(eventName, startDate, endDate, callback)
         , where: 'string(properties["customer:sku"]) != "undefined" and properties["customer:sku"] != "Free Trial"'
         , limit: 10000
     });
-    logger.log('info', 'Backfill MixPanel event: ' + eventName);
+
+//    logger.log('info', eventName + ' : ' + startDate);
     
     rest.get(url).on('complete', function(results) {
         if(results.data == null)
         {
-            logger.log('error', "No data recieved from mixpanel");
+            logger.log('error', "No data recieved from mixpanel: " + eventName + " - " + startDate + " - " + endDate);
             callback();
             return;
         }
@@ -105,17 +106,21 @@ var backfillDailyAppUsageRaw = function(callback){
           });
       }
       , function(callback){
-          var url = getMixpanelUrl("events/names", {type: 'unique',limit: 1000});
+          var url = getMixpanelUrl("events/names", {type: 'unique',limit: 5000});
           rest.get(url).on('complete', function(results) {
-              async.forEachSeries(results, function(eventName, callback){
-                          processSingleEvent(eventName, startDate, endDate, callback);
-                      }, function(err){
-                          if(err){
-                              callback(err);
-                          }else{
-                              callback();
-                          }
+              var all_events_days = [];
+              var curDate = (new Date()).add({days:-16});
+              while(curDate < endDate){
+                  for(var i in results){
+                    all_events_days.push( {"startDate":curDate.clone(), "endDate": curDate.clone().addDays(1), "eventName":results[i]} );
+                  }
+                  curDate.addDays(1);
+              }
+              logger.log("info", "total event days: " + all_events_days.length);
+              async.forEachSeries(all_events_days, function(event_day, callback){
+                processSingleEvent(event_day.eventName, event_day.startDate, event_day.endDate, callback);
               });
+              logger.log('info','done adding mixpanel events');
           });
       }
     ], function(err){
