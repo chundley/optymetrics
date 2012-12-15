@@ -41,7 +41,7 @@ Opty.CustomerUsageView = Backbone.View.extend({
                 },
                 {
                     field: 'count',
-                    display_name: 'Times used'
+                    display_name: 'Used'
                 }              
             ],
             sortable: true,

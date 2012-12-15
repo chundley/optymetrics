@@ -204,9 +204,27 @@ var getFeatureUsageByCustomerId = function(customerId, startDate, endDate, callb
     });
 }
 
+var getBigScoreByCustomerId = function(customerId, startDate, endDate, callback) {
+    var command = {
+        aggregate: 'dailybigscore',
+        pipeline:
+          [
+            { $match: { customer_id: parseInt(customerId), day_of: {$gte : startDate, $lte : endDate} }},  
+            { $group: {_id: { bigScore:"$big score", scoreDate: "$day_of"}, bigScore: { $sum: "$big score" }}},
+            { $project: {_id: 0, scoreDate: '$_id.scoreDate', bigScore: '$_id.bigScore'}},
+            { $sort: {'scoreDate': 1}}
+          ]
+    };
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        callback(null, results.documents[0].result);
+    });
+}
+
+
 // The module's public API
 exports.getFeatureUsageByCustomerId = getFeatureUsageByCustomerId;
 
+exports.getBigScoreByCustomerId = getBigScoreByCustomerId;
 exports.insertDailyAppUsageRawRecord = insertDailyAppUsageRawRecord;
 exports.removeDailyAppUsageRawForDates = removeDailyAppUsageRawForDates;
 exports.getDailyAppUsageRecordCount = getDailyAppUsageRecordCount;

@@ -295,6 +295,9 @@ app.get('/rest/services/find-customer', requiresLogin, routes.services.findCusto
 //Searches for customers
 app.get('/rest/services/customer/:id', requiresLogin, routes.services.getCustomerById);
 
+//Searches for customers
+app.get('/rest/services/customer-bigscore-trend', requiresLogin, routes.services.bigScoreByCustomerId);
+
 /**
 * fetch uptime data (detailed)
 * @param monitorName            which monitor to pull data for

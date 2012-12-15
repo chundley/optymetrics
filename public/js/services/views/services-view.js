@@ -45,39 +45,108 @@ Opty.ServicesView = Backbone.View.extend({
         me.$el.append($customerSearchRow);
         // end search box config
 
-        var $outerRow = $('<div>', { 'class': 'row' });
-        var $leftDiv = $('<div>', { 'class': 'span14' });
-        var $rightDiv = $('<div>', { 'class': 'span4' });
-
-
-
-        var $firstRowLeft = $('<div>', { 'class': 'row' });
-        var $secondRowLeft = $('<div>', { 'class': 'row' });
-
-        var $firstRowRight = $('<div>', { 'class': 'row' });
-        var $secondRowRight = $('<div>', { 'class': 'row' });
-
-        // left
-        var $sitesDiv = $('<div>', { 'class': 'span14' });
-        var $usageDiv = $('<div>', { 'class': 'span14' });
+        /*
         
-        // right
-        var $summaryDiv = $('<div>', { 'class': 'span4' });
-        var $mrrHistoryDiv = $('<div>', { 'class': 'span4' });
+        $outerRow
+        -------------------------------------------------------------------------------------------
+        | $leftDiv                                              | $rightDiv                        |
+        |                                                       |                                  |
+        | $firstRowLeft                                         | $firstRowRight                   |
+        | ----------------------------------------------------  | -------------------------------- |
+        | | $sitesDiv                                        |  | | $summaryDiv                  | |
+        | ----------------------------------------------------- | -------------------------------- |
+        |                                                       |                                  |
+        | $secondRowLeft                                        | $secondRowRight                  |
+        | ----------------------------------------------------- | -------------------------------- |
+        | | $leftSubOuterDiv                                  | | | $mrrHistoryDiv               | |
+        | |                                                   | | -------------------------------- |
+        | | $firstRowLeftSub                                  | |                                  |
+        | | ----------------------- ------------------------  | |                                  |
+        | | | $leftSubLeftDiv      | $leftSubRightDiv       | | |                                  |
+        | | |                      |                        | | |                                  |
+        | | | $leftSubLeftFirstRow | $leftSubRightFirstRow  | | |                                  |
+        | | | -------------------- | ---------------------  | | |                                  |
+        | | | | $usageDiv        | | | $bigscoreDiv      |  | | |                                  |
+        | | | -------------------- | ---------------------  | | |                                  |
+        | | |                      |                        | | |                                  |
+        | | |                      | $leftSubRightSecondRow | | |                                  |
+        | | |                      | ---------------------- | | |                                  |
+        | | |                      | | $bigscoreHistoryDiv| | | |                                  |
+        | | |                      | ---------------------- | | |                                  |
+        | | |                      |                        | | |                                  |
+        | | ------------------------------------------------| | |                                  |
+        | ----------------------------------------------------- |                                  |
+        |------------------------------------------------------------------------------------------|
+        
+        */
 
-        $firstRowLeft.append($sitesDiv);
-        $secondRowLeft.append($usageDiv);
+        var bigSpanClass = 'span13';
+        var halfSpanClass = 'span6';
+        var smallSpanClass = 'span4';
 
-        $firstRowRight.append($summaryDiv);
-        $secondRowRight.append($mrrHistoryDiv);
-
-        $leftDiv.append($firstRowLeft);
-        $leftDiv.append($secondRowLeft);
-        $rightDiv.append($firstRowRight);
-        $rightDiv.append($secondRowRight);
-
+        // outer layout components
+        var $outerRow = $('<div>', { 'class': 'row' });
+        var $leftDiv = $('<div>', { 'class': bigSpanClass });
+        var $rightDiv = $('<div>', { 'class': smallSpanClass });
         $outerRow.append($leftDiv);
         $outerRow.append($rightDiv);
+
+        // left side - rows
+        var $firstRowLeft = $('<div>', { 'class': 'row' });
+        var $secondRowLeft = $('<div>', { 'class': 'row' });
+        $leftDiv.append($firstRowLeft);
+        $leftDiv.append($secondRowLeft);
+
+        // DATA: sites div
+        var $sitesDiv = $('<div>', { 'class': bigSpanClass });
+        $firstRowLeft.append($sitesDiv);
+        
+        // sub-left div + sub left rows
+        var $leftSubOuterDiv = $('<div>', { 'class': bigSpanClass });
+        var $firstRowLeftSub = $('<div>', { 'class': 'row' });
+        $leftSubOuterDiv.append($firstRowLeftSub);
+        $secondRowLeft.append($leftSubOuterDiv);
+
+        // sub divs in first row left sub 
+        var $leftSubLeftDiv = $('<div>', { 'class': halfSpanClass });
+        var $leftSubLeftFirstRow = $('<div>', { 'class': 'row' });
+        $leftSubLeftDiv.append($leftSubLeftFirstRow);
+        $firstRowLeftSub.append($leftSubLeftDiv);
+
+        var $leftSubRightDiv = $('<div>', { 'class': halfSpanClass });
+        var $leftSubRightFirstRow = $('<div>', { 'class': 'row' });
+        var $leftSubRightSecondRow = $('<div>', { 'class': 'row', 'style': 'padding-top: 8px;' });
+        $leftSubRightDiv.append($leftSubRightFirstRow);
+        $leftSubRightDiv.append($leftSubRightSecondRow);
+        $firstRowLeftSub.append($leftSubRightDiv);
+
+        // DATA: usage div
+        var $usageDiv = $('<div>', { 'class': halfSpanClass });
+        $leftSubLeftFirstRow.append($usageDiv);
+
+        // DATA: big score div
+        var $bigscoreDiv = $('<div>', { 'class': halfSpanClass });
+        $leftSubRightFirstRow.append($bigscoreDiv);
+
+        // DATA: big score history div
+        var $bigscoreHistoryDiv = $('<div>', { 'class': halfSpanClass });
+        $leftSubRightSecondRow.append($bigscoreHistoryDiv);
+
+        // right side - rows
+        var $firstRowRight = $('<div>', { 'class': 'row' });
+        $rightDiv.append($firstRowRight);
+
+        var $secondRowRight = $('<div>', { 'class': 'row' });
+        $rightDiv.append($secondRowRight);
+
+        // DATA: summary div
+        var $summaryDiv = $('<div>', { 'class': smallSpanClass });
+        $firstRowRight.append($summaryDiv);
+
+        // DATA: mrr history div
+        var $mrrHistoryDiv = $('<div>', { 'class': smallSpanClass });
+        $secondRowRight.append($mrrHistoryDiv);
+
 
         var customerCollection = new Opty.CustomerCollection({});
         var customerSummaryView = new Opty.CustomerSummaryView({collection: customerCollection});
@@ -92,6 +161,13 @@ Opty.ServicesView = Backbone.View.extend({
         var mrrTrendCollection = new Opty.MRRTrendForCustomerCollection({startDate: Date.today().add({ days: -365 }), endDate: Date.today()});
         var mrrTrendView = new Opty.MRRCustomerHistoryChart({collection: mrrTrendCollection});
         $mrrHistoryDiv.append(mrrTrendView.$el);
+
+        var bigscoreTrendCollection = new Opty.BigScoreTrendForCustomerCollection({startDate: Date.today().add({ days: -90 }), endDate: Date.today()});
+        var bigscoreWidget = new Opty.BigScoreWidgetView({collection: bigscoreTrendCollection, cssClass: '', header: 'Big Score', footer: '4-week rolling average'});
+        $bigscoreDiv.append(bigscoreWidget.$el);
+
+        var bigscoreCustomerHistoryChart = new Opty.BigscoreCustomerHistoryChart({collection: bigscoreTrendCollection});
+        $bigscoreHistoryDiv.append(bigscoreCustomerHistoryChart.$el);
 
         me.$el.append($outerRow);
 
