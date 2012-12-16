@@ -9,7 +9,7 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
         colors: ["#3e8bbc", "#FA6900", "#5B4086", "#002066", "#7AB317", "#F2DB13", "#FE4365", "#EF3F00", "#C5BC8E", "#3D1C00"],
         chart: {
             renderTo: 'bigscore-customer-history-chart',
-            height: 250,
+            height: 270,
             borderColor: '#999999',
             borderWidth: 1,
             borderRadius: 6,
@@ -42,6 +42,10 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
             }
         },
         xAxis: {
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%m/%d'
+            },            
             gridLineColor: '#444444',
             gridLineWidth: 1,
             labels: {
@@ -62,8 +66,9 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
                 }
             },
             min: 0,
+            max: 100,
             startOnTick: true,
-            showFirstLabel: false,
+            showFirstLabel: true,
             labels: {
                 formatter: function () {
                         return Highcharts.numberFormat(this.value, 0);
@@ -100,7 +105,8 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
                 ]
             },
             type: 'spline',
-            name: 'Big Score'
+            name: 'Big Score',
+            data: []
         }
         ],
         credits: {
@@ -125,35 +131,18 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
         var me = this;
         this.$el.empty();
 
-        var categories = [];
-        var bigscore = [];
-
-        var baseline = parseInt(this.collection.length * 2 / 10);
-        var idx = 0;
-
-        this.collection.each(function(model){
-            /*
-            if (idx % baseline == 0) {
-                categories.push(Highcharts.dateFormat('%m/%d', me.convertDateToUTC(new Date(model.get('scoreDate')))));
-            }
-            else {
-                categories.push('');
-            }
-            */
-            categories.push(Highcharts.dateFormat('%m/%d', me.convertDateToUTC(new Date(model.get('scoreDate')))));
-            bigscore.push(model.get('bigScore'));
-            idx++;
+        me.bigscoreCustomerHistoryChartOptions.series[0].data = [];
+        this.collection.each(function(model) {
+            var dateFormatted = me.convertDateToUTC(new Date(model.get('scoreDate')));
+            me.bigscoreCustomerHistoryChartOptions.series[0].data.push([dateFormatted, model.get('bigScore')]);            
         });
-
-        this.bigscoreCustomerHistoryChartOptions.series[0].data = bigscore;
-        this.bigscoreCustomerHistoryChartOptions.xAxis.categories = categories
 
         this.chart = new Highcharts.Chart(this.bigscoreCustomerHistoryChartOptions);
         return this.$el;
     },
 
     convertDateToUTC: function (date) {
-        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+        return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     }
 }
 );
