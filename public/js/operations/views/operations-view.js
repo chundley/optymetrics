@@ -39,7 +39,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $overallrow.append($uptimeWidgetSystemTrend.$el);
 
                     // dashboard uptime
-                    var $dashboardrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>dashboard.optify.net</span></div></div></div></div>');
+                    var $dashboardrowheader = $('<div class="row" style="padding-top: 20px;"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>dashboard.optify.net</span></div></div></div></div>');
                     var $dashboardrow = $('<div>', { 'class': 'row' });
 
                     var uptimeCollectionDashboard = new Opty.UptimeAggregateCollection({ 'monitorName': 'dashboardormaint' });
@@ -53,7 +53,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $dashboardrow.append($uptimeWidgetDashboardTrend.$el);
 
                     // service uptime
-                    var $servicerowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>service.optify.net</span></div></div></div></div>');
+                    var $servicerowheader = $('<div class="row"><div class="span9" style="padding-top: 20px;"><div class="widget-group-header-container"><div class="widget-group-header"><span>service.optify.net</span></div></div></div></div>');
                     var $servicerow = $('<div>', { 'class': 'row' });
 
                     var uptimeCollectionService = new Opty.UptimeAggregateCollection({ 'monitorName': 'service' });
@@ -67,7 +67,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $servicerow.append($uptimeWidgetServiceTrend.$el);
 
                     // pages uptime
-                    var $pagesrowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>pages.optify.net</span></div></div></div></div>');
+                    var $pagesrowheader = $('<div class="row"><div class="span9" style="padding-top: 20px;"><div class="widget-group-header-container"><div class="widget-group-header"><span>pages.optify.net</span></div></div></div></div>');
                     var $pagesrow = $('<div>', { 'class': 'row' });
 
                     var uptimeCollectionPages = new Opty.UptimeAggregateCollection({ 'monitorName': 'landingpages' });
@@ -81,7 +81,7 @@ Opty.OperationsView = Backbone.View.extend({
                     $pagesrow.append($uptimeWidgetPagesTrend.$el);
 
                     // api uptime
-                    var $apirowheader = $('<div class="row"><div class="span9"><div class="widget-group-header-container"><div class="widget-group-header"><span>api.optify.net</span></div></div></div></div>');
+                    var $apirowheader = $('<div class="row"><div class="span9" style="padding-top: 20px;"><div class="widget-group-header-container"><div class="widget-group-header"><span>api.optify.net</span></div></div></div></div>');
                     var $apirow = $('<div>', { 'class': 'row' });
 
                     var uptimeCollectionApi = new Opty.UptimeAggregateCollection({ 'monitorName': 'api' });
