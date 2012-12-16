@@ -59,6 +59,10 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
                 title: 'Velocity'
             },
             {
+                url_fragment: 'adoption',
+                title: 'Adoption'
+            },
+            {
                 url_fragment: 'usage',
                 title: 'Usage'
             }

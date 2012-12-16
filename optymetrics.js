@@ -232,6 +232,9 @@ app.get('/rest/productdev/weekly-feature-usage', requiresLogin, routes.productde
 //Gets feature usage stats aggregated weekly as JSON
 app.get('/rest/productdev/feature-use-by-customer', requiresLogin, routes.productdev.featureUseByCustomerId);
 
+//Gets adoption stats aggregated weekly as JSON
+app.get('/rest/productdev/adoption-by-metric', requiresLogin, routes.productdev.adoptionTrendByMetric);
+
 // Gets TCO data as JSON
 app.get('/ops/tco', requiresLogin, routes.operations.tco);
 

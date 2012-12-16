@@ -220,10 +220,25 @@ var getBigScoreByCustomerId = function(customerId, startDate, endDate, callback)
     });
 }
 
+var adoptionTrendByMetric = function(metric, startDate, endDate, callback) {
+    var command = {
+        aggregate: 'weeklyspreadsheetmetric',
+        pipeline:
+          [
+            { $match: { metricName: metric, weekOf: {$gte : startDate, $lte : endDate} }},  
+            { $group: {_id: { weekOf:"$weekOf", count: "$dataValue"}, count: { $sum: "$big score" }}},
+            { $project: {_id: 0, weekOf: '$_id.weekOf', count: '$_id.count'}},
+            { $sort: {'weekOf': 1}}
+          ]
+    };
+    mongoose.connection.db.executeDbCommand(command, function (err, results) {
+        callback(null, results.documents[0].result);
+    });
+}
 
 // The module's public API
+exports.adoptionTrendByMetric = adoptionTrendByMetric;
 exports.getFeatureUsageByCustomerId = getFeatureUsageByCustomerId;
-
 exports.getBigScoreByCustomerId = getBigScoreByCustomerId;
 exports.insertDailyAppUsageRawRecord = insertDailyAppUsageRawRecord;
 exports.removeDailyAppUsageRawForDates = removeDailyAppUsageRawForDates;

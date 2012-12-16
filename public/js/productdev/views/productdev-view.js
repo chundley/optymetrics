@@ -2,7 +2,6 @@ if(!window.Opty) { window.Opty = {}; }
 
 Opty.ProductDevView = Backbone.View.extend({
     id: 'productdev-view',
-
     initialize: function(options) {
         var me = this;
         me.options = options;
@@ -25,6 +24,10 @@ Opty.ProductDevView = Backbone.View.extend({
             }
             case 'usage': {
                 this.renderUsageSubsection();
+                break;
+            }
+            case 'adoption': {
+                this.renderAdoptionSubsection();
                 break;
             }
             default: {
@@ -431,5 +434,93 @@ Opty.ProductDevView = Backbone.View.extend({
         
         }});
         
+    },
+
+    renderAdoptionSubsection: function() {
+        // Configure report date range picker
+        var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
+        var datePickerView = new Opty.DateRangeView({defaultDays: 180});
+        
+        $datePickerRow.append(datePickerView.$el);
+        this.$el.append($datePickerRow);
+
+        var $appUsageRow = $('<div>', { 'class': 'row' });
+        var $totalSKUDiv = $('<div>', { 'class': 'span4'});
+        var $totalSitesDiv = $('<div>', { 'class': 'span4'});
+        var $totalUsersDiv = $('<div>', { 'class': 'span4'});
+
+        $appUsageRow.append($totalSKUDiv);
+        $appUsageRow.append($totalSitesDiv);
+        $appUsageRow.append($totalUsersDiv);
+
+
+        var $featureUsageRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px;' });
+        var $contactManagerUseDiv = $('<div>', { 'class': 'span4'});
+        var $emailManagerUseDiv = $('<div>', { 'class': 'span4'});
+        var $landingPagesUseDiv = $('<div>', { 'class': 'span4'});
+
+        $featureUsageRow.append($contactManagerUseDiv);
+        $featureUsageRow.append($emailManagerUseDiv);
+        $featureUsageRow.append($landingPagesUseDiv);
+
+
+        var $stickinessRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px;' });
+        var $contactsCreatedDiv = $('<div>', { 'class': 'span4'});
+        var $emailSendsDiv = $('<div>', { 'class': 'span4'});
+        var $landingPagesPublishedDiv = $('<div>', { 'class': 'span4'});
+
+        $stickinessRow.append($contactsCreatedDiv);
+        $stickinessRow.append($emailSendsDiv);
+        $stickinessRow.append($landingPagesPublishedDiv);
+
+        // first row of charts
+        var adoptionTrendTotalSKUCollection = new Opty.AdoptionByMetricCollection({metric: 'Global-Summary-paying customers'});
+        var adoptionTrendTotalSKUChart = new Opty.AdoptionMetricChart({id: 'adoption-paying-customers'}, {collection: adoptionTrendTotalSKUCollection, title:'Total SKU Count', color: '#FA6900'});
+        $totalSKUDiv.append(adoptionTrendTotalSKUChart.$el);
+
+        
+        var adoptionTrendTotalSitesCollection = new Opty.AdoptionByMetricCollection({metric: 'Global-Traffic-sites with traffic'});
+        var adoptionTrendTotalSitesChart = new Opty.AdoptionMetricChart({id: 'adoption-sites'}, {collection: adoptionTrendTotalSitesCollection, title:'Total Sites Tracked', color: '#FA6900'});
+        $totalSitesDiv.append(adoptionTrendTotalSitesChart.$el);
+
+        var adoptionTrendTotalUsersCollection = new Opty.AdoptionByMetricCollection({metric: 'Global-Users-active dashboard users'});
+        var adoptionTrendTotalUsersChart = new Opty.AdoptionMetricChart({id: 'adoption-users'}, {collection: adoptionTrendTotalUsersCollection, title:'Unique Users Logging In', color: '#FA6900'});
+        $totalUsersDiv.append(adoptionTrendTotalUsersChart.$el);
+
+
+        // second row of charts
+        var adoptionTrendContactManagerUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Contact Manager-contact app visits'});
+        var adoptionTrendContactManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-contact-usage'}, {collection: adoptionTrendContactManagerUseCollection, title:'Contact Manager Usage', color: '#3e8bbc'});
+        $contactManagerUseDiv.append(adoptionTrendContactManagerUseChart.$el);
+
+        var adoptionTrendEmailManagerUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Email Manager-email app visits'});
+        var adoptionTrendEmailManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-email-usage'}, {collection: adoptionTrendEmailManagerUseCollection, title:'Email Manager Usage', color: '#3e8bbc'});
+        $emailManagerUseDiv.append(adoptionTrendEmailManagerUseChart.$el);
+
+        var adoptionTrendLandingPagesUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Landing Pages-landing page app visits'});
+        var adoptionTrendLandingPagesUseChart = new Opty.AdoptionMetricChart({id: 'adoption-landingpage-usage'}, {collection: adoptionTrendLandingPagesUseCollection, title:'Landing Pages Usage', color: '#3e8bbc'});
+        $landingPagesUseDiv.append(adoptionTrendLandingPagesUseChart.$el);
+
+
+        // third row of charts
+        var adoptionTrendContactsCreatedCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Contact Manager-contacts created'});
+        var adoptionTrendContactsCreatedChart = new Opty.AdoptionMetricChart({id: 'adoption-contacts-created'}, {collection: adoptionTrendContactsCreatedCollection, title:'Contacts Created', color: '#7AB317'});
+        $contactsCreatedDiv.append(adoptionTrendContactsCreatedChart.$el);
+
+
+        var adoptionTrendEmailsSentCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Email Manager-bulk email sends'});
+        var adoptionTrendEmailsSentChart = new Opty.AdoptionMetricChart({id: 'adoption-email-sent'}, {collection: adoptionTrendEmailsSentCollection, title:'Email Bulk Sends', color: '#7AB317'});
+        $emailSendsDiv.append(adoptionTrendEmailsSentChart.$el);
+
+        var adoptionTrendLandingPagesPublishedCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Landing Pages-landing pages published'});
+        var adoptionTrendLandingPagesPublishedChart = new Opty.AdoptionMetricChart({id: 'adoption-landingpage-publish'}, {collection: adoptionTrendLandingPagesPublishedCollection, title:'Landing Pages Published', color: '#7AB317'});
+        $landingPagesPublishedDiv.append(adoptionTrendLandingPagesPublishedChart.$el);
+
+
+        this.$el.append($appUsageRow);
+        this.$el.append($featureUsageRow);
+        this.$el.append($stickinessRow);
+
+        datePickerView.render();
     }
 });

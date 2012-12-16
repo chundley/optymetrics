@@ -126,3 +126,18 @@ exports.featureUseByCustomerId = function (req, res, next) {
         res.send(data);
     });
 };
+
+exports.adoptionTrendByMetric = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+    var metric = req.query['metric'];
+    appUsageDao.adoptionTrendByMetric(metric, startDate, endDate, function (err, data) {
+         if(err) {
+            logger.error(err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+        res.send(data);
+    });
+};
