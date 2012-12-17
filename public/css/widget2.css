@@ -63,15 +63,16 @@
 
 .widget-group-header 
 {
-	color: #48a1d9;
+	color: #bebca9;
 	font-size: 16px;
 	margin-bottom: 5px;
 	letter-spacing: 2px;
+    text-shadow: 2px 2px 1px #373731;   
 }
 
 .widget-group-header:first-letter
 {
-	font-size: 120%;
+	font-size: 100%;
 }
 
 .widget-group-header span 

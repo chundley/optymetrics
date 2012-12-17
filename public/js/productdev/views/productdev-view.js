@@ -444,39 +444,37 @@ Opty.ProductDevView = Backbone.View.extend({
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
 
-        var $appUsageRow = $('<div>', { 'class': 'row', 'style': 'border: 1px solid blue;' });
-        var $appUsageTitle = $('<div>', { 'class': 'rotated-label', 'style': 'color: #FA6900' });
-        var $totalSKUDiv = $('<div>', { 'class': 'span4'});
-        var $totalSitesDiv = $('<div>', { 'class': 'span4'});
-        var $totalUsersDiv = $('<div>', { 'class': 'span4'});
+        var $appMetricsRowHeader = $('<div class="row"><div class="span12"><div class="widget-group-header-container"><div class="widget-group-header"><span>App Metrics</span></div></div></div></div>');
+        var $appUsageRow = $('<div>', { 'class': 'row' });
+        var $totalSKUDiv = $('<div>', { 'class': 'span4' });
+        var $totalSitesDiv = $('<div>', { 'class': 'span4' });
+        var $totalUsersDiv = $('<div>', { 'class': 'span4' });
 
-        $appUsageRow.append($appUsageTitle);
         $appUsageRow.append($totalSKUDiv);
         $appUsageRow.append($totalSitesDiv);
         $appUsageRow.append($totalUsersDiv);
 
-
-        var $featureUsageRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px; border: 1px solid green;' });
-        var $contactManagerUseDiv = $('<div>', { 'class': 'span4'});
-        var $emailManagerUseDiv = $('<div>', { 'class': 'span4'});
-        var $landingPagesUseDiv = $('<div>', { 'class': 'span4'});
+        var $featureUsageRowHeader = $('<div class="row" style="margin-top: 20px;"><div class="span12"><div class="widget-group-header-container"><div class="widget-group-header"><span>Feature Usage</span></div></div></div></div>');
+        var $featureUsageRow = $('<div>', { 'class': 'row' });
+        var $contactManagerUseDiv = $('<div>', { 'class': 'span4' });
+        var $emailManagerUseDiv = $('<div>', { 'class': 'span4' });
+        var $landingPagesUseDiv = $('<div>', { 'class': 'span4' });
 
         $featureUsageRow.append($contactManagerUseDiv);
         $featureUsageRow.append($emailManagerUseDiv);
         $featureUsageRow.append($landingPagesUseDiv);
 
-
-        var $stickinessRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px;' });
-        var $contactsCreatedDiv = $('<div>', { 'class': 'span4'});
-        var $emailSendsDiv = $('<div>', { 'class': 'span4'});
-        var $landingPagesPublishedDiv = $('<div>', { 'class': 'span4'});
+        var $stickinessRowHeader = $('<div class="row" style="margin-top: 20px;"><div class="span12"><div class="widget-group-header-container"><div class="widget-group-header"><span>Stickiness</span></div></div></div></div>');
+        var $stickinessRow = $('<div>', { 'class': 'row' });
+        var $contactsCreatedDiv = $('<div>', { 'class': 'span4' });
+        var $emailSendsDiv = $('<div>', { 'class': 'span4' });
+        var $landingPagesPublishedDiv = $('<div>', { 'class': 'span4' });
 
         $stickinessRow.append($contactsCreatedDiv);
         $stickinessRow.append($emailSendsDiv);
         $stickinessRow.append($landingPagesPublishedDiv);
 
         // first row of charts
-        $appUsageTitle.append('App Metrics');
         var adoptionTrendTotalSKUCollection = new Opty.AdoptionByMetricCollection({metric: 'Global-Summary-paying customers'});
         var adoptionTrendTotalSKUChart = new Opty.AdoptionMetricChart({id: 'adoption-paying-customers'}, {collection: adoptionTrendTotalSKUCollection, title:'Total SKU Count', color: '#FA6900'});
         $totalSKUDiv.append(adoptionTrendTotalSKUChart.$el);
@@ -493,15 +491,15 @@ Opty.ProductDevView = Backbone.View.extend({
 
         // second row of charts
         var adoptionTrendContactManagerUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Contact Manager-contact app visits'});
-        var adoptionTrendContactManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-contact-usage'}, {collection: adoptionTrendContactManagerUseCollection, title:'Contact Manager Usage', color: '#3e8bbc'});
+        var adoptionTrendContactManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-contact-usage'}, {collection: adoptionTrendContactManagerUseCollection, title:'Contact Manager', color: '#3e8bbc'});
         $contactManagerUseDiv.append(adoptionTrendContactManagerUseChart.$el);
 
         var adoptionTrendEmailManagerUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Email Manager-email app visits'});
-        var adoptionTrendEmailManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-email-usage'}, {collection: adoptionTrendEmailManagerUseCollection, title:'Email Manager Usage', color: '#3e8bbc'});
+        var adoptionTrendEmailManagerUseChart = new Opty.AdoptionMetricChart({id: 'adoption-email-usage'}, {collection: adoptionTrendEmailManagerUseCollection, title:'Email Manager', color: '#3e8bbc'});
         $emailManagerUseDiv.append(adoptionTrendEmailManagerUseChart.$el);
 
         var adoptionTrendLandingPagesUseCollection = new Opty.AdoptionByMetricCollection({metric: 'Nurture Demand-Landing Pages-landing page app visits'});
-        var adoptionTrendLandingPagesUseChart = new Opty.AdoptionMetricChart({id: 'adoption-landingpage-usage'}, {collection: adoptionTrendLandingPagesUseCollection, title:'Landing Pages Usage', color: '#3e8bbc'});
+        var adoptionTrendLandingPagesUseChart = new Opty.AdoptionMetricChart({id: 'adoption-landingpage-usage'}, {collection: adoptionTrendLandingPagesUseCollection, title:'Landing Pages', color: '#3e8bbc'});
         $landingPagesUseDiv.append(adoptionTrendLandingPagesUseChart.$el);
 
 
@@ -520,8 +518,13 @@ Opty.ProductDevView = Backbone.View.extend({
         $landingPagesPublishedDiv.append(adoptionTrendLandingPagesPublishedChart.$el);
 
 
+        this.$el.append($appMetricsRowHeader);
         this.$el.append($appUsageRow);
+
+        this.$el.append($featureUsageRowHeader);
         this.$el.append($featureUsageRow);
+
+        this.$el.append($stickinessRowHeader);
         this.$el.append($stickinessRow);
 
         datePickerView.render();
