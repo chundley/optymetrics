@@ -198,3 +198,25 @@
 {
     background: #ed1c24;
 }
+
+/*
+    Misc styles
+*/
+.rotated-label {
+    -webkit-transform: rotate(270deg);
+    -webkit-transform-origin: top right; 
+    -moz-transform: rotate(270deg);
+    -moz-transform-origin: top right;
+    -o-transform: rotate(270deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    /*writing-mode: rl-tb;*/
+    font-size: 18px;
+    font-weight: bold;    
+    float: left;
+    display: block;
+    text-align: center;
+    border: 1px solid red;
+    /*padding-right: 20px;
+    margin-left: -50px;
+    margin-right: 5px;*/
+}

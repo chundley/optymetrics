@@ -444,17 +444,19 @@ Opty.ProductDevView = Backbone.View.extend({
         $datePickerRow.append(datePickerView.$el);
         this.$el.append($datePickerRow);
 
-        var $appUsageRow = $('<div>', { 'class': 'row' });
+        var $appUsageRow = $('<div>', { 'class': 'row', 'style': 'border: 1px solid blue;' });
+        var $appUsageTitle = $('<div>', { 'class': 'rotated-label', 'style': 'color: #FA6900' });
         var $totalSKUDiv = $('<div>', { 'class': 'span4'});
         var $totalSitesDiv = $('<div>', { 'class': 'span4'});
         var $totalUsersDiv = $('<div>', { 'class': 'span4'});
 
+        $appUsageRow.append($appUsageTitle);
         $appUsageRow.append($totalSKUDiv);
         $appUsageRow.append($totalSitesDiv);
         $appUsageRow.append($totalUsersDiv);
 
 
-        var $featureUsageRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px;' });
+        var $featureUsageRow = $('<div>', { 'class': 'row', 'style': 'margin-top: 20px; border: 1px solid green;' });
         var $contactManagerUseDiv = $('<div>', { 'class': 'span4'});
         var $emailManagerUseDiv = $('<div>', { 'class': 'span4'});
         var $landingPagesUseDiv = $('<div>', { 'class': 'span4'});
@@ -474,6 +476,7 @@ Opty.ProductDevView = Backbone.View.extend({
         $stickinessRow.append($landingPagesPublishedDiv);
 
         // first row of charts
+        $appUsageTitle.append('App Metrics');
         var adoptionTrendTotalSKUCollection = new Opty.AdoptionByMetricCollection({metric: 'Global-Summary-paying customers'});
         var adoptionTrendTotalSKUChart = new Opty.AdoptionMetricChart({id: 'adoption-paying-customers'}, {collection: adoptionTrendTotalSKUCollection, title:'Total SKU Count', color: '#FA6900'});
         $totalSKUDiv.append(adoptionTrendTotalSKUChart.$el);
