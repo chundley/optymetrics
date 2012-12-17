@@ -6,16 +6,16 @@
                 <label class="control-label">SKU</label>
                 <div class="controls">
                     <select name="sku" id="sku" onchange="resetDefaults();">
+                        <option value="Agency Pro">Agency Pro</option>                        
+                        <option value="Agency Complete">Agency Complete</option>                        
                         <option value="Express">Express</option>
-                        <option value="Pro">Pro</option>
+                        <option value="Team">Team</option>
                         <option value="Premium">Premium</option>
-                        <option value="Agency Pro">Agency Pro</option>
-                        <option value="Agency Unlimited">Agency Unlimited</option>
                     </select>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Page views</label>
+                <label class="control-label">Visitors</label>
                 <div class="controls">
                     <input type="text" name="pageviews" id="pageviews" value="25000" onblur="calculate();" />
                 </div>
@@ -33,10 +33,10 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Pageview discount</label>
+                <label class="control-label">Visitor discount</label>
                 <div class="controls">
-                    <div id="pv-discount"></div>
-                    <div id="pv-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                    <div id="vi-discount"></div>
+                    <div id="vi-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
                 </div>
             </div>
             <div class="control-group">
@@ -123,58 +123,58 @@
 
 <script language="javascript" type="text/javascript">
     var skus = {
+        "Agency Pro": {
+            basePrice: 750,
+            vi: 300000,
+            kw: 1500,
+            em: 0
+        },
+        "Agency Complete": {
+            basePrice: 1500,
+            vi: 1000000,
+            kw: 5000,
+            em: 0
+        },        
         "Express": {
             basePrice: 300,
-            pv: 25000,
+            vi: 10000,
             kw: 50,
             em: 2500
         },
-        "Pro": {
+        "Team": {
             basePrice: 600,
-            pv: 250000,
+            vi: 250000,
             kw: 500,
-            em: 10000
+            em: 0
         },
         "Premium": {
             basePrice: 1500,
-            pv: 750000,
-            kw: 1500,
-            em: 30000
-        },
-        "Agency Pro": {
-            basePrice: 500,
-            pv: 250000,
-            kw: 1000,
-            em: 0
-        },
-        "Agency Unlimited": {
-            basePrice: 1000,
-            pv: 750000,
-            kw: 1500,
+            vi: 750000,
+            kw: 3000,
             em: 0
         }
     }
 
 
-    var costPV = .00019,
+    var costvi = .00076,
         costKW = .07919,
         costEM = .003,
-        thresholdPVAddOn = 100000,
-        costPVAddOn = 100,
+        thresholdviAddOn = 100000,
+        costviAddOn = 100,
         thresholdKWAddOn = 500,
         costKWAddOn = 100,
         thresholdEMAddOn = 5000,
-        costEMAddOn = 50;
+        costEMAddOn = 0;
 
     $(function () {
-        $("#pv-discount").slider({
+        $("#vi-discount").slider({
             min: 0,
             max: 100,
             change: function (event, ui) {
                 calculate();
             },
             slide: function (event, ui) {
-                $("#pv-discount-val").text(ui.value + "%");
+                $("#vi-discount-val").text(ui.value + "%");
             }
         });
 
@@ -215,7 +215,7 @@
     });
 
     function calculate() {
-        var pvdisc = $("#pv-discount").slider("value") / 100;
+        var vidisc = $("#vi-discount").slider("value") / 100;
         var kwdisc = $("#kw-discount").slider("value") / 100;
         var emdisc = $("#em-discount").slider("value") / 100;
         var disc = $("#discount").slider("value") / 100;
@@ -224,12 +224,12 @@
         var totCharge = skus[sku].basePrice - (skus[sku].basePrice * disc);
 
         // necessary to account for selling a SKU with reduced capacity (like Pro with no email)
-        var basePVCost = skus[sku].pv * costPV;
+        var baseviCost = skus[sku].vi * costvi;
         var baseKWCost = skus[sku].kw * costKW;
         var baseEMCost = skus[sku].em * costEM;
 
-        if ($("#pageviews").val() < skus[sku].pv) {
-            basePVCost = $("#pageviews").val() * costPV;
+        if ($("#pageviews").val() < skus[sku].vi) {
+            baseviCost = $("#pageviews").val() * costvi;
         }
 
         if ($("#keywords").val() < skus[sku].kw) {
@@ -240,13 +240,13 @@
             baseEMCost = $("#emails").val() * costEM;
         }
 
-        //var totCost = (skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
-        var totCost = (basePVCost) + (baseKWCost) + (baseEMCost);
+        //var totCost = (skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
+        var totCost = (baseviCost) + (baseKWCost) + (baseEMCost);
 
         // Express doesn"t support add-ons, disable controls
         if (sku == "Express") {
             $("#pageviews").attr("disabled", "disabled");
-            $("#pv-discount").slider("option", "disabled", true);
+            $("#vi-discount").slider("option", "disabled", true);
             $("#keywords").attr("disabled", "disabled");
             $("#kw-discount").slider("option", "disabled", true);
             $("#emails").attr("disabled", "disabled");
@@ -254,25 +254,25 @@
         }
         else {
             $("#pageviews").removeAttr("disabled");
-            $("#pv-discount").slider("option", "disabled", false);
+            $("#vi-discount").slider("option", "disabled", false);
             $("#keywords").removeAttr("disabled");
             $("#kw-discount").slider("option", "disabled", false);
             $("#emails").removeAttr("disabled");
             $("#em-discount").slider("option", "disabled", false);
         }
 
-        var pvOver = $("#pageviews").val() - skus[sku].pv;
-        if (pvOver > 0) {
-            var addOns = Math.floor(pvOver / thresholdPVAddOn);
-            if (pvOver % thresholdPVAddOn > 0) {
+        var viOver = $("#pageviews").val() - skus[sku].vi;
+        if (viOver > 0) {
+            var addOns = Math.floor(viOver / thresholdviAddOn);
+            if (viOver % thresholdviAddOn > 0) {
                 addOns++;
             }
-            totCost += addOns * thresholdPVAddOn * costPV;
-            totRetail += addOns * costPVAddOn;
-            totCharge += addOns * (costPVAddOn - (costPVAddOn * pvdisc));
-            $("#pageviews-cost").text(moneyFormat(addOns * thresholdPVAddOn * costPV));
-            $("#pageviews-retail").text(moneyFormat(addOns * costPVAddOn));
-            $("#pageviews-charge").text(moneyFormat(addOns * (costPVAddOn - (costPVAddOn * pvdisc))));
+            totCost += addOns * thresholdviAddOn * costvi;
+            totRetail += addOns * costviAddOn;
+            totCharge += addOns * (costviAddOn - (costviAddOn * vidisc));
+            $("#pageviews-cost").text(moneyFormat(addOns * thresholdviAddOn * costvi));
+            $("#pageviews-retail").text(moneyFormat(addOns * costviAddOn));
+            $("#pageviews-charge").text(moneyFormat(addOns * (costviAddOn - (costviAddOn * vidisc))));
         }
         else {
             // reset defaults
@@ -321,7 +321,7 @@
             $("#email-charge").text("$0.00");
         }
 
-        $("#baseline-cost").text(moneyFormat(basePVCost + baseKWCost + baseEMCost));
+        $("#baseline-cost").text(moneyFormat(baseviCost + baseKWCost + baseEMCost));
         $("#baseline-charge").text(moneyFormat(skus[sku].basePrice - (skus[sku].basePrice * disc)));
         $("#total-cost").text(moneyFormat(totCost));
         $("#total-retail").text(moneyFormat(totRetail));
@@ -345,8 +345,8 @@
     }
 
     function resetDefaults() {
-        $("#pv-discount").slider("value", 0);
-        $("#pv-discount-val").text("0%");
+        $("#vi-discount").slider("value", 0);
+        $("#vi-discount-val").text("0%");
         $("#kw-discount").slider("value", 0);
         $("#kw-discount-val").text("0%");
         $("#em-discount").slider("value", 0);
@@ -368,13 +368,13 @@
 
         var sku = $("#sku").val();
 
-        $("#pageviews").val(skus[sku].pv);
+        $("#pageviews").val(skus[sku].vi);
         $("#keywords").val(skus[sku].kw);
         $("#emails").val(skus[sku].em);
-        $("#baseline-cost").text(moneyFormat((skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#baseline-cost").text(moneyFormat((skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
         $("#baseline-retail").text(moneyFormat(skus[sku].basePrice));
         $("#baseline-charge").text(moneyFormat(skus[sku].basePrice));
-        $("#total-cost").text(moneyFormat((skus[sku].pv * costPV) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#total-cost").text(moneyFormat((skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
         $("#total-retail").text(moneyFormat(skus[sku].basePrice));
         $("#total-charge").text(moneyFormat(skus[sku].basePrice));
 
