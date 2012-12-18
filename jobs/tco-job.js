@@ -16,7 +16,8 @@ var logger = require('../util/logger.js'),
     coredb = require('../data_access/coredb-api.js'),
     shard_api = require('../data_access/shard-api.js'),
     cost_dao = require('../data_access/cost-dao.js'),
-    mrr_api = require('../data_access/mrr-api-old.js');
+    mrr_api = require('../data_access/mrr-api-old.js'),
+    appusage_dao = require('../data_access/appusage-dao.js');
 
 /**
 * Fixed amount - assume the system will scale and always have 20% headroom when calculating TCO
@@ -254,7 +255,44 @@ var tcoJob = function () {
                     }
 
                 });
+            });
+        },
+        function (callback) { // ETL STEP 8: Bigscore
+            customer_dao.getAllCustomers(function (err, customers) {
+                if (err) {
+                    callback(err);
+                }
+                var startDate = Date.today().add({ days: -30 });
+                var endDate = Date.today();
 
+                async.forEach(customers, function (customer, callback_inner) {
+                    appusage_dao.getBigScoreByCustomerId(customer.id, startDate, endDate, function(err, result) {
+                        if (result.length > 0) {
+                            customer.bigScore = result[result.length-1]['bigScore'];
+                            customer_dao.saveCustomer(customer, function (err) {
+                                if (err) {
+                                    callback_inner(err);
+                                }
+                                else {
+                                    logger.info('Bigscore updated for: ' + customer.name + ' (' + customer.bigScore + ')');
+                                    callback_inner();
+                                }
+                            });                            
+                        }
+                        else {
+                            callback_inner();
+                        }
+                    });
+                },
+                function (err) { // callback_inner
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        logger.info('TCO job step 8: [Bigscore] completed');
+                        callback();
+                    }
+                });
             });
         }
     ],
