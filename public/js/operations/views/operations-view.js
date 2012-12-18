@@ -220,8 +220,17 @@ Opty.OperationsView = Backbone.View.extend({
                             display_name: 'SKU'
                         },
                         {
-                            field: 'pageviews',
-                            display_name: 'Page views',
+                            field: 'createdAt',
+                            display_name: 'Created',
+                            formatter: 'date'
+                        },
+                        {
+                            field: 'sites',
+                            display_name: 'Sites'
+                        },
+                        {
+                            field: 'visitors',
+                            display_name: 'Visitors',
                             text_align: 'right',
                             formatter: function (data) {
                                 if (data) {
