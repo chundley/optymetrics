@@ -220,6 +220,10 @@ Opty.OperationsView = Backbone.View.extend({
                             display_name: 'SKU'
                         },
                         {
+                            field: 'bigScore',
+                            display_name: 'TBS'
+                        },
+                        {
                             field: 'createdAt',
                             display_name: 'Created',
                             formatter: 'date'

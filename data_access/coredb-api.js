@@ -107,6 +107,7 @@ var getCustomers = function (callback) {
                             'salesforceName': 'n/a',
                             'mrr': 0,
                             'netRevenue': 0,
+                            'bigScore': 0,
                             'organizations': []
                         });
                         customers[result.rows[row].id] = customermodel;

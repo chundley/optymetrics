@@ -27,7 +27,8 @@ var getCustomerTCOData = function (limit, callback) {
                     tcoSEO: '$tcoSEO',
                     tcoTotal: '$tcoTotal',
                     mrr: '$mrr',
-                    netRevenue: '$netRevenue'
+                    netRevenue: '$netRevenue',
+                    bigScore: '$bigScore'
                     },
                     sites: {$sum: 1}
                 }
@@ -45,7 +46,8 @@ var getCustomerTCOData = function (limit, callback) {
                     tcoSEO: '$_id.tcoSEO',
                     tcoTotal: '$_id.tcoTotal',
                     mrr: '$_id.mrr',
-                    netRevenue: '$_id.netRevenue'
+                    netRevenue: '$_id.netRevenue',
+                    bigScore: '$_id.bigScore'
                 }
             },
             { $sort: {tcoTotal: -1}},
