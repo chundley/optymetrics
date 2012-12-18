@@ -11,21 +11,6 @@ var mongoose = require('mongoose'),
 * @param limit  The number of rows to return
 */
 var getCustomerTCOData = function (limit, callback) {
-    /*
-    customer_model.CustomerModel
-        .find()
-        .select({ 'organizations': 0 })
-        .sort('tcoTotal', -1)
-        .limit(limit)
-        .exec(function (err, customers) {
-            if (err) {
-                callback(err, null);
-            }
-            else {
-                callback(null, customers);
-            }
-        });
-    */
     var command = {
         aggregate: 'customers',
         pipeline:
