@@ -41,6 +41,10 @@ Opty.CustomerSummaryView = Backbone.View.extend({
                 <td style="text-align: center"><%= activeSites %></td> \
             </tr> \
             <tr> \
+                <td>Page views (30d)</td> \
+                <td style="text-align: center"><%= totalPageviews %></td> \
+            </tr> \
+            <tr> \
                 <td>Visitors (30d)</td> \
                 <td style="text-align: center"><%= totalVisitors %></td> \
             </tr> \
@@ -93,6 +97,7 @@ Opty.CustomerSummaryView = Backbone.View.extend({
             sku: this.collection.models[0].get('sku'),
             totalSites: inactiveSites + activeSites,
             activeSites: activeSites,
+            totalPageviews: Opty.util.formatNumber(this.collection.models[0].get('pageviews'), 0),
             totalVisitors: Opty.util.formatNumber(this.collection.models[0].get('visitors'), 0),
             totalKeywords: Opty.util.formatNumber(this.collection.models[0].get('keywords'), 0),
             mrr: '$' + Opty.util.formatNumber(this.collection.models[0].get('mrr'), 0),

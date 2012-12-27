@@ -163,7 +163,7 @@ Opty.ServicesView = Backbone.View.extend({
         $mrrHistoryDiv.append(mrrTrendView.$el);
 
         var bigscoreTrendCollection = new Opty.BigScoreTrendForCustomerCollection({startDate: Date.today().add({ days: -90 }), endDate: Date.today()});
-        var bigscoreWidget = new Opty.BigScoreWidgetView({collection: bigscoreTrendCollection, cssClass: '', header: 'The Big Score (TBS)', footer: '4-week rolling average'});
+        var bigscoreWidget = new Opty.BigScoreWidgetView({collection: bigscoreTrendCollection, cssClass: '', header: 'TBS Current Score', footer: 'Out of 100'});
         $bigscoreDiv.append(bigscoreWidget.$el);
 
         var bigscoreCustomerHistoryChart = new Opty.BigscoreCustomerHistoryChart({collection: bigscoreTrendCollection});

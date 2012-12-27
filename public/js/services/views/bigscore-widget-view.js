@@ -32,7 +32,7 @@ Opty.BigScoreWidgetView = Backbone.View.extend({
             footer: me.footer
         });
 
-        var $divTitle = $('<div class="widget-group-header-container" id="usagetableheader"><div class="widget-group-header"><span>Big Score</span></div></div>');
+        var $divTitle = $('<div class="widget-group-header-container" id="usagetableheader"><div class="widget-group-header"><span>The Big Score (TBS)</span></div></div>');
         
         this.$el.append($divTitle);
         this.$el.append(widget.$el);

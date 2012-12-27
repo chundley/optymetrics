@@ -112,7 +112,7 @@ Opty.CustomerSiteView = Backbone.View.extend({
                 }
             ],
             sortable: true,
-            defaultSort: [[8, 1]],            
+            defaultSort: [[9, 1]],            
             collection: siteCollection
         });
         
