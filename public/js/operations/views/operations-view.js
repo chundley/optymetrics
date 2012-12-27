@@ -233,6 +233,18 @@ Opty.OperationsView = Backbone.View.extend({
                             display_name: 'Sites'
                         },
                         {
+                            field: 'pageviews',
+                            display_name: 'Page Views',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return Opty.util.formatNumber(data, 0);
+                                } else {
+                                    return '0';
+                                }
+                            }
+                        },
+                        {
                             field: 'visitors',
                             display_name: 'Visitors',
                             text_align: 'right',
@@ -324,7 +336,7 @@ Opty.OperationsView = Backbone.View.extend({
                         ],
 
                         sortable: true,
-                        defaultSort: [[8, 1]],
+                        defaultSort: [[10, 1]],
                         sortInitialOrder: 'desc',
                         collection: tco_collection
                     });

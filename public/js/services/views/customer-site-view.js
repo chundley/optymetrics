@@ -63,6 +63,14 @@ Opty.CustomerSiteView = Backbone.View.extend({
                     text_align: 'right'
                 },
                 {
+                    field: 'pageviews',
+                    display_name: 'PV (30d)',
+                    text_align: 'right',
+                    formatter: function(data) {
+                        return Opty.util.formatNumber(data, 0)
+                    }
+                },
+                {
                     field: 'visitors',
                     display_name: 'Visitors (30d)',
                     text_align: 'right',

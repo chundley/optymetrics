@@ -23,7 +23,7 @@ Opty.BigscoreCustomerHistoryChart = Backbone.View.extend({
         },
         title: {
             enabled: false,
-            text: 'Big Score 90-day trend',
+            text: 'TBS 90-day trend',
             style: {
                 color: '#e3e3e3',
                 fontSize: '14px'
