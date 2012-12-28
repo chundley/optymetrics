@@ -31,11 +31,12 @@ var costBackfill = function (callback) {
                 type: data[1],
                 detail: data[2],
                 monthlyCost: data[3],
-                percSEO: data[4],
-                percTraffic: data[5],
-                percEmail: data[6],
-                percOverhead: data[7],
-                notes: data[8]
+                percBaseline: data[4],
+                percSEO: data[5],
+                percTraffic: data[6],
+                percEmail: data[7],
+                percOverhead: data[8],
+                notes: data[9]
             });
             costs.push(costmodel);
         }
@@ -73,6 +74,7 @@ var costBackfill = function (callback) {
 
 var getCostSummary = function (callback) {
     var costs = {
+        tcoBaseline: 0,
         tcoKeywords: 0,
         tcoTraffic: 0,
         tcoEmail: 0,
@@ -80,6 +82,7 @@ var getCostSummary = function (callback) {
     };
     cost_model.CostModel.find({}, function (err, docs) {
         async.forEach(docs, function (doc, callback_inner) {
+            costs.tcoBaseline += doc.monthlyCost * doc.percBaseline;
             costs.tcoKeywords += doc.monthlyCost * doc.percSEO;
             costs.tcoTraffic += doc.monthlyCost * doc.percTraffic;
             costs.tcoEmail += doc.monthlyCost * doc.percEmail;

@@ -1,61 +1,60 @@
-Vendor,Type,Detail,Monthly,% to inbound,% to leads/contacts,% to email,% to overhead,Notes
-Softlayer,Server,dev-build-101.optify.net,214,0,0,0,1,Git and build
-Softlayer,Server,prod-amq-101.optify.net,269,0.5,0.5,0,0,
-Softlayer,Server,prod-amq-102.optify.net,269,0.5,0.5,0,0,
-Softlayer,Server,prod-api-101.optify.net,189,0,1,0,0,
-Softlayer,Server,prod-api-102.optify.net,279,0,1,0,0,
-Softlayer,Server,prod-app-101.optify.net,464,0.5,0.5,0,0,
-Softlayer,Server,prod-app-102.optify.net,434,0.5,0.5,0,0,
-Softlayer,Server,prod-app-103.optify.net,469,0.5,0.5,0,0,Jobs server
-Softlayer,Server,prod-app-104.optify.net,434,0.5,0.5,0,0,Jobs server
-Softlayer,Server,prod-bi-101.optify.net,359,0,0,0,1,Aspen
-Softlayer,Server,prod-build-103.optify.net,364,0,0,0,1,Build server
-Softlayer,Server,prod-build-104.optify.net,269,0,0,0,1,Engineering week projects
-Softlayer,Server,prod-cass-109.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-cass-110.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-cass-111.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-cass-112.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-cass-113.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-cass-114.optify.net,239,1,0,0,0,
-Softlayer,Server,prod-db-110a.optify.net,1549,0,1,0,0,
-Softlayer,Server,prod-db-111a.optify.net,1549,0,1,0,0,
-Softlayer,Server,prod-db-112a.optify.net,1234,0,1,0,0,
-Softlayer,Server,prod-db-113.optify.net,2324,0.1,0.9,0,0,
-Softlayer,Server,prod-db-114a.optify.net,1549,0.5,0.5,0,0,
-Softlayer,Server,prod-db-114b.optify.net,1549,0.5,0.5,0,0,
-Softlayer,Server,prod-db-115.optify.net,1234,0,1,0,0,
-Softlayer,Server,prod-dosdb-102.optify.net,1184,0,1,0,0,
-Softlayer,Server,prod-dosdb-103.optify.net,1034,0,1,0,0,
-Softlayer,Server,prod-dosdb-104.optify.net,1184,0,1,0,0,
-Softlayer,Server,prod-es-101.optify.net,269,0,1,0,0,
-Softlayer,Server,prod-es-102.optify.net,269,0,1,0,0,
-Softlayer,Server,prod-es-103.optify.net,269,0,1,0,0,
-Softlayer,Server,prod-fs-301.optify.net,1049,0.1,0.9,0,0,
-Softlayer,Server,prod-jobs-101.optify.net,279,0.5,0.5,0,0,
-Softlayer,Server,prod-lb-101.optify.net,229,0.2,0.8,0,0,
-Softlayer,Server,prod-lb-102.optify.net,229,0.2,0.8,0,0,
-Softlayer,Server,prod-lpapp-101.optify.net,269,0,1,0,0,
-Softlayer,Server,prod-lpapp-102.optify.net,269,0,1,0,0,
-Softlayer,Server,prod-mdb-101a.optify.net,279,0,1,0,0,Tracker-listener
-Softlayer,Server,prod-mdb-102b.optify.net,279,0,1,0,0,Tracker-receiver
-Softlayer,Server,prod-mdb-103a.optify.net,289,0,1,0,0,Shard jobs
-Softlayer,Server,prod-mdb-103b.optify.net,279,0,1,0,0,Shard jobs
-Softlayer,Server,prod-scoring-101.optify.net,429,0,1,0,0,
-Softlayer,Server,prod-scoring-103.optify.net,279,0,1,0,0,
-Softlayer,Server,prod-scoring-104.optify.net,279,0,1,0,0,
-Softlayer,Server,prod-tl-101.optify.net,299,0,1,0,0,
-Softlayer,Server,prod-tl-102.optify.net,299,0,1,0,0,
-Softlayer,Server,prod-tr-101.optify.net,199,0,1,0,0,
-Softlayer,Server,prod-tr-102.optify.net,199,0,1,0,0,
-Softlayer,Server,prod-vhost-101.optify.net,432,0,0,0,1,"IT, code review, DRE build server"
-Softlayer,Server,prod-www-102.optify.net,289,0,0,0,1,Corp www server
-Softlayer,Network,Bandwidth,680,0.2,0.8,0,0,
-AWS,Server,Development environment,1554,0,0,0,1,
-Anonymizer,Service,Keyword rank proxy,1496,1,0,0,0,
-WonderProxy,Service,Int''l Keyword rank proxy,240,1,0,0,0,
-JangoMail,Service,App Email,945,0.1,0.9,0,0,
-SEMRush,Service,Keyword suggestions,450,1,0,0,0,
-Exact Target,Service,Email Nurturing,6250,0,0,1,0,
-Bing API,Service,Keyword ranking,2737,1,0,0,0,
-SEOMoz,Service,Links,500,1,0,0,0,"Link suggestions and inbound links"
-D&B,Service,Company data,3285,0,1,0,0,"Company lookup data for leads and contacts"
+Vendor,Type,Detail,Monthly,% to baseline,% to inbound,% to leads/contacts,% to email,% to overhead,Notes
+Softlayer,Server,dev-build-101.optify.net,214,0,0,0,0,1,Git and build
+Softlayer,Server,prod-amq-101.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-amq-102.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-api-101.optify.net,189,1,0,0,0,0,
+Softlayer,Server,prod-api-102.optify.net,279,1,0,0,0,0,
+Softlayer,Server,prod-app-101.optify.net,464,1,0,0,0,0,
+Softlayer,Server,prod-app-102.optify.net,434,1,0,0,0,0,
+Softlayer,Server,prod-app-103.optify.net,469,0,0.5,0.5,0,0,Jobs server
+Softlayer,Server,prod-app-104.optify.net,434,0,0.5,0.5,0,0,Jobs server
+Softlayer,Server,prod-bi-101.optify.net,359,0,0,0,0,1,Aspen
+Softlayer,Server,prod-build-103.optify.net,364,0,0,0,0,1,Build server
+Softlayer,Server,prod-build-104.optify.net,269,0,0,0,0,1,Engineering week projects
+Softlayer,Server,prod-cass-109.optify.net,239,1,0,0,0,0,
+Softlayer,Server,prod-cass-110.optify.net,239,1,0,0,0,0,
+Softlayer,Server,prod-cass-111.optify.net,239,1,0,0,0,0,
+Softlayer,Server,prod-cass-112.optify.net,239,0,1,0,0,0,
+Softlayer,Server,prod-cass-113.optify.net,239,0,1,0,0,0,
+Softlayer,Server,prod-cass-114.optify.net,239,0,1,0,0,0,
+Softlayer,Server,prod-db-110a.optify.net,1549,0,0,1,0,0,
+Softlayer,Server,prod-db-111a.optify.net,1549,1,0,0,0,0,
+Softlayer,Server,prod-db-112a.optify.net,1234,0,0,1,0,0,
+Softlayer,Server,prod-db-113.optify.net,2324,0,0.1,0.9,0,0,
+Softlayer,Server,prod-db-114a.optify.net,1549,1,0,0,0,0,
+Softlayer,Server,prod-db-114b.optify.net,1549,1,0,0,0,0,
+Softlayer,Server,prod-db-115.optify.net,1234,0,0,1,0,0,
+Softlayer,Server,prod-dosdb-102.optify.net,1184,1,0,0,0,0,
+Softlayer,Server,prod-dosdb-103.optify.net,1034,0,0,1,0,0,
+Softlayer,Server,prod-dosdb-104.optify.net,1184,0,0,1,0,0,
+Softlayer,Server,prod-es-101.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-es-102.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-es-103.optify.net,269,0,0,1,0,0,
+Softlayer,Server,prod-fs-301.optify.net,1049,0,0.1,0.9,0,0,
+Softlayer,Server,prod-jobs-101.optify.net,279,1,0,0,0,0,
+Softlayer,Server,prod-lb-101.optify.net,229,1,0,0,0,0,
+Softlayer,Server,prod-lb-102.optify.net,229,1,0,0,0,0,
+Softlayer,Server,prod-lpapp-101.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-lpapp-102.optify.net,269,1,0,0,0,0,
+Softlayer,Server,prod-mdb-101a.optify.net,279,1,0,0,0,0,Tracker-listener
+Softlayer,Server,prod-mdb-102b.optify.net,279,1,0,0,0,0,Tracker-receiver
+Softlayer,Server,prod-mdb-103a.optify.net,289,0,0,1,0,0,Shard jobs
+Softlayer,Server,prod-mdb-103b.optify.net,279,0,0,1,0,0,Shard jobs
+Softlayer,Server,prod-scoring-101.optify.net,429,1,0,0,0,0,
+Softlayer,Server,prod-scoring-103.optify.net,279,0,0,1,0,0,
+Softlayer,Server,prod-scoring-104.optify.net,279,0,0,1,0,0,
+Softlayer,Server,prod-tl-101.optify.net,299,1,0,0,0,0,
+Softlayer,Server,prod-tl-102.optify.net,299,1,0,0,0,0,
+Softlayer,Server,prod-tr-101.optify.net,199,1,0,0,0,0,
+Softlayer,Server,prod-tr-102.optify.net,199,1,0,0,0,0,
+Softlayer,Server,prod-vhost-101.optify.net,432,0,0,0,0,1,"IT, code review, DRE build server"
+Softlayer,Server,prod-www-102.optify.net,289,0,0,0,0,1,Corp www server
+Softlayer,Network,Bandwidth,680,0,0.2,0.8,0,0,
+AWS,Server,Development environment,1554,0,0,0,0,1,
+Anonymizer,Service,Keyword rank proxy,1496,0,1,0,0,0,
+WonderProxy,Service,Int''l Keyword rank proxy,240,0,1,0,0,0,
+SendGrid,Service,App Email,150,0,0.1,0.9,0,0,
+SEMRush,Service,Keyword suggestions,450,0,1,0,0,0,
+Exact Target,Service,Email Nurturing,3200,0,0,0,1,0,
+SEOMoz,Service,Links,500,0,1,0,0,0,Link suggestions and inbound links
+D&B,Service,Company data,3285,0,0,1,0,0,Company lookup data for leads and contacts

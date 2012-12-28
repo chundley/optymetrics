@@ -13,6 +13,7 @@ var CostSchema = new Schema({
     type: String,
     detail: String,
     monthlyCost: Number,
+    percBaseline: Number,
     percSEO: Number,
     percTraffic: Number,
     percEmail: Number,
