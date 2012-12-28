@@ -737,12 +737,12 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: 27px;
+  margin-bottom: 15px;
   font-size: 19.5px;
   line-height: 36px;
-  color: #cccccc;
+  color: #ddd;
   border: 0;
-  border-bottom: 1px solid #999999;
+  border-bottom: 1px solid #ddd;
 }
 
 legend small {

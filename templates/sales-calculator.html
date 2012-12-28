@@ -1,7 +1,40 @@
-﻿<div class="row">
+﻿<div class="row" style="padding-bottom: 20px;">
+    <div class="span12">
+        <legend>Instructions</legend>
+        <ol>
+            <li>
+                Set the baseline SKU volume to start pricing based on these two options:
+                <ol>
+                    <li type="a"><span style="color: #a3bccc; font-weight: bold;">SKU Average</span>: the current average usage data for page views, keywoards, and emails for the selected SKU</li>
+                    <li type="a"><span style="color: #a3bccc; font-weight: bold;">Worst Case</span>: the baseline will be set assuming the account will use 100% of their capacity for page veiws, keywords and emails</li>
+                </ol>
+            </li>
+            <li>
+                Select the SKU you'd like to estimate pricing for
+            </li>
+            <li>
+                To the best of your knowledge approximate the total volume in page views, keywords, and emails this customer is likely to use in an average month
+            </li>
+            <li>
+                Adjust discounts (if any) on the base SKU price and add-ons.  Note the calculator will automatically adjust COGS and MRR for SKU overages
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
     <div class="span5">
         <div class="form-horizontal">
-            <legend>Price Estimator</legend>
+            <legend>SKU Settings</legend>
+            <div style="margin-top: -10px; margin-bottom: 20px;">
+                <table width="380" cellpadding="0" cellspacing="0" border="0" style="color: #ccc;">
+                <tr>
+                    <td><label class="radio" style="font-size: 120%">Baseline:</label></td>
+                    <td><label class="radio" style="font-size: 120%"><input type="radio" name="calctype" id="calctypeaverage" value="calctypeaverage" checked onchange="resetDefaults();">SKU Average</label></td>
+                    <td><label class="radio" style="font-size: 120%"><input type="radio" name="calctype" id="calctypeworst" value="calctypeworst" onchange="resetDefaults();" >Worst Case</label></td>
+                </tr>
+                </table>
+            </div>
             <div class="control-group">
                 <label class="control-label">SKU</label>
                 <div class="controls">
@@ -15,28 +48,28 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Visitors</label>
+                <label class="control-label">Pageviews</label>
                 <div class="controls">
-                    <input type="text" name="pageviews" id="pageviews" value="25000" onblur="calculate();" />
+                    <input type="text" name="pageviews" id="pageviews" value="300000" onblur="calculate();" />
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Keywords</label>
                 <div class="controls">
-                    <input type="text" name="keywords" id="keywords" value="50" onblur="calculate();" />
+                    <input type="text" name="keywords" id="keywords" value="1500" onblur="calculate();" />
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label">Emails</label>
                 <div class="controls">
-                    <input type="text" name="emails" id="emails" value="2500" onblur="calculate();" />
+                    <input type="text" name="emails" id="emails" value="0" onblur="calculate();" />
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Visitor discount</label>
+                <label class="control-label">Pageview discount</label>
                 <div class="controls">
-                    <div id="vi-discount"></div>
-                    <div id="vi-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
+                    <div id="pv-discount"></div>
+                    <div id="pv-discount-val" style="padding-right: 100px; text-align: right;">0%</div>
                 </div>
             </div>
             <div class="control-group">
@@ -62,7 +95,6 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                <!-- <button type="reset" class="btn" onclick="resetDefaults();">Reset Form</button> -->
                 </div>
             </div>
         </div> <!-- form -->
@@ -125,56 +157,71 @@
     var skus = {
         "Agency Pro": {
             basePrice: 750,
-            vi: 300000,
+            pv: 300000,
             kw: 1500,
-            em: 0
+            em: 375000,
+            pvAvg: 75000,
+            kwAvg: 300,
+            emAvg: 500
         },
         "Agency Complete": {
             basePrice: 1500,
-            vi: 1000000,
+            pv: 1000000,
             kw: 5000,
-            em: 0
+            em: 1125000,
+            pvAvg: 175000,
+            kwAvg: 1200,
+            emAvg: 500
         },        
         "Express": {
             basePrice: 300,
-            vi: 10000,
+            pv: 10000,
             kw: 50,
-            em: 2500
+            em: 2500,
+            pvAvg: 6000,
+            kwAvg: 40,
+            emAvg: 200
         },
         "Team": {
             basePrice: 600,
-            vi: 250000,
+            pv: 250000,
             kw: 500,
-            em: 0
+            em: 100000,
+            pvAvg: 75000,
+            kwAvg: 350,
+            emAvg: 1500
         },
         "Premium": {
-            basePrice: 1500,
-            vi: 750000,
+            basePrice: 1200,
+            pv: 750000,
             kw: 3000,
-            em: 0
+            em: 250000,
+            pvAvg: 600000,
+            kwAvg: 1500,
+            emAvg: 500
         }
     }
 
 
-    var costvi = .00076,
-        costKW = .07919,
-        costEM = .003,
-        thresholdviAddOn = 100000,
-        costviAddOn = 100,
+    var costpv = .000106,
+        costKW = .0301,
+        costEM = .00211,
+        thresholdpvAddOn = 100000,
+        costpvAddOn = 100,
         thresholdKWAddOn = 500,
         costKWAddOn = 100,
         thresholdEMAddOn = 5000,
-        costEMAddOn = 0;
+        costEMAddOn = 50;
 
     $(function () {
-        $("#vi-discount").slider({
+        $("#pv-discount").slider({
             min: 0,
             max: 100,
             change: function (event, ui) {
                 calculate();
             },
             slide: function (event, ui) {
-                $("#vi-discount-val").text(ui.value + "%");
+                $("#pv-discount-val").text(ui.value + "%");
             }
         });
 
@@ -215,21 +262,24 @@
     });
 
     function calculate() {
-        var vidisc = $("#vi-discount").slider("value") / 100;
+        var sku = $("#sku").val();
+
+        // Variables for global calculations
+        var pvdisc = $("#pv-discount").slider("value") / 100;
         var kwdisc = $("#kw-discount").slider("value") / 100;
         var emdisc = $("#em-discount").slider("value") / 100;
         var disc = $("#discount").slider("value") / 100;
-        var sku = $("#sku").val();
+        
         var totRetail = skus[sku].basePrice;
         var totCharge = skus[sku].basePrice - (skus[sku].basePrice * disc);
 
         // necessary to account for selling a SKU with reduced capacity (like Pro with no email)
-        var baseviCost = skus[sku].vi * costvi;
+        var basepvCost = skus[sku].pv * costpv;
         var baseKWCost = skus[sku].kw * costKW;
         var baseEMCost = skus[sku].em * costEM;
 
-        if ($("#pageviews").val() < skus[sku].vi) {
-            baseviCost = $("#pageviews").val() * costvi;
+        if ($("#pageviews").val() < skus[sku].pv) {
+            basepvCost = $("#pageviews").val() * costpv;
         }
 
         if ($("#keywords").val() < skus[sku].kw) {
@@ -240,13 +290,12 @@
             baseEMCost = $("#emails").val() * costEM;
         }
 
-        //var totCost = (skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM);
-        var totCost = (baseviCost) + (baseKWCost) + (baseEMCost);
+        var totCost = (basepvCost) + (baseKWCost) + (baseEMCost);
 
-        // Express doesn"t support add-ons, disable controls
+        // Express doesn't support add-ons, disable controls
         if (sku == "Express") {
             $("#pageviews").attr("disabled", "disabled");
-            $("#vi-discount").slider("option", "disabled", true);
+            $("#pv-discount").slider("option", "disabled", true);
             $("#keywords").attr("disabled", "disabled");
             $("#kw-discount").slider("option", "disabled", true);
             $("#emails").attr("disabled", "disabled");
@@ -254,25 +303,25 @@
         }
         else {
             $("#pageviews").removeAttr("disabled");
-            $("#vi-discount").slider("option", "disabled", false);
+            $("#pv-discount").slider("option", "disabled", false);
             $("#keywords").removeAttr("disabled");
             $("#kw-discount").slider("option", "disabled", false);
             $("#emails").removeAttr("disabled");
             $("#em-discount").slider("option", "disabled", false);
         }
 
-        var viOver = $("#pageviews").val() - skus[sku].vi;
-        if (viOver > 0) {
-            var addOns = Math.floor(viOver / thresholdviAddOn);
-            if (viOver % thresholdviAddOn > 0) {
+        var pvOver = $("#pageviews").val() - skus[sku].pv;
+        if (pvOver > 0) {
+            var addOns = Math.floor(pvOver / thresholdpvAddOn);
+            if (pvOver % thresholdpvAddOn > 0) {
                 addOns++;
             }
-            totCost += addOns * thresholdviAddOn * costvi;
-            totRetail += addOns * costviAddOn;
-            totCharge += addOns * (costviAddOn - (costviAddOn * vidisc));
-            $("#pageviews-cost").text(moneyFormat(addOns * thresholdviAddOn * costvi));
-            $("#pageviews-retail").text(moneyFormat(addOns * costviAddOn));
-            $("#pageviews-charge").text(moneyFormat(addOns * (costviAddOn - (costviAddOn * vidisc))));
+            totCost += addOns * thresholdpvAddOn * costpv;
+            totRetail += addOns * costpvAddOn;
+            totCharge += addOns * (costpvAddOn - (costpvAddOn * pvdisc));
+            $("#pageviews-cost").text(moneyFormat(addOns * thresholdpvAddOn * costpv));
+            $("#pageviews-retail").text(moneyFormat(addOns * costpvAddOn));
+            $("#pageviews-charge").text(moneyFormat(addOns * (costpvAddOn - (costpvAddOn * pvdisc))));
         }
         else {
             // reset defaults
@@ -321,7 +370,7 @@
             $("#email-charge").text("$0.00");
         }
 
-        $("#baseline-cost").text(moneyFormat(baseviCost + baseKWCost + baseEMCost));
+        $("#baseline-cost").text(moneyFormat(basepvCost + baseKWCost + baseEMCost));
         $("#baseline-charge").text(moneyFormat(skus[sku].basePrice - (skus[sku].basePrice * disc)));
         $("#total-cost").text(moneyFormat(totCost));
         $("#total-retail").text(moneyFormat(totRetail));
@@ -330,8 +379,28 @@
         $("#tot-discount").text("Total discount: " + ((totRetail - totCharge) / totRetail * 100).toFixed(2) + "%");
         $("#margin").text("Gross Margin: " + ((totCharge - totCost) / totCharge * 100).toFixed(2) + "%");
 
-        if ((totCharge - totCost) / totCharge < .75) {
-            $("#warning").text("Margin too low - talk to Woody, Rob, or Chris before closing");
+        var totNet = totCharge - totCost;
+        var margin = (totCharge - totCost) / totCharge;
+        var warning = false;
+
+        if (
+              (totNet <= 100 && margin < .95) ||
+              (totNet <= 200 && margin < .9) ||
+              (totNet <= 400 && margin < .8) ||
+              (totNet <= 600 && margin < .7) ||
+              (totNet <= 800 && margin < .6) ||
+              (totNet <= 1000 && margin < .5) ||
+              (totNet <= 2000 && margin < .4) ||
+              (totNet <= 5000 && margin < .3) ||
+              (totNet <= 10000 && margin < .2) ||
+              (totNet > 10000 && margin <= 0)
+           )
+        {
+            warning = true;
+        }
+
+        if (warning) {
+            $("#warning").text("LOW MARGIN WARNING: If you have any concerns about pricing this customer please talk to Woody, Rob, or Chris");
             $("#warning").css("border", "1px solid #f06c20");
         }
         else {
@@ -345,8 +414,8 @@
     }
 
     function resetDefaults() {
-        $("#vi-discount").slider("value", 0);
-        $("#vi-discount-val").text("0%");
+        $("#pv-discount").slider("value", 0);
+        $("#pv-discount-val").text("0%");
         $("#kw-discount").slider("value", 0);
         $("#kw-discount-val").text("0%");
         $("#em-discount").slider("value", 0);
@@ -367,14 +436,18 @@
         $("#email-charge").text("$0.00");
 
         var sku = $("#sku").val();
+        var avg = $("input[name=calctype]:checked").val() == "calctypeaverage" ? true : false;
+        var basePV = avg ? skus[sku].pvAvg : skus[sku].pv;
+        var baseKW = avg ? skus[sku].kwAvg : skus[sku].kw;
+        var baseEM = avg ? skus[sku].emAvg : skus[sku].em;
 
-        $("#pageviews").val(skus[sku].vi);
-        $("#keywords").val(skus[sku].kw);
-        $("#emails").val(skus[sku].em);
-        $("#baseline-cost").text(moneyFormat((skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#pageviews").val(basePV);
+        $("#keywords").val(baseKW);
+        $("#emails").val(baseEM);
+        $("#baseline-cost").text(moneyFormat((basePV * costpv) + (baseKW * costKW) + (baseEM * costEM)));
         $("#baseline-retail").text(moneyFormat(skus[sku].basePrice));
         $("#baseline-charge").text(moneyFormat(skus[sku].basePrice));
-        $("#total-cost").text(moneyFormat((skus[sku].vi * costvi) + (skus[sku].kw * costKW) + (skus[sku].em * costEM)));
+        $("#total-cost").text(moneyFormat((basePV * costpv) + (baseKW * costKW) + (baseEM * costEM)));
         $("#total-retail").text(moneyFormat(skus[sku].basePrice));
         $("#total-charge").text(moneyFormat(skus[sku].basePrice));
 
