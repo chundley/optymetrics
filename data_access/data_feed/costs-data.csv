@@ -1,4 +1,4 @@
-Vendor,Type,Detail,Monthly,% to baseline,% to inbound,% to leads/contacts,% to email,% to overhead,Notes
+Vendor,Type,Detail,Monthly,% to baseline,% to inbound,% to leads/contacts,% to email,% to overhead,Note
 Softlayer,Server,dev-build-101.optify.net,214,0,0,0,0,1,Git and build
 Softlayer,Server,prod-amq-101.optify.net,269,1,0,0,0,0,
 Softlayer,Server,prod-amq-102.optify.net,269,1,0,0,0,0,
