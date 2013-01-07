@@ -26,8 +26,6 @@ var logger = require('../util/logger.js');
 var getVendorData = function (callback) {
     var vendorData = [];
     csv().fromPath('./data_access/data_feed/vendor-data.csv').on("data", function (data, index) {
-        var temp = { id: 10 };
-        
         var vendor = {
             billingMonth: data[0],
             vendorName: data[1],
