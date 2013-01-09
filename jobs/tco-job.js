@@ -62,7 +62,50 @@ var tcoJob = function () {
                 }
             });
         },
-        function (callback) {  // ETL STEP 3: Keywords
+        function(callback) {   // ETL STEP 3: Resolve agency flag
+            coredb.getAgencyCustomers(function(err, customerIds) {
+                if (err) {
+                    callback(err);
+                }
+                else {
+                    async.forEach(customerIds, function(customerId, callback_inner) {
+                        customer_dao.getCustomerById(customerId, function(err, customer) {
+                            if (err) {
+                                callback_inner(err);
+                            }
+                            else {
+                                if (customer != null) {
+                                    customer.sku = "Agency";
+                                    customer_dao.saveCustomer(customer, function(err) {
+                                        if (err) {
+                                            callback_inner(err);
+                                        }
+                                        else {
+                                            logger.info("Agency SKU set for " + customer.name);
+                                            callback_inner();
+                                        }
+                                    });
+                                }
+                                else {
+                                    logger.warn("No customer found with customerId " + customerId);
+                                    callback_inner();
+                                }
+                            }
+                        });
+                    },
+                    function(err){ // callback_inner
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('TCO job step 3: [Agency flag] completed');
+                            callback();                            
+                        }
+                    });
+                }
+            });
+        },
+        function (callback) {  // ETL STEP 4: Keywords
             customer_dao.getAllCustomers(function (err, customers) {
                 if (err) {
                     callback(err);
@@ -98,13 +141,13 @@ var tcoJob = function () {
                         callback(err);
                     }
                     else {
-                        logger.info('TCO job step 3: [keyword counts] completed');
+                        logger.info('TCO job step 4: [keyword counts] completed');
                         callback();
                     }
                 }); // end async Callback
             }); // end getAllCustomers
         },
-        function (callback) {  // ETL STEP 4: Traffic
+        function (callback) {  // ETL STEP 5: Traffic
             customer_dao.getAllCustomers(function (err, customers) {
                 if (err) {
                     callback(err);
@@ -154,24 +197,24 @@ var tcoJob = function () {
                         callback(err);
                     }
                     else {
-                        logger.info('TCO job step 4: [Traffic counts] completed');
+                        logger.info('TCO job step 5: [Traffic counts] completed');
                         callback();
                     }
                 });
             }); // end getAllCustomers
         },
-        function (callback) { // ETL STEP 5: Costs
+        function (callback) { // ETL STEP 6: Costs
             cost_dao.costBackfill(function (err) {
                 if (err) {
                     callback(err);
                 }
                 else {
-                    logger.info('TCO job step 5: [Costs] completed');
+                    logger.info('TCO job step 6: [Costs] completed');
                     callback();
                 }
             });
         },
-        function (callback) { // ETL STEP 6: Cost breakout
+        function (callback) { // ETL STEP 7: Cost breakout
             customer_dao.getSummaryCounts(function (err, counts) {
                 cost_dao.getCostSummary(function (err, costs) {
                     customer_dao.getAllCustomers(function (err, customers) {
@@ -208,7 +251,7 @@ var tcoJob = function () {
                                 callback(err);
                             }
                             else {
-                                logger.info('TCO job step 6: [Customer costs] completed');
+                                logger.info('TCO job step 7: [Customer costs] completed');
                                 callback();
                             }
                         });
@@ -216,7 +259,7 @@ var tcoJob = function () {
                 });
             });
         },
-        function (callback) { // ETL STEP 7: MRR
+        function (callback) { // ETL STEP 8: MRR
             mrr_api.getMRRData(function (err, mrrData) {
                 async.forEach(mrrData, function (mrr, callback_inner) {
                     customer_dao.getCustomerById(mrr[0], function (err, customer) {
@@ -250,14 +293,14 @@ var tcoJob = function () {
                         callback(err);
                     }
                     else {
-                        logger.info('TCO job step 7: [MRR] completed');
+                        logger.info('TCO job step 8: [MRR] completed');
                         callback();
                     }
 
                 });
             });
         },
-        function (callback) { // ETL STEP 8: Bigscore
+        function (callback) { // ETL STEP 9: Bigscore
             customer_dao.getAllCustomers(function (err, customers) {
                 if (err) {
                     callback(err);
@@ -289,7 +332,7 @@ var tcoJob = function () {
                         callback(err);
                     }
                     else {
-                        logger.info('TCO job step 8: [Bigscore] completed');
+                        logger.info('TCO job step 9: [Bigscore] completed');
                         callback();
                     }
                 });

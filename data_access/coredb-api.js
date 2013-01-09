@@ -171,6 +171,28 @@ var getCustomerKeywordCount = function (customer, callback) {
     }); // end pg.connect
 };
 
+var getAgencyCustomers = function(callback) {
+    pg.connect(coredb_config.connectionString, function (err, client) {
+        if (err) {
+            callback(err, null);
+        }
+        client.query(QUERY_AGENCIES, function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            var customerIds = [];
+            async.forEach(result.rows, function (row, callback_inner) {
+                customerIds.push(row.customer_id)
+                callback_inner();
+            },
+            function () { // callback_inner
+                callback(null, customerIds)
+            });
+        }); // end query
+    }); // end pg.connect
+};
+
+exports.getAgencyCustomers = getAgencyCustomers;
 exports.getShards = getShards;
 exports.getCustomers = getCustomers;
 exports.getCustomerKeywordCount = getCustomerKeywordCount;
@@ -209,6 +231,10 @@ var QUERY_CUSTOMERS = "select " +
                         "and o.disabled = false " +
                         "and c.name != 'Hanegev' " +
                         "order by c.id, o.id";
+
+var QUERY_AGENCIES = "select distinct ca.customer_id " +
+                     "from customer_attribute ca " +
+                     "where ca.org_attribute_key_id = 93";
 
 var QUERY_ORGS = "select " +
                         "id, " +
