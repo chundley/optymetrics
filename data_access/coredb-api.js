@@ -234,7 +234,8 @@ var QUERY_CUSTOMERS = "select " +
 
 var QUERY_AGENCIES = "select distinct ca.customer_id " +
                      "from customer_attribute ca " +
-                     "where ca.org_attribute_key_id = 93";
+                     "where ca.org_attribute_key_id = 93 " +
+                     "and ca.value = 'true'";
 
 var QUERY_ORGS = "select " +
                         "id, " +
