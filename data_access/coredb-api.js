@@ -208,7 +208,8 @@ var QUERY_SHARDS = "select distinct " +
                         "sc.db_password, " +
                         "sc.disabled " +
                     "from shard_configuration sc " +
-                    "inner join organization o on sc.id = o.shard_configuration_id";
+                    "inner join organization o on sc.id = o.shard_configuration_id " +
+                    "where sc.available = 'true' ";
 
 var QUERY_CUSTOMERS = "select " +
                             "c.id, " +
