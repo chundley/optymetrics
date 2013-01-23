@@ -1,5 +1,5 @@
 function firstDayOfWeek(week, year) { 
-    if (typeof year !== 'undefined') {
+    if (typeof year === 'undefined') {
       year = (new Date()).getFullYear();
     }
 
