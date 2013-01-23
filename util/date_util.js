@@ -3,11 +3,9 @@ function firstDayOfWeek(week, year) {
       year = (new Date()).getFullYear();
     }
 
-    var date       = firstWeekOfYear(year),
-    weekTime   = weeksToMilliseconds(week),
-    targetTime = date.getTime() + weekTime;
-
-    return date.setTime(targetTime); 
+    var d = new Date("Jan 01, "+year+" 01:00:00");
+    var w = d.getTime() + 604800000 * (week-1);
+    return new Date(w).getTime(); 
 }
 
 function weeksToMilliseconds(weeks) {
