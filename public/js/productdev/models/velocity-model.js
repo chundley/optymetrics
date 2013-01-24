@@ -20,5 +20,9 @@ Opty.VelocityCollection = Backbone.Collection.extend({
         this.startDate = data.start;
         this.endDate = data.end;
         this.fetch();
+    }, 
+
+    comparator: function(model) {
+        return new Date(model.get("week_of"));
     }
 });
