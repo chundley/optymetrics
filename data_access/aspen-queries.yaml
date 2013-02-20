@@ -28,9 +28,12 @@ WeeklyCustomerUserStats : >
     HAVING count(distinct to_char(pageview_date, 'yyyy-mm-dd')) >= 6
 
 WeeklyFeatureUsageStats : >
+    DROP VIEW IF EXISTS v_traffic_with_feature;
     CREATE TEMP view v_traffic_with_feature
     as
-    SELECT *, case when url_host = 'help' then 'help' ELSE regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(url_path, '/([^/#?%]*).*', '\\1', 'g')
+    SELECT *, case when url_host = 'help' then 'help' 
+    ELSE regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
+    regexp_replace(url_path, '/([^/#?%]*).*', '\1', 'g')
     , '^link$', 'links')
     , '^landingpage$', 'landingpages')
     , '^lead$', 'leadintel')
@@ -53,7 +56,8 @@ WeeklyFeatureUsageStats : >
     AND (url_host in('dashboard', 'help') OR feature in ('dailyemail'))
     AND feature ~* '(help|landing|lead|keyword|twitter|contact|email|link|report|page)'
     AND url_path !~* '(page-event|pagenot)'
-    GROUP BY 1, 2, 3, 4, 5;
+    GROUP BY 1, 2, 3, 4, 5
+    HAVING (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date <> '2013-01-05';
     
     
     DROP TABLE IF EXISTS __temp_t2;
