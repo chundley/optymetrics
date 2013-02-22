@@ -1,4 +1,3 @@
-CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 916,iq4bis,Software,Direct,,,Express,26.00,1/31/2013,31-Jan-13,EXPRESS
 7170,Bereanopartners,Software,Direct,,,Express,100.00,1/31/2013,31-Jan-13,EXPRESS
 763,Project 8 Labs,Software,Direct,,,Express,50.00,1/31/2013,31-Jan-13,EXPRESS
@@ -32,7 +31,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 2236,GPL Tax & Accounting,Software,Direct,,,Express,150.00,1/31/2013,31-Jan-13,EXPRESS
 7332,Meteorological Service of New Zealand Ltd,Software,Direct,,,Express,80.00,1/31/2013,31-Jan-13,EXPRESS
 7836,Maersk Line,Software,Direct,,,Express,149.00,1/31/2013,31-Jan-13,EXPRESS
-699,Fulcrum Consulting,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
+6999,Fulcrum Consulting,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
 916,iq4bis,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
 8117,Kabbage,Software,Direct,,,Express,281.60,1/31/2013,31-Jan-13,EXPRESS
 6591,Versatile Company,Software,Direct,,,Express,94.05,1/31/2013,31-Jan-13,EXPRESS
@@ -80,7 +79,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 8709,AIDS Healthcare Foundation,Software,Direct,,,Pro,40.00,1/31/2013,31-Jan-13,PRO
 144,Zyme Solutions,Software,Direct,,,Pro,250.00,1/31/2013,31-Jan-13,PRO
 9379,"Drivestream, Inc.",Software,Direct,,,Pro,455.00,1/31/2013,31-Jan-13,PRO
-7615,Directions on Microsoft,Software,Direct,,,Pro,500.00,1/31/2013,31-Jan-13,PRO
+71,Directions on Microsoft,Software,Direct,,,Pro,500.00,1/31/2013,31-Jan-13,PRO
 10410,Workplace Safety North,Software,Direct,,,Pro,570.00,1/31/2013,31-Jan-13,PRO
 1467,WhiteCloud Analytics,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
 8328,BlueStripe Software,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
@@ -147,8 +146,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 162,CheckSum LLC,Software,Direct,,,Pro,250.00,1/31/2013,31-Jan-13,PRO
 34,All Senior Homes,Software,Direct,,,Pro,200.00,1/31/2013,31-Jan-13,PRO
 8236,Green Banana SEO,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
-10847,Derrick Mitchell Designs,Software,Direct,,,Agency,0.00,1/31/2013,31-Jan-13,AGENCY
-10064,EMAY,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
+10383,EMAY,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
 7158,Open Marketing,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
 10116,Rentping Media,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
 9735,Wilder2,Software,Direct,,,Agency,50.00,1/31/2013,31-Jan-13,AGENCY
@@ -223,7 +221,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 10847,Derrick Mitchell Designs,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 10373,Digital Department,Software,Direct,,,Agency,400.00,1/31/2013,31-Jan-13,AGENCY
 8690,ELOC Digital,Software,Direct,,,Agency,250.00,1/31/2013,31-Jan-13,AGENCY
-10064,EMAY,Software,Direct,,,Agency,400.00,1/31/2013,31-Jan-13,AGENCY
+10383,EMAY,Software,Direct,,,Agency,400.00,1/31/2013,31-Jan-13,AGENCY
 10232,"Everpay, LLC",Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 10831,Global Bend,Software,Direct,,,Agency,250.00,1/31/2013,31-Jan-13,AGENCY
 10119,Goals,Software,Direct,,,Agency,200.00,1/31/2013,31-Jan-13,AGENCY
@@ -262,7 +260,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 10017,wsiwebsmart.com,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 11242,5 Stones Consulting,Software,Direct,,,Agency,100.00,1/31/2013,31-Jan-13,AGENCY
 1450,N2O Marketing,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
-6864,Optiem,Software,Direct,,,Agency,198.00,1/31/2013,31-Jan-13,AGENCY
+4043,Optiem,Software,Direct,,,Agency,198.00,1/31/2013,31-Jan-13,AGENCY
 10709,Quantus Creative,Software,Direct,,,Agency,1000.00,1/31/2013,31-Jan-13,AGENCY
 11108,See Jane (t) Work,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 10956,B2B Ray,Software,Direct,,,Agency,100.00,1/31/2013,31-Jan-13,AGENCY
@@ -287,7 +285,7 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 9974,"Fuel, Inc.",Software,Direct,,,Agency,400.00,1/31/2013,31-Jan-13,AGENCY
 9735,Wilder2,Software,Direct,,,Agency,320.00,1/31/2013,31-Jan-13,AGENCY
 8282,Social Wildfire,Software,Direct,,,Agency,241.67,1/31/2013,31-Jan-13,AGENCY
-10857,Web Echoes,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
+9038,Web Echoes,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 10152,3C Marketing Group LLC,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
 10517,"TM Marketing, Inc.",Software,Direct,,,Agency,-650.00,1/31/2013,31-Jan-13,AGENCY
 7125,Fusion Marketing,Software,Direct,,,Agency,500.00,1/31/2013,31-Jan-13,AGENCY
@@ -298,20 +296,20 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 10940,Paltalk,Software,Managed,,,Enterprise,1300.00,1/31/2013,31-Jan-13,ENTERPRISE
 11133,IdentityForce,Software,Managed,,,Enterprise,400.00,1/31/2013,31-Jan-13,ENTERPRISE
 8012,"ExtraHop Networks, Inc.",Software,Managed,,,Enterprise,1000.00,1/31/2013,31-Jan-13,ENTERPRISE
-6863,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
 73,Isilon,Software,Managed,,,Enterprise,2000.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Software,Managed,,,Enterprise,500.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Software,Managed,,,Enterprise,1200.00,1/31/2013,31-Jan-13,ENTERPRISE
 1230,ALM's Real Estate Media Group,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
 7118,NBC News Digital,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
-6863,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
 461,ADSI,Software,Managed,,,Enterprise,450.00,1/31/2013,31-Jan-13,ENTERPRISE
 8477,Egencia Global,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
 355,Egencia,Software,Managed,,,Enterprise,1000.00,1/31/2013,31-Jan-13,ENTERPRISE
 394,LexisNexis/Lawyers.com,Software,Channel Managed,,,Enterprise,2397.08,1/31/2013,31-Jan-13,ENTERPRISE
 9996,LexisNexis:Lexis Nexis Bliss - Intelligence,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
 3156,"Colliers Intl Property Consultants, Inc",Software,Channel Managed,,,Enterprise,6734.40,1/31/2013,31-Jan-13,ENTERPRISE
-756,LexisNexis:LexisNexis,Software,Channel Managed,,,Enterprise,2220.00,1/31/2013,31-Jan-13,ENTERPRISE
+96,LexisNexis:LexisNexis,Software,Channel Managed,,,Enterprise,2220.00,1/31/2013,31-Jan-13,ENTERPRISE
 10243,Top Right Group,Software,Channel Managed,,,Enterprise,1931.25,1/31/2013,31-Jan-13,ENTERPRISE
 9813,LexisNexis:LexisNexis Bliss - CounselLink,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
 96,LexisNexis:LexisNexis Bliss - Firm Manager,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
@@ -339,19 +337,19 @@ CustomerID,Customer,Type,Subtype,n/a,n/a,SKU,MRR,Date,Dateformatted,SKUFinal
 10534,Colliers - London,Software,Channel Managed,,,Enterprise,312.00,1/31/2013,31-Jan-13,ENTERPRISE
 2140,Allrecipes.com,Software,Channel Managed,,,Enterprise,2250.00,1/31/2013,31-Jan-13,ENTERPRISE
 3156,"Colliers Intl Property Consultants, Inc",Services,Channel Managed,,,Enterprise,2760.00,1/31/2013,31-Jan-13,ENTERPRISE
-756,LexisNexis:LexisNexis,Services,Channel Managed,,,Enterprise,555.00,1/31/2013,31-Jan-13,ENTERPRISE
+96,LexisNexis:LexisNexis,Services,Channel Managed,,,Enterprise,555.00,1/31/2013,31-Jan-13,ENTERPRISE
 10243,Top Right Group,Services,Channel Managed,,,Enterprise,112.50,1/31/2013,31-Jan-13,ENTERPRISE
 10243,Top Right Group,Services,Channel Managed,,,Enterprise,225.00,1/31/2013,31-Jan-13,ENTERPRISE
 10940,Paltalk,Services,Managed,,,Enterprise,1900.00,1/31/2013,31-Jan-13,ENTERPRISE
 11133,IdentityForce,Services,Managed,,,Enterprise,3600.00,1/31/2013,31-Jan-13,ENTERPRISE
 8012,"ExtraHop Networks, Inc.",Services,Managed,,,Enterprise,9000.00,1/31/2013,31-Jan-13,ENTERPRISE
-6863,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
 73,Isilon,Services,Managed,,,Enterprise,5000.00,1/31/2013,31-Jan-13,ENTERPRISE
 23,SonoSite,Services,Managed,,,Enterprise,5000.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Services,Managed,,,Enterprise,1300.00,1/31/2013,31-Jan-13,ENTERPRISE
 1230,ALM's Real Estate Media Group,Services,Managed,,,Enterprise,500.00,1/31/2013,31-Jan-13,ENTERPRISE
 7118,NBC News Digital,Services,Managed,,,Enterprise,6000.00,1/31/2013,31-Jan-13,ENTERPRISE
-6863,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
 461,ADSI,Services,Managed,,,Enterprise,750.00,1/31/2013,31-Jan-13,ENTERPRISE
 355,Egencia,Services,Managed,,,Enterprise,2691.67,1/31/2013,31-Jan-13,ENTERPRISE
 9513,Generation Host,Software,Direct,GENERATION HOST-,Eric Thompson,Software: Optify Team,500,12/1/2012,31-Dec-12,PRO

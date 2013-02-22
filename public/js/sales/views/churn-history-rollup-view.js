@@ -141,7 +141,11 @@ Opty.ChurnRollupChart = Backbone.View.extend({
                                 $.getJSON(query, function(result) {
                                     var total = 0;
                                     $.each(result, function(i) {
-                                        customers += '<tr><td>' + this.accountName + '</td><td>' + this.sku.toLowerCase() + '</td><td align="right">$' + Highcharts.numberFormat(this.totalPrice, 0) + '</td></tr>';
+                                        var color = '';
+                                        if (this.partial == false) {
+                                            //color = '#e28c8c';
+                                        }
+                                        customers += '<tr style="color: ' + color + ';"><td>' + this.accountName + '</td><td>' + this.sku.toLowerCase() + '</td><td align="right">$' + Highcharts.numberFormat(this.totalPrice, 0) + '</td></tr>';
                                         total += this.totalPrice;
                                     });
                                     customers += '<tr style="font-size: 120%; font-weight: bold; color: #dddddd;"><td><b>Total</b></td><td colspan="2" align="right"><b>$' + Highcharts.numberFormat(total, 0) + '</td></tr>';
@@ -229,7 +233,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
 
         me.churn = options.churn;
         me.newsales = options.newsales;
-
+        console.log(me.churn);
         me.churn.on('reset', me.churnRollupDataChanged);
         me.newsales.on('reset', me.churnRollupDataChanged);
     },
