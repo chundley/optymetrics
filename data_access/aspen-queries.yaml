@@ -11,9 +11,9 @@ MonthlyCustomerStats : >
     GROUP BY 1, 2
     
 WeeklyCustomerUserStats : >
-    SELECT to_char(pageview_date, 'yyyy-ww') week_num
+    SELECT min(to_char(pageview_date, 'yyyy-ww')) week_num
     , case when sku = 'Premium' then 'Enterprise' ELSE sku END sku
-    , (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date week_of
+    , (date_trunc('week', pageview_date) - INTERVAL '1 DAY')::date  week_of
     , count(distinct to_char(pageview_date, 'yyyy-mm-dd')) days
     , count(distinct customer_id) customer_count
     , count(distinct user_id) user_count
@@ -24,8 +24,7 @@ WeeklyCustomerUserStats : >
     WHERE url_host = 'dashboard'
     AND sku ~* '^(agency|basic|express|premium|enterprise|professional|free trial)'
     AND pageview_date >= now() - INTERVAL '12 MONTHS'
-    GROUP BY 1, 2
-    HAVING count(distinct to_char(pageview_date, 'yyyy-mm-dd')) >= 6
+    GROUP BY 2, 3;
 
 WeeklyFeatureUsageStats : >
     DROP VIEW IF EXISTS v_traffic_with_feature;
@@ -45,9 +44,10 @@ WeeklyFeatureUsageStats : >
     DROP TABLE IF EXISTS __temp_t1;
     CREATE TEMP table __temp_t1
     AS
-    select feature, user_id
-    , to_char(pageview_date, 'yyyy-ww') week_num
-    , (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date week_of
+    select feature
+    , user_id
+    , min(to_char(pageview_date, 'yyyy-ww')) week_num
+    , (date_trunc('week', pageview_date)-INTERVAL '1 DAY')::date week_of
     , (traffic_visitor_id*1000)::varchar || traffic_visit_num::varchar visit_num
     , extract(epoch from max(pageview_date) - min(pageview_date))/ 60 time_on_feature
     , count(*) pageviews
@@ -56,8 +56,7 @@ WeeklyFeatureUsageStats : >
     AND (url_host in('dashboard', 'help') OR feature in ('dailyemail'))
     AND feature ~* '(help|landing|lead|keyword|twitter|contact|email|link|report|page)'
     AND url_path !~* '(page-event|pagenot)'
-    GROUP BY 1, 2, 3, 4, 5
-    HAVING (to_timestamp(to_char(pageview_date, 'yyyy-ww'),'yyyy-ww')+interval '6 DAYS')::date <> '2013-01-05';
+    GROUP BY 1, 2, 4, 5;
     
     
     DROP TABLE IF EXISTS __temp_t2;
@@ -75,7 +74,7 @@ WeeklyFeatureUsageStats : >
     , row_number()over(partition by feature ORDER BY t2.visits desc) visits_row_num
     FROM
     (
-    SELECT feature, week_num, week_of
+    SELECT feature, min(week_num) week_num, week_of
     , count(distinct user_id) unique_users
     , count(distinct customer_id) unique_customers
     , count(*) visits, sum(time_on_feature) time_on_feature, sum(pageviews) pageviews
@@ -84,10 +83,11 @@ WeeklyFeatureUsageStats : >
     JOIN v_customer c on c.id = ou.customer_id
     WHERE sku !~* '(Complimentary)'
     AND email_address !~* '(optify.net)'
-    GROUP BY 1, 2, 3
+    GROUP BY 1, 3
     ) t2
     JOIN (
-    SELECT week_num
+    SELECT min(week_num) week_num
+    , week_of
     , count(distinct user_id)::float unique_users
     , count(distinct customer_id)::float unique_customers
     
@@ -100,9 +100,8 @@ WeeklyFeatureUsageStats : >
     JOIN v_customer c on c.id = ou.customer_id
     WHERE sku !~* '(Complimentary)'
     AND email_address !~* '(optify.net)'
-    GROUP BY 1
-    ) t3 on t3.week_num = t2.week_num
-    
+    GROUP BY 2
+    ) t3 on t3.week_of = t2.week_of
     ;
     
     
