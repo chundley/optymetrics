@@ -303,15 +303,49 @@ var getUniqueDates = function(mrrs, callback) {
         }
 
         if (!dfound(dates)) {
-                dates.push(data[9]);
+            dates.push(data[9]);
         }
         inner_callback();
     },
     function() { // inner_callback
+        dates.sort(sortDate);
         callback(dates);
     });    
 }
 
+function sortDate(one, two) {
+    var dateOne = stringToDate(one);
+    var dateTwo = stringToDate(two);
+    if (dateOne < dateTwo) {
+        return 1;
+    }
+    else if (dateOne > dateTwo) {
+        return -1;
+    }
+    return 0;
+}
+
+function stringToDate(stringDate) {
+    var day = stringDate.split('-')[0];
+    var month = stringDate.split('-')[1];
+    var year = '20' + stringDate.split('-')[2];
+    var numMonth = 0;
+    switch(month) {
+        case 'Jan': numMonth = 0; break;
+        case 'Feb': numMonth = 1; break;
+        case 'Mar': numMonth = 2; break;
+        case 'Apr': numMonth = 3; break;
+        case 'May': numMonth = 4; break;
+        case 'Jun': numMonth = 5; break;
+        case 'Jul': numMonth = 6; break;
+        case 'Aug': numMonth = 7; break;
+        case 'Sep': numMonth = 8; break;
+        case 'Oct': numMonth = 9; break;
+        case 'Nov': numMonth = 10; break;
+        case 'Dec': numMonth = 11; break;
+    }
+    return new Date(year, numMonth, day-1);
+}
 /*
 *  Private helper function - get unique customers from a set of mrrs
 */
