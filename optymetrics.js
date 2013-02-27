@@ -274,11 +274,14 @@ app.get('/rest/sales/mrrs', requiresLogin, routes.sales.mrrs);
 //Gets mrrs by product type
 app.get('/rest/sales/mrrs-by-product', requiresLogin, routes.sales.mrrsByProductType);
 
-//Gets mrrs by product type
+//Gets mrrs by product type (CSV export)
 app.get('/rest/sales/mrrs-by-product-csv', requiresLogin, routes.sales.mrrsByProductTypeCSV);
 
 //Gets software mrrs by sku
 app.get('/rest/sales/mrrs-software-by-sku', requiresLogin, routes.sales.mrrsSoftwareBySKU);
+
+//Gets software mrrs by sku (CSV export)
+app.get('/rest/sales/mrrs-software-by-sku-csv', requiresLogin, routes.sales.mrrsSoftwareBySKUCSV);
 
 //Gets software mrrs by sku
 app.get('/rest/sales/mrr-trend-by-customer', requiresLogin, routes.sales.mrrTrendByCustomer);

@@ -233,8 +233,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
 
         me.churn = options.churn;
         me.newsales = options.newsales;
-        console.log(me.churn);
-        me.churn.on('reset', me.churnRollupDataChanged);
+       //me.churn.on('reset', me.churnRollupDataChanged);
         me.newsales.on('reset', me.churnRollupDataChanged);
     },
 
@@ -316,7 +315,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
         this.churnRollupChartOptions.series[3].data = servicesNew;
         this.churnRollupChartOptions.series[3].visible = false;
 
-        this.churnRollupChartOptions.xAxis.categories = categories
+        this.churnRollupChartOptions.xAxis.categories = categories;
 
         this.chart = new Highcharts.Chart(this.churnRollupChartOptions);
         return this.$el;

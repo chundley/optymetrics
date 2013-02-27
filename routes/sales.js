@@ -100,6 +100,41 @@ exports.mrrsSoftwareBySKU = function (req, res, next) {
     });
 };
 
+exports.mrrsSoftwareBySKUCSV = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+
+    mrr_dao.getSoftwareMRRBySKU(startDate, endDate, function (err, rows) {
+        if (err) {
+            logger.log('info', err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        var source = [ ['Date', 'Express MRR', 'Pro MRR', 'Agency MRR', 'Enterprise MRR' ] ];
+        _.each(rows, function(row) {
+            var r = [];
+            r.push((row.dateAdded.getMonth() + 1).toString() + '-' + row.dateAdded.getFullYear());
+            r.push(row.express);
+            r.push(row.pro);
+            r.push(row.agency);
+            r.push(row.enterprise);            
+            source.push(r);
+        });
+        var result = [];
+        csv().from(source)
+            .on('data', function(data) {
+                result.push(data.join(','));
+            })
+            .on('end', function() {
+                res.setHeader('Content-disposition', 'attachment; filename=softwre-mrr-by-sku.csv');
+                res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
+                res.send(result.join('\n'));
+            }); 
+    });
+};
+
 exports.mrrsChurnByProductType = function (req, res, next) {
     var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
     var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
