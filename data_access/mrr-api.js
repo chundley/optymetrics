@@ -19,8 +19,6 @@ var logger = require('../util/logger.js');
 /**
 * Gets MRR data from the .csv file
 *
-* The spreadsheet is ./data_access/data_feed/mrr-data.csv and is formatted:
-*    {customer_id},{salesforce_name},{mrr}
 */
 var getMRRData = function (callback) {
     var mrrData = [];

@@ -16,7 +16,7 @@ var logger = require('../util/logger.js'),
     coredb = require('../data_access/coredb-api.js'),
     shard_api = require('../data_access/shard-api.js'),
     cost_dao = require('../data_access/cost-dao.js'),
-    mrr_api = require('../data_access/mrr-api-old.js'),
+    mrr_dao = require('../data_access/mrr-dao.js'),
     appusage_dao = require('../data_access/appusage-dao.js');
 
 /**
@@ -215,16 +215,15 @@ var tcoJob = function () {
             });
         },
         function (callback) { // ETL STEP 7: Cost breakout
-            customer_dao.getSummaryCounts(function (err, counts) {
-                cost_dao.getCostSummary(function (err, costs) {
-                    customer_dao.getAllCustomers(function (err, customers) {
+            customer_dao.getSummaryCounts(function (err, counts) {             
+                cost_dao.getCostSummary(function (err, costs) {                      
+                    customer_dao.getAllCustomers(function (err, customers) {                       
                         async.forEach(customers, function (customer, callback_inner) {
                             customer.percTraffic = customer.pageviews / counts.pageviews;
                             customer.percSEO = customer.keywords / counts.keywords;
                             customer.tcoTraffic = customer.percTraffic * costs.tcoTraffic * TRAFFIC_CAPACITY;
                             customer.tcoSEO = customer.percSEO * costs.tcoKeywords;
                             customer.tcoTotal = customer.tcoTraffic + customer.tcoSEO;
-
                             // default all customer netRevenue to their cost. This will be updated in the 
                             // MRR step if a customer has MRR
                             customer.netRevenue = (-1) * customer.tcoTotal;
@@ -234,7 +233,7 @@ var tcoJob = function () {
                                 customer.organizations[i].percSEO = customer.organizations[i].keywords / counts.keywords;
                                 customer.organizations[i].tcoTraffic = customer.organizations[i].percTraffic * costs.tcoTraffic * TRAFFIC_CAPACITY;
                                 customer.organizations[i].tcoSEO = customer.organizations[i].percSEO * costs.tcoKeywords;
-                                customer.organizations[i].tcoTotal = customer.organizations[i].tcoTraffic + customer.organizations[i].tcoSEO;
+                                customer.organizations[i].tcoTotal = customer.organizations[i].tcoTraffic + customer.organizations[i].tcoSEO;                              
                             }
                             customer_dao.saveCustomer(customer, function (err) {
                                 if (err) {
@@ -260,21 +259,19 @@ var tcoJob = function () {
             });
         },
         function (callback) { // ETL STEP 8: MRR
-            mrr_api.getMRRData(function (err, mrrData) {
-                async.forEach(mrrData, function (mrr, callback_inner) {
-                    customer_dao.getCustomerById(mrr[0], function (err, customer) {
-                        if (err) {
-                            callback_inner(err);
-                        }
-                        else {
-                            if (!customer) {
-                                logger.warn('Salesforce data not in core - Salesforce Name: ' + mrr[1] + ', customer_id: ' + mrr[0]);
-                                callback_inner();
-                            }
-                            else {
-                                customer.salesforceName = mrr[1];
-                                customer.mrr = mrr[2];
-                                customer.netRevenue = customer.mrr - customer.tcoTotal;
+            mrr_dao.getLatestMRRDate(function(err, date) {
+                var startDate = new Date(date).add({days: -2});
+                var endDate = new Date(date).add({days: 2});
+                customer_dao.getAllCustomers(function (err, customers) {
+                    if (err) {
+                        callback(err);
+                    }
+                    async.forEach(customers, function (customer, callback_inner) {
+                        mrr_dao.getMRRTrendByCustomer(customer.id, startDate, endDate, function (err, results) {
+                            if (results.length > 0) {
+                                customer.mrr = results[0].software;
+                                customer.mrrServices = results[0].services;
+                                customer.netRevenue = (customer.mrr + customer.mrrServices) - customer.tcoTotal;
                                 customer_dao.saveCustomer(customer, function (err) {
                                     if (err) {
                                         callback_inner(err);
@@ -283,20 +280,22 @@ var tcoJob = function () {
                                         logger.info('MRR updated for: ' + customer.name);
                                         callback_inner();
                                     }
-                                });
+                                });                                
                             }
+                            else {
+                                callback_inner();
+                            }
+                        })
+                    },
+                    function(err) { // callback_inner
+                        if (err) {
+                            callback(err);
+                        }
+                        else {
+                            logger.info('TCO job step 8: [MRR] completed');
+                            callback();
                         }
                     });
-                },
-                function (err) { // callback_inner
-                    if (err) {
-                        callback(err);
-                    }
-                    else {
-                        logger.info('TCO job step 8: [MRR] completed');
-                        callback();
-                    }
-
                 });
             });
         },

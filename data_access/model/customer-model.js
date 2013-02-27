@@ -42,6 +42,7 @@ var CustomerSchema = new Schema({
     tcoTotal: Number,
     salesforceName: String,
     mrr: Number,
+    mrrServices: Number,
     netRevenue: Number,
     bigScore: Number,
     organizations: [OrganizationSchema]

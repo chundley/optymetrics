@@ -20,7 +20,7 @@ var logger = require('../util/logger.js');
 /**
 * Gets vendor cost data from the .csv file
 *
-* The spreadsheet is ./data_access/data_feed/mrr-data.csv and is formatted:
+* The spreadsheet is ./data_access/data_feed/vendor-data.csv and is formatted:
 *    {Month},{Vendor},{Amount},{% to SEO},{% to Leads},{% to Email},{% to Overhead},{Notes}
 */
 var getVendorData = function (callback) {

@@ -898,9 +898,24 @@ var getMRRTrendByCustomer = function(customerId, startDate, endDate, callback) {
     });    
 }
 
+var getLatestMRRDate = function(callback) {
+    var query = mrr_model.MRRModel.find().limit(1); // this seems to work getting the latest record, but could break
+    //var query = mrr_model.MRRModel.find().sort({'dateAdded': -1}).limit(1); // doesn't seem to work for some reason
+    query.execFind(function (err, doc) {
+        logger.info('here');
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            callback(null, doc[0].dateAdded);
+        }      
+    });
+}
+
 exports.saveMRRs = saveMRRs;
 exports.saveMRRChurn = saveMRRChurn;
 
+exports.getLatestMRRDate = getLatestMRRDate;
 exports.getMRRTrendByCustomer = getMRRTrendByCustomer;
 exports.getMRRNewDetail = getMRRNewDetail;
 exports.getMRRChurnDetail = getMRRChurnDetail;

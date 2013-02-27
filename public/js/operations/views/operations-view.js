@@ -317,6 +317,18 @@ Opty.OperationsView = Backbone.View.extend({
                             }
                         },
                         {
+                            field: 'mrrServices',
+                            display_name: 'Services MRR',
+                            text_align: 'right',
+                            formatter: function (data) {
+                                if (data) {
+                                    return '$' + Opty.util.formatNumber(data, 2);
+                                } else {
+                                    return '$0.00';
+                                }
+                            }
+                        },
+                        {
                             field: 'netRevenue',
                             display_name: 'Net Revenue',
                             text_align: 'right',
@@ -336,7 +348,7 @@ Opty.OperationsView = Backbone.View.extend({
                         ],
 
                         sortable: true,
-                        defaultSort: [[10, 1]],
+                        defaultSort: [[11, 1]],
                         sortInitialOrder: 'desc',
                         collection: tco_collection
                     });

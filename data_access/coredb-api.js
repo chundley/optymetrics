@@ -106,6 +106,7 @@ var getCustomers = function (callback) {
                             'tcoTotal': 0,
                             'salesforceName': 'n/a',
                             'mrr': 0,
+                            'mrrServices': 0,
                             'netRevenue': 0,
                             'bigScore': 0,
                             'organizations': []
