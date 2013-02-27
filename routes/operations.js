@@ -7,6 +7,7 @@ var date_util = require('../util/date_util.js'),
     uptime = require('../data_access/uptime-dao.js'),
     url = require('url'),
     csv = require('csv'),
+    _ = require('underscore'),    
     vendorCostDao = require('../data_access/vendor-cost-dao.js');
 
 exports.tco = function (req, res, next) {
@@ -28,57 +29,45 @@ exports.tco = function (req, res, next) {
 };
 
 exports.tcoCSV = function (req, res, next) {
-    var params = url.parse(req.url, true).query;
-    var count = 50;
-    if (params.count) {
-        count = params.count;
-    }
-    tco_dao.getCustomerTCOData(count, function (err, customers) {
+    tco_dao.getCustomerTCOData(100000, function (err, customers) {
         if (err) {
             logger.log('error', err);
             res.statusCode = 500;
             res.send('Internal Server Error');
             return;
         }
-
-        res.send(customers);
-    });
-
-    // sample csv export code
-
-    /*
-    metrics_dao.getDeploymentVelocity(function(err, results) {
-        if(err) {
-            logger.log('info',err);
-            res.statusCode = 500;
-            res.send('Internal Server Error');
-            return;
-        }
-
-        var source = [ [ "WeekOf", "Velocity" ] ];
-        debugger;
-        _.each(results, function(result) {
+        var source = [ ['CustomerId', 'Customer', 'Sku', 'TBS', 'Created', 'Sites', 'Page Views (30d)', 'Visitors (30d)', 'Traffic TCO', 'Keywords', 'Keyword TCO', 'Total TCO', 'Software MRR', 'Services MRR', 'Net Revenue' ] ];
+        _.each(customers, function(customer) {
             var row = [];
-            row.push(result.week_of);
-            row.push(result.velocity);
+            row.push(customer.id);
+            row.push('"' + customer.name + '"');
+            row.push('"' + customer.sku + '"');
+            row.push(customer.bigScore);
+            row.push((customer.createdAt.getMonth() + 1).toString() + '-' + customer.createdAt.getDate() + '-' + customer.createdAt.getFullYear());
+            row.push(customer.sites);
+            row.push(customer.pageviews);
+            row.push(customer.visitors);
+            row.push(customer.tcoTraffic);
+            row.push(customer.keywords);
+            row.push(customer.tcoSEO);
+            row.push(customer.tcoTotal);
+            row.push(customer.mrr);
+            row.push(customer.mrrServices);
+            row.push(customer.netRevenue);
             source.push(row);
         });
-
         var result = [];
-        res.contentType('csv');
-        
+        //res.ContentType('csv');
         csv().from(source)
             .on('data', function(data) {
-                debugger;
                 result.push(data.join(','));
             })
             .on('end', function() {
-                res.setHeader('Content-disposition', 'attachment; filename=velocity.csv');
+                res.setHeader('Content-disposition', 'attachment; filename=tco.csv');
                 res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
                 res.send(result.join('\n'));
             });
     });
-*/
 };
 
 exports.monitors = function (req, res, next) {
