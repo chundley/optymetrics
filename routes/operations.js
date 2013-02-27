@@ -6,6 +6,7 @@ var date_util = require('../util/date_util.js'),
     tco_dao = require('../data_access/tco-dao.js'),
     uptime = require('../data_access/uptime-dao.js'),
     url = require('url'),
+    csv = require('csv'),
     vendorCostDao = require('../data_access/vendor-cost-dao.js');
 
 exports.tco = function (req, res, next) {
@@ -24,6 +25,60 @@ exports.tco = function (req, res, next) {
 
         res.send(customers);
     });
+};
+
+exports.tcoCSV = function (req, res, next) {
+    var params = url.parse(req.url, true).query;
+    var count = 50;
+    if (params.count) {
+        count = params.count;
+    }
+    tco_dao.getCustomerTCOData(count, function (err, customers) {
+        if (err) {
+            logger.log('error', err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        res.send(customers);
+    });
+
+    // sample csv export code
+
+    /*
+    metrics_dao.getDeploymentVelocity(function(err, results) {
+        if(err) {
+            logger.log('info',err);
+            res.statusCode = 500;
+            res.send('Internal Server Error');
+            return;
+        }
+
+        var source = [ [ "WeekOf", "Velocity" ] ];
+        debugger;
+        _.each(results, function(result) {
+            var row = [];
+            row.push(result.week_of);
+            row.push(result.velocity);
+            source.push(row);
+        });
+
+        var result = [];
+        res.contentType('csv');
+        
+        csv().from(source)
+            .on('data', function(data) {
+                debugger;
+                result.push(data.join(','));
+            })
+            .on('end', function() {
+                res.setHeader('Content-disposition', 'attachment; filename=velocity.csv');
+                res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
+                res.send(result.join('\n'));
+            });
+    });
+*/
 };
 
 exports.monitors = function (req, res, next) {

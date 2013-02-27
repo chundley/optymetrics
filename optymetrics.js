@@ -238,6 +238,9 @@ app.get('/rest/productdev/adoption-by-metric', requiresLogin, routes.productdev.
 // Gets TCO data as JSON
 app.get('/ops/tco', requiresLogin, routes.operations.tco);
 
+// Gets TCO data as CSV
+app.get('/ops/tco-csv', requiresLogin, routes.operations.tcoCSV);
+
 // Gets uptime data as JSON
 app.get('/ops/monitors', requiresLogin, routes.operations.monitors);
 
