@@ -57,7 +57,6 @@ exports.tcoCSV = function (req, res, next) {
             source.push(row);
         });
         var result = [];
-        //res.ContentType('csv');
         csv().from(source)
             .on('data', function(data) {
                 result.push(data.join(','));

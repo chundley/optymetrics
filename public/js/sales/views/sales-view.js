@@ -49,7 +49,7 @@ Opty.SalesView = Backbone.View.extend({
 
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row' });
-        var datePickerView = new Opty.DateRangeView({ defaultDays: 365 });
+        var datePickerView = new Opty.DateRangeView({ defaultDays: 366 });
 
         $datePickerRow.append(datePickerView.$el);
         me.$el.append($datePickerRow);

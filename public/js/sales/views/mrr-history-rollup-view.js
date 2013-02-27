@@ -9,6 +9,10 @@ Opty.MRRRollupChart = Backbone.View.extend({
         colors: ["#3e8bbc", "#FA6900", "#5B4086", "#002066", "#7AB317", "#F2DB13", "#FE4365", "#EF3F00", "#C5BC8E", "#3D1C00"],
         chart: {
             renderTo: 'mrr-rollup-chart',
+            events: { // placeholder to be replaced in code later
+                load: function() {
+                }
+            },
             borderColor: '#999999',
             borderWidth: 1,
             borderRadius: 6,
@@ -156,6 +160,22 @@ Opty.MRRRollupChart = Backbone.View.extend({
         this.mrrRollupChartOptions.series[1].visible = false;
         this.mrrRollupChartOptions.xAxis.categories = categories
 
+        this.mrrRollupChartOptions.chart.events.load = function() {
+            var start = new Date(me.collection.models[0].get('dateAdded')).getTime() - 111600000; // subtract one hour in ms to correct for start date
+            var end = new Date(me.collection.models[me.collection.models.length-1].get('dateAdded')).getTime();
+            this.renderer.image('/img/export.png', 7, 385, 54, 9)
+                .on('click', function() {
+                    location.href = '/rest/sales/mrrs-by-product-csv?start=' + start + '&end=' + end;
+                })
+                .css({
+                    cursor: 'pointer'
+                })
+                .attr({
+                    zIndex: -100
+                })
+                .add();
+        };
+
         this.chart = new Highcharts.Chart(this.mrrRollupChartOptions);
         return this.$el;
     },
@@ -163,5 +183,6 @@ Opty.MRRRollupChart = Backbone.View.extend({
     convertDateToUTC: function (date) {
         return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
     }
+
 }
 );
