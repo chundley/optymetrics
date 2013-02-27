@@ -348,7 +348,7 @@ Opty.OperationsView = Backbone.View.extend({
                         ],
 
                         sortable: true,
-                        defaultSort: [[11, 1]],
+                        defaultSort: [[10, 1]],
                         sortInitialOrder: 'desc',
                         collection: tco_collection
                     });

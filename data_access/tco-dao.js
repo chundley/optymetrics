@@ -28,6 +28,7 @@ var getCustomerTCOData = function (limit, callback) {
                     tcoSEO: '$tcoSEO',
                     tcoTotal: '$tcoTotal',
                     mrr: '$mrr',
+                    mrrServices: '$mrrServices',
                     netRevenue: '$netRevenue',
                     bigScore: '$bigScore'
                     },
