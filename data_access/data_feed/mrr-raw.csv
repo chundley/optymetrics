@@ -18,7 +18,7 @@
 715,Kate-Lo Tile & Stone,Software,Direct,,,Express,79.20,1/31/2013,31-Jan-13,EXPRESS
 8469,ASC Software,Software,Direct,,,Express,149.00,1/31/2013,31-Jan-13,EXPRESS
 10380,"SmartSignIn, Inc.",Software,Direct,,,Express,300.00,1/31/2013,31-Jan-13,EXPRESS
-10239,Ballantine,Software,Direct,,,Express,200.00,1/31/2013,31-Jan-13,EXPRESS
+10239,Ballantine,Software,Direct,,,Express,200.00,1/31/2013,31-Jan-13,EXPRESS, "Switched to annual payments"
 6811,Businessleads,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
 3171,Canyon Communications,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
 7007,Chemical Safety Software,Software,Direct,,,Express,99.00,1/31/2013,31-Jan-13,EXPRESS
@@ -110,7 +110,7 @@
 10895,Turtle Island Resort,Software,Direct,,,Pro,600.00,1/31/2013,31-Jan-13,PRO
 10589,Global Consolidated Services Ltd,Software,Direct,,,Pro,600.00,1/31/2013,31-Jan-13,PRO
 3257,Blue Sky Marketing,Software,Direct,,,Pro,300.00,1/31/2013,31-Jan-13,PRO
-8891,Coherentsolutions.com,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
+8891,Coherentsolutions.com,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO,"Switched to annual payments"
 2842,Easy Solutions,Software,Direct,,,Pro,250.00,1/31/2013,31-Jan-13,PRO
 10891,Electrolock,Software,Direct,,,Pro,600.00,1/31/2013,31-Jan-13,PRO
 553,Guidant Financial Group,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
@@ -119,7 +119,7 @@
 755,VYRE,Software,Direct,,,Pro,180.00,1/31/2013,31-Jan-13,PRO
 3132,Brooks Running,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
 9513,Generation Host,Software,Direct,,,Pro,250.00,1/31/2013,31-Jan-13,PRO
-547,"Fierce, Inc.",Software,Direct,,,Pro,540.00,1/31/2013,31-Jan-13,PRO
+547,"Fierce, Inc.",Software,Direct,,,Pro,540.00,1/31/2013,31-Jan-13,PRO,"Downgrade from old Premium"
 689,Mercent,Software,Direct,,,Pro,500.00,1/31/2013,31-Jan-13,PRO
 279,Serena Software,Software,Direct,,,Pro,500.00,1/31/2013,31-Jan-13,PRO
 3,Skytap,Software,Direct,,,Pro,400.00,1/31/2013,31-Jan-13,PRO
@@ -307,12 +307,12 @@
 8477,Egencia Global,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
 355,Egencia,Software,Managed,,,Enterprise,1000.00,1/31/2013,31-Jan-13,ENTERPRISE
 394,LexisNexis/Lawyers.com,Software,Channel Managed,,,Enterprise,2397.08,1/31/2013,31-Jan-13,ENTERPRISE
-9996,LexisNexis:Lexis Nexis Bliss - Intelligence,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
+9813,LexisNexis:Lexis Nexis Bliss - Intelligence,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
 3156,"Colliers Intl Property Consultants, Inc",Software,Channel Managed,,,Enterprise,6734.40,1/31/2013,31-Jan-13,ENTERPRISE
 96,LexisNexis:LexisNexis,Software,Channel Managed,,,Enterprise,2220.00,1/31/2013,31-Jan-13,ENTERPRISE
 10243,Top Right Group,Software,Channel Managed,,,Enterprise,1931.25,1/31/2013,31-Jan-13,ENTERPRISE
 9813,LexisNexis:LexisNexis Bliss - CounselLink,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
-96,LexisNexis:LexisNexis Bliss - Firm Manager,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
+9813,LexisNexis:LexisNexis Bliss - Firm Manager,Software,Channel Managed,,,Enterprise,200.00,1/31/2013,31-Jan-13,ENTERPRISE
 10534,Colliers - Southwest Florida,Software,Channel Managed,,,Enterprise,400.00,1/31/2013,31-Jan-13,ENTERPRISE
 10534,Colliers - Seattle,Software,Channel Managed,,,Enterprise,100.00,1/31/2013,31-Jan-13,ENTERPRISE
 10534,Colliers - South Carolina,Software,Channel Managed,,,Enterprise,300.00,1/31/2013,31-Jan-13,ENTERPRISE
@@ -401,7 +401,7 @@
 3257,Blue Sky Marketing,Software,Direct,Blue Sky Marketing Renewal 2012,Alyssa Putnam,Software: Optify Team,300,12/1/2012,31-Dec-12,PRO
 4052,MIG & Co.,Software,Direct,MIG & Co.-2012 Renewal,Will Wyatt,Optify Professional,500,12/15/2012,31-Dec-12,PRO
 5412,MyFootPath,Software,Direct,MyFootPath - 2012 Renewal,Elisabeth Wendl,Software: Optify Team,450,12/15/2012,31-Dec-12,PRO
-5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703.13,12/1/2012,31-Dec-12,PRO
+5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703,12/1/2012,31-Dec-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax Renewal 2012,Elisabeth Wendl,Software: Optify Team,675,12/1/2012,31-Dec-12,PRO
 6915,Verne Global,Software,Direct,Verne Global - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,450,12/1/2012,31-Dec-12,PRO
 7229,Flagship Cruises and Events,Software,Direct,Flagship Cruises and Events-,Jeff Gibb,Software: Optify Team,540,12/1/2012,31-Dec-12,PRO
@@ -474,7 +474,7 @@
 5578,Kemtron,Software,Direct,Kemtron - Renewal 2012,Ignacio Izquierdo,Software: Optify Basic,99,12/18/2012,31-Dec-12,EXPRESS
 5866,LYYN AB,Software,Direct,LYYN AB - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,12/25/2012,31-Dec-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94,12/28/2012,31-Dec-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,89.1,12/18/2012,31-Dec-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,89,12/18/2012,31-Dec-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94.05,12/10/2012,31-Dec-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance - 2012 Renewal,Elisabeth Wendl,Software: Optify Basic,99,12/1/2012,31-Dec-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training System - 2012 Renewal,Ting Van Osdol,Software: Optify Basic,99,12/13/2012,31-Dec-12,EXPRESS
@@ -487,7 +487,6 @@
 7012,Smiley Cookie,Software,Direct,Smiley Cookie - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,135,12/15/2012,31-Dec-12,EXPRESS
 7332,Meteorological Service of New Zealand Ltd,Software,Direct,Meteorological Service - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,80,12/5/2012,31-Dec-12,EXPRESS
 7426,Tottini,Software,Direct,Tottini,Jeff Gibb,Optify Basic,50,12/5/2012,31-Dec-12,EXPRESS
-7553,Loadstorm,Software,Direct,Loadstorm - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,79.2,12/30/2012,31-Dec-12,EXPRESS
 7661,Licor,Software,Direct,LICOR Biosciences,Jeff Gibb,Optify Basic,99,12/30/2012,31-Dec-12,EXPRESS
 7836,Maersk Line,Software,Direct,Maersk Line,Jeff Gibb,Optify Basic,149,12/31/2012,31-Dec-12,EXPRESS
 7848,malomatia,Software,Direct,malomatia-,Will Wyatt,Optify Basic,96.85,12/31/2012,31-Dec-12,EXPRESS
@@ -750,7 +749,7 @@
 4018,PLAYNETWORK,Software,Direct,PlayNetwork - 2012 Renewal,Alyssa Putnam,Optify Basic,99,11/1/2012,30-Nov-12,PRO
 4052,MIG & Co.,Software,Direct,MIG & Co.-2012 Renewal,Will Wyatt,Optify Professional,500,11/15/2012,30-Nov-12,PRO
 5412,MyFootPath,Software,Direct,MyFootPath - 2012 Renewal,Elisabeth Wendl,Software: Optify Team,450,11/15/2012,30-Nov-12,PRO
-5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703.13,11/1/2012,30-Nov-12,PRO
+5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703,11/1/2012,30-Nov-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Professional,450,11/1/2012,30-Nov-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Agency Bundle,225,11/1/2012,30-Nov-12,PRO
 6915,Verne Global,Software,Direct,Verne Global - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,450,11/1/2012,30-Nov-12,PRO
@@ -828,7 +827,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,11/25/2012,30-Nov-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,11/1/2012,30-Nov-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94,11/28/2012,30-Nov-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,89.1,11/18/2012,30-Nov-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,89,11/18/2012,30-Nov-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94.05,11/10/2012,30-Nov-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance - 2012 Renewal,Elisabeth Wendl,Software: Optify Basic,99,11/1/2012,30-Nov-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training System - 2012 Renewal,Ting Van Osdol,Software: Optify Basic,99,11/13/2012,30-Nov-12,EXPRESS
@@ -1095,7 +1094,7 @@
 4018,PLAYNETWORK,Software,Direct,PlayNetwork - 2012 Renewal,Alyssa Putnam,Optify Basic,99,10/1/2012,31-Oct-12,PRO
 4052,MIG & Co.,Software,Direct,MIG & Co.-2012 Renewal,Will Wyatt,Optify Professional,500,10/15/2012,31-Oct-12,PRO
 5412,MyFootPath,Software,Direct,MyFootPath - 2012 Renewal,Elisabeth Wendl,Software: Optify Team,450,10/15/2012,31-Oct-12,PRO
-5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703.13,10/1/2012,31-Oct-12,PRO
+5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703,10/1/2012,31-Oct-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Professional,450,10/1/2012,31-Oct-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Agency Bundle,225,10/1/2012,31-Oct-12,PRO
 6915,Verne Global,Software,Direct,Verne Global,Jeff Gibb,Optify Professional,450,10/1/2012,31-Oct-12,PRO
@@ -1177,7 +1176,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,10/25/2012,31-Oct-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,10/1/2012,31-Oct-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94,10/28/2012,31-Oct-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,10/18/2012,31-Oct-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,10/18/2012,31-Oct-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94.05,10/10/2012,31-Oct-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,10/1/2012,31-Oct-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training System - 2012 Renewal,Ting Van Osdol,Software: Optify Basic,99,10/13/2012,31-Oct-12,EXPRESS
@@ -1458,7 +1457,7 @@
 4018,PLAYNETWORK,Software,Direct,PlayNetwork - 2012 Renewal,Alyssa Putnam,Optify Basic,99,9/1/2012,30-Sep-12,PRO
 4052,MIG & Co.,Software,Direct,MIG & Co.-2012 Renewal,Will Wyatt,Optify Professional,500,9/15/2012,30-Sep-12,PRO
 5412,MyFootPath,Software,Direct,MyFootPath - 2012 Renewal,Elisabeth Wendl,Software: Optify Team,450,9/15/2012,30-Sep-12,PRO
-5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703.13,9/1/2012,30-Sep-12,PRO
+5575,UVA Health System,Software,Direct,UVA Health System - 2012 Renewal,Ignacio Izquierdo,Software: Optify Team,703,9/1/2012,30-Sep-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Professional,450,9/1/2012,30-Sep-12,PRO
 6895,OpenText,Software,Direct,OpenText - RightFax,Steven Woody,Optify Agency Bundle,225,9/1/2012,30-Sep-12,PRO
 6915,Verne Global,Software,Direct,Verne Global,Jeff Gibb,Optify Professional,450,9/1/2012,30-Sep-12,PRO
@@ -1536,7 +1535,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,9/25/2012,30-Sep-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,9/1/2012,30-Sep-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,94,9/28/2012,30-Sep-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,9/18/2012,30-Sep-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,9/18/2012,30-Sep-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,9/10/2012,30-Sep-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,9/1/2012,30-Sep-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,9/10/2012,30-Sep-12,EXPRESS
@@ -1881,7 +1880,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB - 2012 Renewal,Ignacio Izquierdo,Software: Optify Basic,99,8/25/2012,31-Aug-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,8/1/2012,31-Aug-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,8/28/2012,31-Aug-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,8/18/2012,31-Aug-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,8/18/2012,31-Aug-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,8/10/2012,31-Aug-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,8/1/2012,31-Aug-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,8/10/2012,31-Aug-12,EXPRESS
@@ -2245,7 +2244,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB-,Steven Woody,Optify Basic,99,7/25/2012,31-Jul-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,7/1/2012,31-Jul-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,7/28/2012,31-Jul-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,7/18/2012,31-Jul-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,7/18/2012,31-Jul-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,7/10/2012,31-Jul-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,7/1/2012,31-Jul-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,7/10/2012,31-Jul-12,EXPRESS
@@ -2601,7 +2600,7 @@
 5866,LYYN AB,Software,Direct,LYYN AB-,Steven Woody,Optify Basic,99,6/25/2012,30-Jun-12,EXPRESS
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,6/1/2012,30-Jun-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,6/28/2012,30-Jun-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,6/18/2012,30-Jun-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,6/18/2012,30-Jun-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,6/10/2012,30-Jun-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,6/1/2012,30-Jun-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,6/10/2012,30-Jun-12,EXPRESS
@@ -2949,7 +2948,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,5/1/2012,31-May-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,5/28/2012,31-May-12,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,5/14/2012,31-May-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,5/18/2012,31-May-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,5/18/2012,31-May-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,5/10/2012,31-May-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,5/1/2012,31-May-12,EXPRESS
 6655,Fitness One Training Systems,Software,Direct,Fitness One Training Systems,Steven Woody,Optify Basic,99,5/10/2012,31-May-12,EXPRESS
@@ -3282,7 +3281,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,4/1/2012,30-Apr-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,4/28/2012,30-Apr-12,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,4/14/2012,30-Apr-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,4/18/2012,30-Apr-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,4/18/2012,30-Apr-12,EXPRESS
 6560,Progress Software,Software,Direct,Progress Software,Jeff Gibb,Optify Basic,99,4/11/2012,30-Apr-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,4/10/2012,30-Apr-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,4/1/2012,30-Apr-12,EXPRESS
@@ -3615,7 +3614,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,3/1/2012,31-Mar-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,3/28/2012,31-Mar-12,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,3/14/2012,31-Mar-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,3/18/2012,31-Mar-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,3/18/2012,31-Mar-12,EXPRESS
 6560,Progress Software,Software,Direct,Progress Software,Jeff Gibb,Optify Basic,99,3/11/2012,31-Mar-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,3/10/2012,31-Mar-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,3/1/2012,31-Mar-12,EXPRESS
@@ -3951,7 +3950,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,2/1/2012,29-Feb-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,2/28/2012,29-Feb-12,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,2/14/2012,29-Feb-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,2/18/2012,29-Feb-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,2/18/2012,29-Feb-12,EXPRESS
 6560,Progress Software,Software,Direct,Progress Software,Jeff Gibb,Optify Basic,99,2/11/2012,29-Feb-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,2/10/2012,29-Feb-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,2/1/2012,29-Feb-12,EXPRESS
@@ -4272,7 +4271,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,1/1/2012,31-Jan-12,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,1/28/2012,31-Jan-12,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,1/14/2012,31-Jan-12,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,1/18/2012,31-Jan-12,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,1/18/2012,31-Jan-12,EXPRESS
 6560,Progress Software,Software,Direct,Progress Software,Jeff Gibb,Optify Basic,99,1/11/2012,31-Jan-12,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,1/10/2012,31-Jan-12,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,1/1/2012,31-Jan-12,EXPRESS
@@ -4568,7 +4567,7 @@
 6051,110 Consulting,Software,Direct,110 Consulting,Steven Woody,Optify Basic,99,12/1/2011,31-Dec-11,EXPRESS
 6120,Herman & Wallace Inc,Software,Direct,Herman & Wallace Inc,Steven Woody,Optify Basic,94,12/28/2011,31-Dec-11,EXPRESS
 6160,Kellner Consulting LLC,Software,Direct,Kellner Consulting LLC-,Steven Woody,Optify Basic,99,12/14/2011,31-Dec-11,EXPRESS
-6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89.1,12/18/2011,31-Dec-11,EXPRESS
+6433,Del Pacifico at Esterillos,Software,Direct,Del Pacifico at Esterillos,Jeff Gibb,Optify Basic,89,12/18/2011,31-Dec-11,EXPRESS
 6560,Progress Software,Software,Direct,Progress Software,Jeff Gibb,Optify Basic,99,12/11/2011,31-Dec-11,EXPRESS
 6591,Versatile Company,Software,Direct,Versatile Company,Steven Woody,Optify Basic,94.05,12/10/2011,31-Dec-11,EXPRESS
 6605,Acadia Insurance,Software,Direct,Acadia Insurance-,Jeff Gibb,Optify Basic,99,12/1/2011,31-Dec-11,EXPRESS
