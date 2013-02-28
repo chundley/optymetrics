@@ -237,7 +237,7 @@ Opty.ChurnRollupChart = Backbone.View.extend({
 
         me.churn = options.churn;
         me.newsales = options.newsales;
-       //me.churn.on('reset', me.churnRollupDataChanged);
+        me.churn.on('reset', me.churnRollupDataChanged);
         me.newsales.on('reset', me.churnRollupDataChanged);
     },
 
