@@ -203,7 +203,7 @@ Opty.MRRSKUChart = Backbone.View.extend({
         this.mrrSKUChartOptions.chart.events.load = function() {
             var start = new Date(me.collection.models[0].get('dateAdded')).getTime() - 111600000; // subtract one hour in ms to correct for start date
             var end = new Date(me.collection.models[me.collection.models.length-1].get('dateAdded')).getTime();
-            this.renderer.image('/img/export.png', 7, 385, 54, 9)
+            this.renderer.image('/img/export.png', 7, 382, 42, 11)
                 .on('click', function() {
                     location.href = '/rest/sales/mrrs-software-by-sku-csv?start=' + start + '&end=' + end;
                 })

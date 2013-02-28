@@ -292,11 +292,14 @@ app.get('/rest/sales/churn-by-product', requiresLogin, routes.sales.mrrsChurnByP
 //Gets new business by product type
 app.get('/rest/sales/new-by-product', requiresLogin, routes.sales.mrrsNewSalesByProductType);
 
-//Gets new business by product type
+//Gets churn detail for a date range and product type
 app.get('/rest/sales/churn-detail', requiresLogin, routes.sales.mrrsChurnDetail);
 
-//Gets new business by product type
+//Gets new mrr detail for a date range and product type
 app.get('/rest/sales/new-detail', requiresLogin, routes.sales.mrrsNewDetail);
+
+// Gets detail for new and churned mrr for csv export
+app.get('/rest/sales/new-churn-detail-csv', requiresLogin, routes.sales.mrrsNewChurnDetailCSV);
 
 //Gets sales calculator template as Html
 app.get('/rest/sales/calculator', requiresLogin, routes.sales.salesCalculator);

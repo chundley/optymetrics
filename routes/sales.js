@@ -3,6 +3,7 @@ var date_util = require('../util/date_util.js'),
     url = require('url'),
     fs = require('fs'),
     csv = require('csv'),
+    async = require('async');
     _ = require('underscore'),      
     appUsageDao = require('../data_access/appusage-dao.js'),
     mrr_dao = require('../data_access/mrr-dao.js');
@@ -197,6 +198,128 @@ exports.mrrsNewDetail = function (req, res, next) {
 
         res.send(results);
     });
+};
+
+exports.mrrsNewChurnDetailCSV = function (req, res, next) {
+    var startDate = date_util.convertDateToUTC(new Date(parseInt(req.query['start'])));
+    var endDate = date_util.convertDateToUTC(new Date(parseInt(req.query['end'])));
+
+    var source = [ ['Month', 'Customer Id', 'Customer', 'SKU', 'Product Type', 'New MRR', 'Churn MRR'] ];
+    
+    async.series([
+            function (callback) {
+                mrr_dao.getMRRNewDetail('Software', startDate, endDate, function (err, rows) {
+                    if (err) {
+                        callback(err);
+                    }
+                    async.forEach(rows, function (row, callback_inner) {
+                        var r = [];
+                        r.push((row.dateAdded.getMonth() + 1).toString() + '-' + row.dateAdded.getFullYear());
+                        r.push(row.customerId.toString());
+                        r.push('"' + row.accountName + '"');
+                        r.push('"' + row.sku + '"');
+                        r.push(row.productType);
+                        r.push(row.totalPrice.toString()); // new
+                        r.push(0); // churn
+                        //r.push(row.partial.toString()); // partial doesn't work for some reason
+                        source.push(r);
+                        callback_inner();
+                    },
+                    function() { // callback_inner
+                        callback();
+                    });
+                });
+            },
+            function (callback) {
+                 mrr_dao.getMRRNewDetail('Services', startDate, endDate, function (err, rows) {
+                    if (err) {
+                        callback(err);
+                    }
+                    async.forEach(rows, function (row, callback_inner) {
+                        var r = [];
+                        r.push((row.dateAdded.getMonth() + 1).toString() + '-' + row.dateAdded.getFullYear());
+                        r.push(row.customerId.toString());
+                        r.push('"' + row.accountName + '"');
+                        r.push('"' + row.sku + '"');
+                        r.push(row.productType);
+                        r.push(row.totalPrice.toString()); // new
+                        r.push(0); // churn
+                        //r.push(row.partial.toString()); // partial doesn't work for some reason
+                        source.push(r);
+                        callback_inner();
+                    },
+                    function() { // callback_inner
+                        callback();
+                    });
+                });
+            },
+            function (callback) {
+                 mrr_dao.getMRRChurnDetail('Software', startDate, endDate, function (err, rows) {
+                    if (err) {
+                        callback(err);
+                    }
+                    async.forEach(rows, function (row, callback_inner) {
+                        var r = [];
+                        r.push((row.dateAdded.getMonth() + 1).toString() + '-' + row.dateAdded.getFullYear());
+                        r.push(row.customerId.toString());
+                        r.push('"' + row.accountName + '"');
+                        r.push('"' + row.sku + '"');
+                        r.push(row.productType);
+                        r.push(0); // new
+                        r.push(row.totalPrice.toString()); // churn
+                        //r.push(row.partial.toString()); // partial doesn't work for some reason
+                        source.push(r);
+                        callback_inner();
+                    },
+                    function() { // callback_inner
+                        callback();
+                    });
+                });
+            },
+            function (callback) {
+                  mrr_dao.getMRRChurnDetail('Services', startDate, endDate, function (err, rows) {
+                    if (err) {
+                        callback(err);
+                    }
+                    async.forEach(rows, function (row, callback_inner) {
+                        var r = [];
+                        r.push((row.dateAdded.getMonth() + 1).toString() + '-' + row.dateAdded.getFullYear());
+                        r.push(row.customerId.toString());
+                        r.push('"' + row.accountName + '"');
+                        r.push('"' + row.sku + '"');
+                        r.push(row.productType);
+                        r.push(0); // new
+                        r.push(row.totalPrice.toString()); // churn
+                        //r.push(row.partial.toString()); // partial doesn't work for some reason
+                        source.push(r);
+                        callback_inner();
+                    },
+                    function() { // callback_inner
+                        callback();
+                    });
+                });               
+            }
+        ],
+        function (err) { // callback
+            if (err) {
+                logger.error(err);
+                res.statusCode = 500;
+                res.send('Internal Server Error');
+                return;
+            }
+            else {
+                var result = [];
+                csv().from(source)
+                     .on('data', function(data) {
+                        result.push(data.join(','));
+                    })
+                    .on('end', function() {
+                        res.setHeader('Content-disposition', 'attachment; filename=new-and-churn-mrr.csv');
+                        res.setHeader('Content-type', 'application/octet-stream;charset=UTF-8');
+                        res.send(result.join('\n'));
+                    });
+            }
+        });
 };
 
 exports.mrrTrendByCustomer = function (req, res, next) {
