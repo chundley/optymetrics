@@ -353,7 +353,7 @@ Opty.OperationsView = Backbone.View.extend({
                         collection: tco_collection
                     });
                     var $exportRow = $('<div>', { 'class': 'row-fluid' });
-                    $exportRow.append($('<div>', { 'class': 'span12' }).append('<a class="btn btn-warning btn-mini pull-right" style="margin-bottom: 2px;" href="/ops/tco-csv">Export to CSV</a>'));
+                    $exportRow.append($('<div>', { 'class': 'span12' }).append('<a class="btn btn-info btn-mini pull-right" style="margin-bottom: 2px;" href="/ops/tco-csv">Export to CSV</a>'));
                     this.$el.append($exportRow);
 
                     var $reportRow = $('<div>', { 'class': 'row-fluid' });

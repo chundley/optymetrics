@@ -9,6 +9,10 @@ Opty.ChurnRollupChart = Backbone.View.extend({
         colors: ["#3e8bbc", "#FA6900", "#5B4086", "#002066", "#7AB317", "#F2DB13", "#FE4365", "#EF3F00", "#C5BC8E", "#3D1C00"],
         chart: {
             renderTo: 'churn-rollup-chart',
+            events: { // placeholder to be replaced in code later
+                load: function() {
+                }
+            },            
             borderColor: '#999999',
             borderWidth: 1,
             borderRadius: 6,
@@ -314,8 +318,23 @@ Opty.ChurnRollupChart = Backbone.View.extend({
         this.churnRollupChartOptions.series[2].data = softwareNew;
         this.churnRollupChartOptions.series[3].data = servicesNew;
         this.churnRollupChartOptions.series[3].visible = false;
-
         this.churnRollupChartOptions.xAxis.categories = categories;
+
+        this.churnRollupChartOptions.chart.events.load = function() {
+            var start = new Date(me.newsales.models[0].get('dateAdded')).getTime() - 111600000; // subtract one hour in ms to correct for start date
+            var end = new Date(me.newsales.models[me.newsales.models.length-1].get('dateAdded')).getTime();
+            this.renderer.image('/img/export.png', 7, 382, 42, 11)
+                .on('click', function() {
+                    location.href = '/rest/sales/new-churn-detail-csv?start=' + start + '&end=' + end;
+                })
+                .css({
+                    cursor: 'pointer'
+                })
+                .attr({
+                    zIndex: -100
+                })
+                .add();
+        };
 
         this.chart = new Highcharts.Chart(this.churnRollupChartOptions);
         return this.$el;
