@@ -72,7 +72,8 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
         [ 'Marketing Automation', 'Contact Manager' ],
         [ 'Marketing Automation', 'CRM' ],
         [ 'Marketing Automation', 'Email Manager' ],
-        [ 'Miscellaneous', 'Miscellaneous' ]
+        [ 'Miscellaneous', 'Miscellaneous' ],
+        [ 'Usage Tracking', 'Mixpanel' ]
     ],
 
     getEpicForFeatureGroup: function(featureGroup) {
