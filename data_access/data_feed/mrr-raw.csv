@@ -331,7 +331,7 @@
 96,LexisNexis:LexisNexis,Services,Channel,1 month rev rec,,Enterprise,555.00,2/28/2013,28-Feb-13,ENTERPRISE
 10940,Paltalk,Software,Managed,1 month rev rec,,Enterprise,1300.00,2/28/2013,28-Feb-13,ENTERPRISE
 11133,IdentityForce,Software,Managed,1 month rec rev,,Enterprise,400.00,2/28/2013,28-Feb-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamice ERP,Software,Managed,1 month rev rec,,Enterprise,2500.00,2/28/2013,28-Feb-13,ENTERPRISE
+6863,Microsoft:Microsoft - Dynamice ERP,Software,Managed,1 month rev rec,,Enterprise,2500.00,2/28/2013,28-Feb-13,ENTERPRISE
 349,Microsoft:Microsoft - Dynamics CRM,Software,Managed,1 month rec rev,,Enterprise,2500.00,2/28/2013,28-Feb-13,ENTERPRISE
 73,Isilon,Software,Managed,1 month rev rec,,Enterprise,2000.00,2/28/2013,28-Feb-13,ENTERPRISE
 2970,Pharmacy OneSource,Software,Managed,1 month rev rec,,Enterprise,500.00,2/28/2013,28-Feb-13,ENTERPRISE
@@ -344,7 +344,7 @@
 355,Egencia,Software,Managed,1 month rev rec,,Enterprise,1000.00,2/28/2013,28-Feb-13,ENTERPRISE
 10940,Paltalk,Services,Managed,1 month rev rec,,Enterprise,1900.00,2/28/2013,28-Feb-13,ENTERPRISE
 11133,IdentityForce,Services,Managed,1 month rec rev,,Enterprise,3600.00,2/28/2013,28-Feb-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamice ERP,Services,Managed,1 month rev rec,,Enterprise,3750.00,2/28/2013,28-Feb-13,ENTERPRISE
+6863,Microsoft:Microsoft - Dynamice ERP,Services,Managed,1 month rev rec,,Enterprise,3750.00,2/28/2013,28-Feb-13,ENTERPRISE
 349,Microsoft:Microsoft - Dynamics CRM,Services,Managed,1 month rec rev,,Enterprise,3750.00,2/28/2013,28-Feb-13,ENTERPRISE
 73,Isilon,Services,Managed,1 month rev rec,,Enterprise,5000.00,2/28/2013,28-Feb-13,ENTERPRISE
 2970,Pharmacy OneSource,Services,Managed,1 month rev rec,,Enterprise,1300.00,2/28/2013,28-Feb-13,ENTERPRISE
@@ -653,13 +653,13 @@
 10940,Paltalk,Software,Managed,,,Enterprise,1300.00,1/31/2013,31-Jan-13,ENTERPRISE
 11133,IdentityForce,Software,Managed,,,Enterprise,400.00,1/31/2013,31-Jan-13,ENTERPRISE
 8012,"ExtraHop Networks, Inc.",Software,Managed,,,Enterprise,1000.00,1/31/2013,31-Jan-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics - CRM,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
 73,Isilon,Software,Managed,,,Enterprise,2000.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Software,Managed,,,Enterprise,500.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Software,Managed,,,Enterprise,1200.00,1/31/2013,31-Jan-13,ENTERPRISE
 1230,ALM's Real Estate Media Group,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
 7118,NBC News Digital,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamics,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
+6863,Microsoft:Microsoft - Dynamics - ERP,Software,Managed,,,Enterprise,2500.00,1/31/2013,31-Jan-13,ENTERPRISE
 461,ADSI,Software,Managed,,,Enterprise,450.00,1/31/2013,31-Jan-13,ENTERPRISE
 8477,Egencia Global,Software,Managed,,,Enterprise,1500.00,1/31/2013,31-Jan-13,ENTERPRISE
 355,Egencia,Software,Managed,,,Enterprise,1000.00,1/31/2013,31-Jan-13,ENTERPRISE
@@ -700,13 +700,13 @@
 10940,Paltalk,Services,Managed,,,Enterprise,1900.00,1/31/2013,31-Jan-13,ENTERPRISE
 11133,IdentityForce,Services,Managed,,,Enterprise,3600.00,1/31/2013,31-Jan-13,ENTERPRISE
 8012,"ExtraHop Networks, Inc.",Services,Managed,,,Enterprise,9000.00,1/31/2013,31-Jan-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
+349,Microsoft:Microsoft - Dynamics - CRM,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
 73,Isilon,Services,Managed,,,Enterprise,5000.00,1/31/2013,31-Jan-13,ENTERPRISE
 23,SonoSite,Services,Managed,,,Enterprise,5000.00,1/31/2013,31-Jan-13,ENTERPRISE
 2970,Pharmacy OneSource,Services,Managed,,,Enterprise,1300.00,1/31/2013,31-Jan-13,ENTERPRISE
 1230,ALM's Real Estate Media Group,Services,Managed,,,Enterprise,500.00,1/31/2013,31-Jan-13,ENTERPRISE
 7118,NBC News Digital,Services,Managed,,,Enterprise,6000.00,1/31/2013,31-Jan-13,ENTERPRISE
-349,Microsoft:Microsoft - Dynamics,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
+6863,Microsoft:Microsoft - Dynamics - ERP,Services,Managed,,,Enterprise,3750.00,1/31/2013,31-Jan-13,ENTERPRISE
 461,ADSI,Services,Managed,,,Enterprise,750.00,1/31/2013,31-Jan-13,ENTERPRISE
 355,Egencia,Services,Managed,,,Enterprise,2691.67,1/31/2013,31-Jan-13,ENTERPRISE
 9513,Generation Host,Software,Direct,GENERATION HOST-,Eric Thompson,Software: Optify Team,500,12/1/2012,31-Dec-12,PRO
