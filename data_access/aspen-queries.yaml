@@ -48,7 +48,7 @@ WeeklyFeatureUsageStats : >
     , user_id
     , min(to_char(pageview_date, 'yyyy-ww')) week_num
     , (date_trunc('week', pageview_date)-INTERVAL '1 DAY')::date week_of
-    , (traffic_visitor_id*1000)::varchar || traffic_visit_num::varchar visit_num
+    , (traffic_visitor_id::bigint*1000)::varchar || traffic_visit_num::varchar visit_num
     , extract(epoch from max(pageview_date) - min(pageview_date))/ 60 time_on_feature
     , count(*) pageviews
     FROM v_traffic_with_feature
@@ -66,8 +66,8 @@ WeeklyFeatureUsageStats : >
     , t2.unique_customers / t3.unique_customers percent_customers_using
     , t2.unique_users / t3.unique_users percent_users_using
     
-    , t2.unique_customers / t3.unique_customers_exclude_email percent_customers_using_exclude_email
-    , t2.unique_users / t3.unique_users_exclude_email percent_users_using_exclude_email
+    , CASE WHEN t3.unique_customers_exclude_email = 0 THEN 0 ELSE t2.unique_customers / t3.unique_customers_exclude_email END percent_customers_using_exclude_email
+    , CASE WHEN t3.unique_users_exclude_email = 0 THEN 0 ELSE t2.unique_users / t3.unique_users_exclude_email END percent_users_using_exclude_email
     
     , row_number()over(partition by feature ORDER BY t2.time_on_feature desc) time_on_feature_row_num
     , row_number()over(partition by feature ORDER BY t2.pageviews desc) pageviews_row_num
