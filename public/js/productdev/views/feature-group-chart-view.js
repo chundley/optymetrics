@@ -71,6 +71,7 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
         [ 'Infrastructure', 'Engineering' ],
         [ 'Infrastructure', 'Engineering Excellence' ],
         [ 'Infrastructure', 'Infrastructure' ],
+        [ 'Marketing Automation', 'API' ],
         [ 'Marketing Automation', 'Contact Manager' ],
         [ 'Marketing Automation', 'CRM' ],
         [ 'Marketing Automation', 'Email Manager' ],
