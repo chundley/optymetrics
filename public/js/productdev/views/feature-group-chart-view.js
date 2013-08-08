@@ -60,6 +60,7 @@ Opty.FeatureGroupChartView = Backbone.View.extend({
         [ 'Billing', 'SKU Packaging' ],
         [ 'Business Development', 'Biz Dev' ],
         [ 'Business Development', 'Marketing' ],
+        [ 'Inbound Marketing', 'Alerts' ],
         [ 'Inbound Marketing', 'Landing Pages' ],
         [ 'Inbound Marketing', 'Lead Intelligence' ],
         [ 'Inbound Marketing', 'Lead Feed' ],
