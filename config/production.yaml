@@ -1,5 +1,5 @@
 Mongo:
-  dbHost: prod-it-102
+  dbHost: localhost
   dbPort: 27017
   database: optymetrics  
 
