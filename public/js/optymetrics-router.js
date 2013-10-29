@@ -6,8 +6,6 @@ _.extend(Opty.pubsub, Backbone.Events);
 Opty.OptyMetricsRouter = Backbone.Router.extend({
     routes: {
         '': 'defaultRoute',
-        'marketing': 'marketingRoute',
-        'marketing/:subpage': 'marketingRoute',
         'operations': 'operationsRoute',
         'operations/:subpage': 'operationsRoute',
         'productdev': 'productdevRoute',
@@ -24,7 +22,6 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
 
         _.bindAll(this,
                   'defaultRoute',
-                  'marketingRoute',
                   'operationsRoute',
                   'productdevRoute',
                   'salesRoute',
@@ -83,11 +80,6 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
         $('div.tab-content').empty()
             .append(Optymetrics_subnav.render())
             .append(productdev_view.render());
-    },
-
-    marketingRoute: function () {
-        this.updateNavState('marketing');
-        $('div.tab-content').empty();
     },
 
     operationsRoute: function (subpage) {
@@ -177,10 +169,6 @@ Opty.OptyMetricsRouter = Backbone.Router.extend({
                 url_fragment: 'research',
                 title: 'Customer Research',
                 selected: true // default
-            },
-            {
-                url_fragment: 'support',
-                title: 'Tier 1 Support'
             }
         ];
 

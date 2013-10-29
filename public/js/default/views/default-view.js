@@ -19,8 +19,11 @@ Opty.DefaultView = Backbone.View.extend({
                     //var $divContainer = $('<div>', { 'class': 'row' });
                     //me.$el.append($divContainer);
 
-                    me.$el.append('<div class="span9" style="color: #ff3333; font-size: 22px;">DEMO DATA ON THIS PAGE, NOT LIVE YET!!!</div><br>');
-                    var $divLeftPanel = $('<div>', { 'class': 'span9' });
+
+                    me.$el.append('<div class="span9">Historical Optify Operational Dashboard</div>');
+
+
+/*                    var $divLeftPanel = $('<div>', { 'class': 'span9' });
                     //$divContainer.append($divLeftPanel);
                     me.$el.append($divLeftPanel);
 
@@ -38,6 +41,9 @@ Opty.DefaultView = Backbone.View.extend({
 
                     var triPaneMetricMarketing = new Opty.TriPaneMetricWidgetView({ collection: null, group: 'MARKETING', header: 'Month', footer: 'New Leads' });
                     $divLeftPanel.append(triPaneMetricMarketing.$el);
+*/
+
+
 
                     /*
                     // Needs to be wired up to a date picker control to work now
