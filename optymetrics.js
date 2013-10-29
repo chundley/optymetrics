@@ -372,7 +372,7 @@ var shutdownHook = function() {
     logger.log('info','Shutting down');
     logger.log('info', 'Closing MongoDB connection');
     mongodb_connection.disconnect();
-    trelloBackfillJob.stop();
+    //trelloBackfillJob.stop();
     server.close();
 };
 
