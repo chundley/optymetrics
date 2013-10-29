@@ -36,6 +36,10 @@ var authDao = require('./data_access/auth-dao.js'),
     aspen_backfill = require('./jobs/aspen_backfill.js'),
     mrrjob = require('./jobs/mrr-job.js');
 
+// so, something in the latest node causes a problem with the asyc library (I believe).
+// something to do with recursive nextTick calls. This fixes it for our purposes
+process.maxTickDepth = 2147483647;
+
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
