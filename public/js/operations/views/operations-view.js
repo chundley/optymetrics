@@ -19,7 +19,8 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // Configure report date range picker
                     var $datePickerRow = $('<div>', { 'class': 'row' });
-                    var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
+                    //var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
+                    var datePickerView = new Opty.DateRangeView({ start: 'Mon Jul 1 2013 00:00:00 GMT-0700 (Pacific Daylight Time)', end: 'Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)' });
 
                     $datePickerRow.append(datePickerView.$el);
                     me.$el.append($datePickerRow);
@@ -119,8 +120,9 @@ Opty.OperationsView = Backbone.View.extend({
 
                 // Configure report date range picker
                 var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-                var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
-
+                //var datePickerView = new Opty.DateRangeView({ defaultDays: 30 });
+                var datePickerView = new Opty.DateRangeView({ start: 'Mon Jul 1 2013 00:00:00 GMT-0700 (Pacific Daylight Time)', end: 'Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)' });
+                
                 $datePickerRow.append(datePickerView.$el);
                 me.$el.append($datePickerRow);
 
@@ -372,8 +374,8 @@ Opty.OperationsView = Backbone.View.extend({
 
                     // Configure report date range picker
                     var $datePickerRow = $('<div>', { 'class': 'row-fluid' });
-                    var datePickerView = new Opty.DateRangeView({ defaultDays: 365 + 30 });
-
+                    //var datePickerView = new Opty.DateRangeView({ defaultDays: 365 + 30 });
+                    var datePickerView = new Opty.DateRangeView({ start: 'Tue July 31 2012 00:00:00 GMT-0700 (Pacific Daylight Time)', end: 'Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)' });
                     $datePickerRow.append(datePickerView.$el);
                     me.$el.append($datePickerRow);
 

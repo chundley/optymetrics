@@ -154,15 +154,18 @@ Opty.ServicesView = Backbone.View.extend({
         $summaryDiv.append(customerSummaryView.$el);
         $sitesDiv.append(customerSiteView.$el);
 
-        var usageCollection = new Opty.CustomerUsageCollection({startDate: Date.today().add({ days: -30 }), endDate: Date.today()});
+        //var usageCollection = new Opty.CustomerUsageCollection({startDate: Date.today().add({ days: -30 }), endDate: Date.today()});
+        var usageCollection = new Opty.CustomerUsageCollection({startDate: new Date('Mon Jul 1 2013 00:00:00 GMT-0700 (Pacific Daylight Time)'), endDate: new Date('Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)')});
         var usageSummaryView = new Opty.CustomerUsageView({collection: usageCollection});
         $usageDiv.append(usageSummaryView.$el);
 
-        var mrrTrendCollection = new Opty.MRRTrendForCustomerCollection({startDate: Date.today().add({ days: -365 }), endDate: Date.today()});
+        //var mrrTrendCollection = new Opty.MRRTrendForCustomerCollection({startDate: Date.today().add({ days: -365 }), endDate: Date.today()});
+        var mrrTrendCollection = new Opty.MRRTrendForCustomerCollection({startDate: new Date('Tue July 31 2012 00:00:00 GMT-0700 (Pacific Daylight Time)'), endDate: new Date('Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)')});
         var mrrTrendView = new Opty.MRRCustomerHistoryChart({collection: mrrTrendCollection});
         $mrrHistoryDiv.append(mrrTrendView.$el);
 
-        var bigscoreTrendCollection = new Opty.BigScoreTrendForCustomerCollection({startDate: Date.today().add({ days: -90 }), endDate: Date.today()});
+        //var bigscoreTrendCollection = new Opty.BigScoreTrendForCustomerCollection({startDate: Date.today().add({ days: -90 }), endDate: Date.today()});
+        var bigscoreTrendCollection = new Opty.BigScoreTrendForCustomerCollection({startDate: new Date('Tue Apr 30 2013 00:00:00 GMT-0700 (Pacific Daylight Time)'), endDate: new Date('Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)')});
         var bigscoreWidget = new Opty.BigScoreWidgetView({collection: bigscoreTrendCollection, cssClass: '', header: 'TBS Current Score', footer: 'Out of 100'});
         $bigscoreDiv.append(bigscoreWidget.$el);
 

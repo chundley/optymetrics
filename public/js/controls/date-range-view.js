@@ -28,13 +28,18 @@ Opty.DateRangeView = Backbone.View.extend({
             me.dateRangeChanged
         );
 
-        // set default to 30 days, option 'defaultDays' can override this
-        var defDays = 29;
-        if (!isNaN(me.options.defaultDays)) {
-            defDays = me.options.defaultDays - 1;
+        // allow hard-coding of start/end for historical dashboard
+        if (me.options.start) {
+          this.dateRangeChanged(new Date(me.options.start), new Date(me.options.end));
         }
-        this.dateRangeChanged(Date.today().add({ days: -defDays }), Date.today());
-
+        else {
+          // set default to 30 days, option 'defaultDays' can override this
+          var defDays = 29;
+          if (!isNaN(me.options.defaultDays)) {
+              defDays = me.options.defaultDays - 1;
+          }
+          this.dateRangeChanged(Date.today().add({ days: -defDays }), Date.today());
+        }
         return this.$el;
     },
 

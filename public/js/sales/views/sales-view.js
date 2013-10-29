@@ -49,8 +49,8 @@ Opty.SalesView = Backbone.View.extend({
 
         // Configure report date range picker
         var $datePickerRow = $('<div>', { 'class': 'row' });
-        var datePickerView = new Opty.DateRangeView({ defaultDays: 366 });
-
+        //var datePickerView = new Opty.DateRangeView({ defaultDays: 366 });
+        var datePickerView = new Opty.DateRangeView({ start: 'Tue July 31 2012 00:00:00 GMT-0700 (Pacific Daylight Time)', end: 'Wed Jul 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)' });
         $datePickerRow.append(datePickerView.$el);
         me.$el.append($datePickerRow);
 
@@ -92,14 +92,17 @@ Opty.SalesView = Backbone.View.extend({
         var customerHistoryCollection = new Opty.CustomerHistoryCollection({});
         var series = {};
         var series_array = [];
+        var startDate = new Date('Mon Jan 2 2012 00:00:00 GMT-0700 (Pacific Daylight Time)').moveToFirstDayOfMonth();
+        var endDate = new Date('Sat Aug 31 2013 23:59:59 GMT-0700 (Pacific Daylight Time)');
+
         start_date = Date.today().add(-17).months().moveToFirstDayOfMonth();
         var dates = {};
         date_num = 0;
         var xAxisLabels = [];
-        while (start_date < Date.today()) {
-            dates[start_date.toString("yyyy-MM-dd")] = date_num++;
-            xAxisLabels.push(start_date.toString("MMM") + " " + (start_date.getMonth() == 0 || date_num == 1 ? start_date.toString("yyyy") : ""));
-            start_date = start_date.add(1).months();
+        while (startDate < endDate) {
+            dates[startDate.toString("yyyy-MM-dd")] = date_num++;
+            xAxisLabels.push(startDate.toString("MMM") + " " + (startDate.getMonth() == 0 || date_num == 1 ? startDate.toString("yyyy") : ""));
+            startDate = startDate.add(1).months();
         }
         series["Free Trial"] = null;
         series["Premium"] = null;
