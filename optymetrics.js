@@ -399,9 +399,7 @@ process.on('uncaughtException', function(err) {
 });
 
 function backfillAdmins() { 
-    authDao.addUser('Nathan Harkenrider', 'nathan@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
-    authDao.addUser('Chris Hundley', 'chris@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
-    authDao.addUser('Tommy Unger', 'tommy@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
+    authDao.addUser('Admin', 'admin@optify.net', 'optify123', UserRoles.ADMIN, function(err) {});
 };
 
 backfillAdmins();
