@@ -39,94 +39,100 @@ var authDao = require('./data_access/auth-dao.js'),
 // connect to Mongo - this connection will be used for all access to MongoDB
 mongodb_connection.connect();
 
+
+/*
+ *  NOTE: commenting out all the jobs as they shouldn't run ever again.
+*/
+
 // Run the VendorCost backfill every day at 6:00 AM
-var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
-    try {
-        logger.info('Running Vendor cost backfill');
-        vendorCostJob.vendorCostJob();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-vendorCostBackfillJob.start();
+//var vendorCostBackfillJob = new cronJob("0 0 14 * *", function () {
+//    try {
+//        logger.info('Running Vendor cost backfill');
+//        vendorCostJob.vendorCostJob();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//vendorCostBackfillJob.start();
 
 // Run the MRR backfill every 8 hours
-var mrrBackfillJob = new cronJob("0 0 0,7,15 * *", function () {
-    try {
-        logger.info('Running MRR backfill');
-        mrrjob.mrrJob();
-    } catch (err) {
-        logger.error(err);
-    }
-});
-mrrBackfillJob.start();
+//var mrrBackfillJob = new cronJob("0 0 0,7,15 * *", function () {
+//    try {
+//        logger.info('Running MRR backfill');
+//        mrrjob.mrrJob();
+//    } catch (err) {
+//        logger.error(err);
+//    }
+//});
+//mrrBackfillJob.start();
 
 // Run the TCO backfill every 8 hours
-var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
-    try {
-        logger.info('Running TCO backfill');
-        tcojob.tcoJob();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-tcoBackfillJob.start();
+//var tcoBackfillJob = new cronJob("0 0 0,8,16 * *", function () {
+//    try {
+//        logger.info('Running TCO backfill');
+//        tcojob.tcoJob();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//tcoBackfillJob.start();
 
 // Run the Trello backfill hourly
-var trelloBackfillJob = new cronJob("0 0 * * *", function() {
-    try {
-        logger.log('info','Running Trello backfill');
-        trello_backfill.trelloBackfill();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-trelloBackfillJob.start();
+//var trelloBackfillJob = new cronJob("0 0 * * *", function() {
+//    try {
+//        logger.log('info','Running Trello backfill');
+//        trello_backfill.trelloBackfill();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//trelloBackfillJob.start();
 
 // Run the PagerDuty backfill every 10 minutes 
-var pagerDutyBackfillJob = new cronJob("0 */10 * * *", function() {
-    try {
-        debugger;
-        logger.log('info', 'Running PagerDuty backfill');
-        pagerDutyJob.pagerDutyBackfill();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-pagerDutyBackfillJob.start();
+//var pagerDutyBackfillJob = new cronJob("0 */10 * * *", function() {
+//    try {
+//        debugger;
+//        logger.log('info', 'Running PagerDuty backfill');
+//        pagerDutyJob.pagerDutyBackfill();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//pagerDutyBackfillJob.start();
 
 // Run the Pingdom backfill hourly (five minutes after the hour)
-var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
-    try {
-        logger.info('Running Uptime job');
-        uptimejob.uptimeJob();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-uptimeJobSchedule.start();
+//var uptimeJobSchedule = new cronJob('0 5 * * *', function () {
+//    try {
+//        logger.info('Running Uptime job');
+//        uptimejob.uptimeJob();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//uptimeJobSchedule.start();
 
 //Run the mixpanel backfill at 7AM PST
-var mixpanelJob = new cronJob("0 0 */6 * *", function () {
-    try {
-        logger.info('Running Mixpanel backfill');
-        mixpanel_backfill.mixpanelBackfill();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-mixpanelJob.start();
+//var mixpanelJob = new cronJob("0 0 */6 * *", function () {
+//    try {
+//        logger.info('Running Mixpanel backfill');
+//        mixpanel_backfill.mixpanelBackfill();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//mixpanelJob.start();
 
 //Run the aspen backfill job at 7AM PST
-var aspenJob = new cronJob("0 0 */6 * *", function () {
-    try {
-        logger.info('Running Aspen backfill');
-        aspen_backfill.aspenBackfill();
-    } catch(err) {
-        logger.error(err);
-    }
-});
-aspenJob.start();
+//var aspenJob = new cronJob("0 0 */6 * *", function () {
+//    try {
+//        logger.info('Running Aspen backfill');
+//        aspen_backfill.aspenBackfill();
+//    } catch(err) {
+//        logger.error(err);
+//    }
+//});
+//aspenJob.start();
+
 
 // The web server instance
 var app = express.createServer();
